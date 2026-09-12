@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>US CNC Laser Drafting & Instant Quoting Engine | Trumpf & SigmaNEST Ready</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/assets/index-DEAyMc_i.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DegUXN02.css">
+  </head>
+  <body>
+    <!-- Top Navigation Header -->
+    <header class="top-nav app-header">
+      <div class="nav-left header-left">
+        <div class="brand-logo">
+          <span class="logo-icon">⚡</span>
+          <div class="brand-text">
+            <span class="brand-title" id="brandTitle">US CNC LASER CPQ</span>
+            <span class="brand-subtitle" id="brandSubtitle">Instant Quoting, Nesting & Trumpf/SigmaNEST DXF</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Quoting Mode Pill Bar -->
+      <div class="quoting-mode-bar" id="quotingModeBar">
+        <span class="mode-label">Mode:</span>
+        <button class="mode-pill active" id="modeJobWork" data-mode="job_work" title="Customer supplies sheet; Quote by Cut Inches + Pierces">
+          🔧 Labor Only
+        </button>
+        <button class="mode-pill" id="modeWithMaterial" data-mode="with_material" title="Shop supplies sheet; Quote by Material + Cut Inches">
+          📦 Turnkey
+        </button>
+        <button class="mode-pill" id="modeSqFtJali" data-mode="sqft_jali" title="Architectural Panels & Screens quoted per sq.ft">
+          🏛️ Arch Panels
+        </button>
+      </div>
+
+      <div class="nav-right header-right">
+        <!-- Currency & Region Switcher -->
+        <div class="currency-toggle" id="currencyToggleGroup">
+          <button class="currency-btn" id="btnCurrencyINR" title="Indian Metric (mm, kg, ₹/kg, ₹/m, 18% GST)">
+            🇮🇳 INR
+          </button>
+          <button class="currency-btn active" id="btnCurrencyUSD" title="US Imperial (inches, lbs, $/sq.in, $/in)">
+            🇺🇸 USD
+          </button>
+        </div>
+
+        <div class="cam-preset-badge" id="navCamBadge" title="Selected CAM Profile: Trumpf Laser">
+          <span class="badge-dot"></span>
+          <span id="navCamName">Trumpf</span>
+        </div>
+
+        <!-- Workspace Panel Toggles -->
+        <div class="panel-toggles-group" id="panelTogglesGroup">
+          <button class="nav-panel-btn active" id="btnToggleLeftPanel" title="Toggle Drafting Panel (Alt+1)">
+            <span class="panel-btn-icon">📐</span>
+            <span class="panel-btn-label">Drafting</span>
+          </button>
+          <button class="nav-panel-btn active" id="btnToggleRightPanel" title="Toggle Quotation & CAM (Alt+2)">
+            <span class="panel-btn-icon">📋</span>
+            <span class="panel-btn-label">Quotation</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Splitter Container -->
+    <main class="main-layout app-workspace" id="appWorkspace">
+      <!-- Left: Parametric Controls & Material Selection Drawer -->
+      <section class="panel panel-left" id="panelLeft">
+        <div class="panel-header-bar">
+          <span class="panel-header-title">DESIGN & MATERIAL CONFIG</span>
+          <button id="collapseLeftBtn" class="collapse-icon-btn" title="Collapse Panel (Alt+1)">
+            ◀
+          </button>
+        </div>
+
+        <!-- Input Mode Tabs -->
+        <div class="tab-group">
+          <button class="tab-btn active" id="tabParametric">Parametric Builder</button>
+          <button class="tab-btn" id="tabUpload">Upload 2D DXF</button>
+        </div>
+
+        <!-- Parametric Generator Section -->
+        <div id="parametricContainer" class="config-section">
+          <!-- Part Type Selector -->
+          <div class="form-group">
+            <label class="form-label">Part Geometry Family</label>
+            <div class="shape-selector">
+              <button class="shape-btn active" data-shape="baseplate">Baseplate</button>
+              <button class="shape-btn" data-shape="flange">Flange (BS/DIN)</button>
+              <button class="shape-btn" data-shape="gusset">Gusset (Snipe)</button>
+              <button class="shape-btn" data-shape="jali">CNC Jali/Gate</button>
+              <button class="shape-btn" data-shape="bracket">Bracket</button>
+              <button class="shape-btn" data-shape="disc">Disc</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Parameter Controls Container -->
+          <div id="dynamicControls" class="dynamic-controls"></div>
+        </div>
+
+        <!-- Upload DXF Section -->
+        <div id="uploadContainer" class="config-section hidden">
+          <div class="upload-dropzone" id="dropzone">
+            <div class="upload-icon">📥</div>
+            <div class="upload-title">Drop 2D DXF File Here</div>
+            <div class="upload-sub">Auto-cleans micro-gaps, layers & duplicate lines</div>
+            <input type="file" id="dxfFileInput" accept=".dxf" class="file-input-hidden" />
+          </div>
+          <div id="uploadFileInfo" class="file-info hidden">
+            <span class="file-name" id="loadedFileName">filename.dxf</span>
+            <span class="file-status">Sanitized & Validated</span>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Material, Assist Gas & Sheet Selection -->
+        <div class="config-section">
+          <div class="form-group">
+            <label class="form-label" for="materialSelect">Cutting Material</label>
+            <select id="materialSelect" class="form-select"></select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="gaugeSelect">Sheet Thickness / Gauge</label>
+            <select id="gaugeSelect" class="form-select"></select>
+          </div>
+
+          <!-- Assist Gas Selector -->
+          <div class="form-group">
+            <label class="form-label" for="assistGasSelect">Assist Gas</label>
+            <select id="assistGasSelect" class="form-select">
+              <option value="air">Compressed Air (16–20 Bar) - Most Economical</option>
+              <option value="oxygen">Oxygen (O2) - Mild Steel Plate</option>
+              <option value="nitrogen">Nitrogen (N2) - High-Pressure Clean Edge</option>
+            </select>
+          </div>
+
+          <!-- Standard Sheet Size for Nesting -->
+          <div class="form-group">
+            <label class="form-label" for="sheetSizeSelect">Mill Sheet Size (Nesting)</label>
+            <select id="sheetSizeSelect" class="form-select">
+              <option value="sheet_8x4">8 × 4 ft (2500 × 1250 mm) - Standard Indian Sheet</option>
+              <option value="sheet_10x5">10 × 5 ft (3000 × 1500 mm) - Standard Laser Bed</option>
+              <option value="sheet_20x5">20 × 5 ft (6000 × 1500 mm) - Heavy Plate</option>
+              <option value="sheet_small">4 × 4 ft (1250 × 1250 mm) - Half Offcut Sheet</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="partQuantity">Order Quantity (pcs)</label>
+            <div class="qty-control">
+              <button class="qty-btn" id="qtyMinus">-</button>
+              <input type="number" id="partQuantity" class="form-input text-center" value="1" min="1" max="5000" />
+              <button class="qty-btn" id="qtyPlus">+</button>
+            </div>
+          </div>
+
+          <!-- Secondary Value-Add Operations Accordion -->
+          <div class="secondary-ops-box">
+            <div class="secondary-title" id="toggleSecOpsBtn" style="cursor: pointer; display: flex; justify-content: space-between;">
+              <span>⚙️ Secondary Operations (Bending / Tapping / Coating)</span>
+              <span id="secOpsChevron">▼</span>
+            </div>
+            <div id="secOpsContent" class="secondary-content">
+              <div class="sec-row">
+                <label>CNC Press Brake Bends:</label>
+                <input type="number" id="secBendsCount" class="form-input text-center sec-input" value="0" min="0" max="20" />
+                <span class="sec-rate-hint">@ ₹15/bend</span>
+              </div>
+              <div class="sec-row">
+                <label>Tapped Thread Holes:</label>
+                <input type="number" id="secTapsCount" class="form-input text-center sec-input" value="0" min="0" max="50" />
+                <span class="sec-rate-hint">@ ₹18/hole</span>
+              </div>
+              <div class="sec-row">
+                <label>Edge Deburring & Grinding:</label>
+                <input type="checkbox" id="secDeburringCheck" class="form-checkbox" />
+                <span class="sec-rate-hint">@ ₹8/kg</span>
+              </div>
+              <div class="sec-row">
+                <label>Surface Treatment:</label>
+                <select id="secSurfaceFinish" class="form-select sec-select">
+                  <option value="none">None (Raw Cut Edge)</option>
+                  <option value="primer">Red Oxide Primer (₹20/sq.ft)</option>
+                  <option value="powder_coating">Pure Polyester Powder Coating (₹45/sq.ft)</option>
+                  <option value="galvanizing">Hot-Dip Galvanizing (₹42/kg)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add to RFQ Project Cart Action -->
+          <div class="cart-add-wrapper" style="margin-top: 1.25rem;">
+            <button id="addToCartBtn" class="btn btn-primary btn-lg" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669); border-color: #34d399; font-weight: 700; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);">
+              <span class="btn-icon">➕</span> Add Part to RFQ Cart
+            </button>
+            <span style="font-size: 0.72rem; color: #94a3b8; display: block; text-align: center; margin-top: 0.35rem;">
+              Add multiple distinct shapes to pack & quote together
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Left Splitter Handle -->
+      <div class="splitter" id="splitterLeft" title="Drag to resize left panel | Double-click to reset width">
+        <div class="splitter-handle"></div>
+      </div>
+
+      <!-- Center: 2D Interactive CAD Canvas & Telemetry -->
+      <section class="panel panel-center" id="panelCenter">
+        <!-- Canvas Toolbar -->
+        <div class="canvas-header">
+          <div class="canvas-status">
+            <span class="status-indicator"></span>
+            <span id="canvasTitle">Part Geometry Preview</span>
+          </div>
+          <div class="canvas-right-controls">
+            <!-- Cut Order Simulator Controls -->
+            <div class="simulator-btn-group" id="simulatorControls">
+              <button class="sim-btn" id="btnSimulateCut" title="Simulate laser cut sequence (Holes first, Outer last)">
+                <span id="simBtnIcon">▶</span> <span id="simBtnText">Simulate Cut</span>
+              </button>
+              <select id="simSpeedSelect" class="sim-speed-select" title="Simulation Speed">
+                <option value="1">1x</option>
+                <option value="2" selected>2x</option>
+                <option value="5">5x</option>
+                <option value="10">10x</option>
+              </select>
+              <button class="sim-pill-toggle active" id="btnToggleCamBadges" title="Toggle CAM cut order badges (①, ②, ③)">
+                CAM Badges
+              </button>
+            </div>
+
+            <!-- View Mode Switch: Single Part vs Sheet Nesting -->
+            <div class="view-switch-group">
+              <button class="view-btn active" id="btnViewPart">Part CAD</button>
+              <button class="view-btn" id="btnViewNesting">📊 Sheet Nesting</button>
+            </div>
+            <div class="units-toggle">
+              <button class="unit-btn" id="unitMm">MM</button>
+              <button class="unit-btn active" id="unitInch">INCH</button>
+            </div>
+
+            <!-- Quick Export Preview Action -->
+            <button class="canvas-action-btn" id="btnExportImage" title="Export Client High-Res Render (PNG for WhatsApp / Proposal)">
+              📸 Export PNG
+            </button>
+          </div>
+        </div>
+
+        <!-- Architectural CNC Jali & Gate Studio Toolbar -->
+        <div id="gateStudioToolbar" class="gate-studio-toolbar hidden">
+          <div class="gate-tool-group">
+            <span class="gate-tool-label">View:</span>
+            <button class="gate-view-toggle active" id="btnJaliViewRealistic" title="Photorealistic Architectural Gate View with Finishes & Backlight">
+              ✨ Realistic Gate
+            </button>
+            <button class="gate-view-toggle" id="btnJaliViewCam" title="CypCut 2D CAM Wireframe & Toolpath">
+              📐 CAM Toolpath
+            </button>
+          </div>
+
+          <div class="gate-tool-divider"></div>
+
+          <div class="gate-tool-group" id="gateFinishGroup">
+            <span class="gate-tool-label">Finish:</span>
+            <div class="gate-finish-swatches">
+              <button class="finish-swatch active" data-finish="matte_black" title="Matte Black Powder Coat">
+                <span class="swatch-color" style="background: linear-gradient(135deg, #2a303c, #111418);"></span>
+                <span class="swatch-name">Matte Black</span>
+              </button>
+              <button class="finish-swatch" data-finish="royal_gold" title="Royal Brass / Antique Gold">
+                <span class="swatch-color" style="background: linear-gradient(135deg, #fde047, #b45309);"></span>
+                <span class="swatch-name">Royal Gold</span>
+              </button>
+              <button class="finish-swatch" data-finish="corten_rust" title="Corten Weathered Rust Steel">
+                <span class="swatch-color" style="background: linear-gradient(135deg, #ea580c, #7c2d12);"></span>
+                <span class="swatch-name">Corten Rust</span>
+              </button>
+              <button class="finish-swatch" data-finish="brushed_stainless" title="Satin Stainless Steel 304">
+                <span class="swatch-color" style="background: linear-gradient(135deg, #f8fafc, #64748b);"></span>
+                <span class="swatch-name">Stainless 304</span>
+              </button>
+              <button class="finish-swatch" data-finish="champagne_bronze" title="Champagne Bronze">
+                <span class="swatch-color" style="background: linear-gradient(135deg, #fbbf24, #78350f);"></span>
+                <span class="swatch-name">Bronze</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="gate-tool-divider"></div>
+
+          <div class="gate-tool-group" id="gateBacklightGroup">
+            <span class="gate-tool-label">Backlight:</span>
+            <div class="gate-backlight-pills">
+              <button class="backlight-pill active" data-backlight="warm_white" title="Warm 3000K LED Glow">💡 Warm 3000K</button>
+              <button class="backlight-pill" data-backlight="cool_white" title="Cool 6000K LED Glow">❄️ Cool 6000K</button>
+              <button class="backlight-pill" data-backlight="amber_gold" title="Sunset Amber Gold">🌅 Amber</button>
+              <button class="backlight-pill" data-backlight="none" title="Daylight / Off">Off</button>
+            </div>
+          </div>
+
+          <div class="gate-tool-divider"></div>
+
+          <div class="gate-tool-group" id="gateTypeGroup">
+            <span class="gate-tool-label">Type:</span>
+            <button class="gate-type-btn active" data-gatetype="single_swing">Single Gate</button>
+            <button class="gate-type-btn" data-gatetype="double_swing">Double Swing</button>
+            <button class="gate-type-btn" data-gatetype="wall_panel">Wall Jali</button>
+          </div>
+        </div>
+
+        <!-- SVG CAD Canvas Viewport -->
+        <div class="canvas-viewport" id="canvasViewport">
+          <!-- Laser Simulation Real-time Telemetry HUD Overlay -->
+          <div id="simHudOverlay" class="sim-hud-overlay hidden">
+            <div class="sim-hud-inner">
+              <div class="sim-hud-left">
+                <span class="sim-pulse-dot"></span>
+                <span id="simStatusText" class="sim-status-text">Piercing Hole 1 (Yellow)...</span>
+              </div>
+              <div class="sim-progress-track">
+                <div id="simProgressBar" class="sim-progress-bar" style="width: 0%;"></div>
+              </div>
+              <div class="sim-hud-right">
+                <span id="simStepText" class="sim-metric-text">Step 1 of 5</span>
+                <span id="simTimeText" class="sim-metric-text">0.0s / 12.0s</span>
+                <button id="btnStopSim" class="sim-stop-btn">✕ Stop</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multi-Sheet Pagination & Nest Source Bar -->
+          <div id="sheetPaginationBar" class="sheet-pagination-bar hidden">
+            <button id="btnPrevSheet" class="sheet-page-btn" disabled>◀ Prev Sheet</button>
+            <span id="sheetPageIndicator" class="sheet-page-text">Sheet 1 of 1</span>
+            <button id="btnNextSheet" class="sheet-page-btn" disabled>Next Sheet ▶</button>
+            <div class="nest-source-toggle" id="nestSourceToggle">
+              <span class="nest-source-label">Source:</span>
+              <button class="nest-source-btn active" id="btnNestSourceSingle">Active Part</button>
+              <button class="nest-source-btn" id="btnNestSourceCart">Full RFQ Cart (<span id="nestCartCount">0</span>)</button>
+            </div>
+          </div>
+
+          <div id="svgContainer" class="svg-container"></div>
+
+          <!-- Floating Interactive Zoom / Pan Controls -->
+          <div class="canvas-zoom-controls" id="canvasZoomControls">
+            <button class="zoom-btn" id="btnZoomIn" title="Zoom In (or Scroll Wheel Up)">➕</button>
+            <span class="zoom-display" id="zoomLevelDisplay">100%</span>
+            <button class="zoom-btn" id="btnZoomOut" title="Zoom Out (or Scroll Wheel Down)">➖</button>
+            <button class="zoom-btn zoom-fit-btn" id="btnZoomFit" title="Fit to Screen (Reset Zoom & Pan)">⛶ Fit</button>
+          </div>
+        </div>
+
+        <!-- CypCut Layer Legend Bar (Visible in CAM Toolpath View) -->
+        <div class="cam-legend-bar" id="camLegendBar">
+          <div class="legend-item"><span class="legend-dot dot-outer"></span> Layer 0 (White/Green): Outer Cut</div>
+          <div class="legend-item"><span class="legend-dot dot-inner"></span> Layer 1 (Yellow): Inner Cutouts</div>
+          <div class="legend-item"><span class="legend-dot dot-center"></span> Crosshair: Center Pierce Point</div>
+        </div>
+
+        <!-- Architectural Gate Specifications Legend (Shown in Realistic Gate mode) -->
+        <div class="arch-legend-bar hidden" id="archLegendBar">
+          <div class="legend-item"><span class="arch-legend-icon">🎨</span> <span class="arch-legend-label">Finish:</span> <span class="arch-legend-val" id="archLegendFinish">Matte Black</span></div>
+          <div class="legend-item"><span class="arch-legend-icon">💡</span> <span class="arch-legend-label">Lighting:</span> <span class="arch-legend-val" id="archLegendLight">Warm 3000K</span></div>
+          <div class="legend-item"><span class="arch-legend-icon">🚪</span> <span class="arch-legend-label">Frame:</span> <span class="arch-legend-val" id="archLegendFrame">50mm Box Tube</span></div>
+          <div class="legend-item"><span class="arch-legend-icon">🔩</span> <span class="arch-legend-label">Hardware:</span> <span class="arch-legend-val" id="archLegendHardware">Bullet Hinges + Bar Pull</span></div>
+        </div>
+
+        <!-- Real-time HUD Metrics Bar -->
+        <div class="hud-bar">
+          <div class="hud-item">
+            <span class="hud-label">Cut Perimeter</span>
+            <span class="hud-val" id="hudCutLength">0.00 mm</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">Piercing Points</span>
+            <span class="hud-val" id="hudPierces">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">Est. Part Weight</span>
+            <span class="hud-val" id="hudWeight">0.00 kg</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">Bounding Box</span>
+            <span class="hud-val" id="hudBoundingBox">0 x 0 mm</span>
+          </div>
+        </div>
+
+        <!-- 2D Sheet Nesting Telemetry Bar (Visible when quantity > 1 or in nesting mode) -->
+        <div class="nesting-hud-bar" id="nestingHudBar">
+          <div class="nest-hud-item">
+            <span class="nest-hud-label">Sheets Required</span>
+            <span class="nest-hud-val" id="nestHudSheets">1 Sheet</span>
+          </div>
+          <div class="nest-hud-item">
+            <span class="nest-hud-label">Sheet Utilization</span>
+            <span class="nest-hud-val" id="nestHudUtil">0.0%</span>
+          </div>
+          <div class="nest-hud-item">
+            <span class="nest-hud-label">Skeleton Scrap</span>
+            <span class="nest-hud-val" id="nestHudScrap">0.00 kg</span>
+          </div>
+          <div class="nest-hud-item">
+            <span class="nest-hud-label">Reusable Remnant</span>
+            <span class="nest-hud-val" id="nestHudRemnant">0 × 0 mm</span>
+          </div>
+        </div>
+
+        <!-- DFM Guardrail Alerts -->
+        <div id="dfmAlertContainer" class="dfm-container"></div>
+      </section>
+
+      <!-- Right Splitter Handle -->
+      <div class="splitter" id="splitterRight" title="Drag to resize quote panel | Double-click to reset width">
+        <div class="splitter-handle"></div>
+      </div>
+
+      <!-- Right: Quoting Card & Shop Admin Drawer -->
+      <section class="panel panel-right" id="panelRight">
+        <div class="panel-header-bar">
+          <span class="panel-header-title">QUOTING & SETTINGS</span>
+          <button id="collapseRightBtn" class="collapse-icon-btn" title="Collapse Panel (Alt+2)">
+            ▶
+          </button>
+        </div>
+
+        <!-- Right Panel Tabs: Quote vs Cart vs Admin -->
+        <div class="tab-group right-tabs">
+          <button class="tab-btn active" id="tabQuote">
+            <span>📋 Single Quote</span>
+          </button>
+          <button class="tab-btn" id="tabCart">
+            <span>🛒 RFQ Cart <span id="cartBadge" class="cart-count-badge">0</span></span>
+          </button>
+          <button class="tab-btn" id="tabAdmin">
+            <span>⚙️ Shop Rates</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: Instant Quotation -->
+        <div id="quoteView" class="tab-pane">
+          <div class="quote-card">
+            <div class="quote-header">
+              <span class="quote-badge" id="quoteModeBadge">LABOR ONLY (JOB SHOP)</span>
+              <div class="shop-name-pill" id="quoteShopName">Midwest Precision CNC & Laser</div>
+            </div>
+
+            <div class="price-display">
+              <span class="currency" id="currencySym">$</span>
+              <span class="price-amount" id="totalPrice">0.00</span>
+              <span class="price-sub" id="pricePerUnit">($0.00 / unit)</span>
+            </div>
+
+            <div id="minOrderWarning" class="min-order-pill hidden">
+              ⚠️ Minimum Order Floor Applied
+            </div>
+
+            <div class="quote-breakdown">
+              <div class="breakdown-row" id="rowMaterial">
+                <span>Raw Material:</span>
+                <span id="costMaterial">₹0.00</span>
+              </div>
+              <div class="breakdown-row" id="rowCut">
+                <span>Laser Cutting:</span>
+                <span id="costCut">₹0.00</span>
+              </div>
+              <div class="breakdown-row" id="rowPierce">
+                <span>Piercing Charges:</span>
+                <span id="costPierce">₹0.00</span>
+              </div>
+              <div class="breakdown-row" id="rowHandling">
+                <span>Plate Handling Fee:</span>
+                <span id="costHandling">₹0.00</span>
+              </div>
+              <div class="breakdown-row" id="rowSecondary">
+                <span>Secondary Operations:</span>
+                <span id="costSecondary">₹0.00</span>
+              </div>
+              <div class="breakdown-row discount-row" id="volumeDiscountRow">
+                <span>Volume Discount:</span>
+                <span id="costDiscount">-0%</span>
+              </div>
+              <div class="breakdown-row gst-row" id="gstBreakdownRow">
+                <span id="gstLabel">GST (18%):</span>
+                <span id="costGst">₹0.00</span>
+              </div>
+              <div class="breakdown-row total-inc-gst">
+                <span style="font-weight: 700; color: #fff;">Total (Inc. GST):</span>
+                <span id="totalIncGst" style="font-weight: 800; color: #38bdf8;">₹0.00</span>
+              </div>
+              <div class="hsn-tag" id="hsnCodeTag">NAICS 332813 (Laser Cutting & Fabrication)</div>
+            </div>
+
+            <div class="whatsapp-box" id="customerContactBox">
+              <div class="label-row">
+                <label class="form-label" for="customerPhoneInput" id="customerPhoneLabel">Customer Email / Phone</label>
+                <span class="phone-badge" id="phoneModeBadge">Email / RFQ</span>
+              </div>
+              <div class="phone-input-group">
+                <span class="phone-prefix" id="phoneCountryPrefix">+1</span>
+                <input
+                  type="tel"
+                  id="customerPhoneInput"
+                  class="phone-input"
+                  placeholder="estimator@client.com or (555) 123-4567"
+                  maxlength="32"
+                />
+              </div>
+              <span class="phone-hint" id="phoneHint">Enter email to send quote, or copy directly to clipboard</span>
+            </div>
+
+            <div class="action-stack">
+              <button id="shareWhatsAppBtn" class="btn btn-email btn-lg">
+                <span class="btn-icon" id="shareBtnIcon">✉️</span> <span id="shareBtnText">Copy Quote for Email</span>
+              </button>
+              
+              <div class="btn-split-row">
+                <button id="printInvoiceBtn" class="btn btn-secondary" style="flex: 1;">
+                  <span class="btn-icon">📄</span> <span id="printInvoiceText">Commercial Quote (PDF)</span>
+                </button>
+                <button id="jobCardBtn" class="btn btn-secondary" style="flex: 1;">
+                  <span class="btn-icon">🛠️</span> Job Card
+                </button>
+              </div>
+
+              <div class="btn-split-row">
+                <button id="downloadDxfBtn" class="btn btn-primary" style="flex: 1.2;">
+                  <span class="btn-icon">⚡</span> <span id="downloadDxfText">Trumpf DXF</span>
+                </button>
+                <button id="copyQuoteBtn" class="btn btn-secondary" style="flex: 0.8;">
+                  <span class="btn-icon">📋</span> Copy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Project RFQ Cart -->
+        <div id="cartView" class="tab-pane hidden">
+          <div class="cart-card">
+            <div class="cart-header">
+              <div>
+                <h3 class="cart-title">Project RFQ Cart</h3>
+                <span class="cart-sub">Consolidated Multi-Part Assembly & Nesting</span>
+              </div>
+              <button id="clearCartBtn" class="btn btn-secondary btn-sm" title="Remove all items from cart">
+                🗑️ Clear
+              </button>
+            </div>
+
+            <!-- Customer & Project Details -->
+            <div class="cart-project-meta">
+              <div class="form-group" style="margin-bottom: 0.5rem;">
+                <label class="form-label" for="cartProjectName">Project / Assembly Title</label>
+                <input type="text" id="cartProjectName" class="form-input" value="Industrial Skid Batch #1" />
+              </div>
+              <div class="form-row-2">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" for="cartCustomerName">Customer / Company</label>
+                  <input type="text" id="cartCustomerName" class="form-input" placeholder="e.g. Tata AutoComp" />
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" for="cartCustomerPhone">WhatsApp Mobile</label>
+                  <input type="tel" id="cartCustomerPhone" class="form-input" placeholder="10-digit mobile" maxlength="16" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Cart Items List Container -->
+            <div id="cartItemsList" class="cart-items-list">
+              <!-- Dynamically populated or empty state -->
+            </div>
+
+            <!-- Consolidated Project Summary Box -->
+            <div id="cartSummaryBox" class="cart-summary-box hidden">
+              <div class="cart-summary-title">CONSOLIDATED BATCH SUMMARY</div>
+              <div class="cart-metrics-grid">
+                <div class="cart-metric-item">
+                  <span class="cart-metric-label">Total Parts</span>
+                  <span class="cart-metric-val" id="cartTotalParts">0 pcs</span>
+                </div>
+                <div class="cart-metric-item">
+                  <span class="cart-metric-label">Total Cut Length</span>
+                  <span class="cart-metric-val" id="cartTotalCut">0.0 m</span>
+                </div>
+                <div class="cart-metric-item">
+                  <span class="cart-metric-label">Total Pierces</span>
+                  <span class="cart-metric-val" id="cartTotalPierces">0</span>
+                </div>
+                <div class="cart-metric-item">
+                  <span class="cart-metric-label">Net Steel Mass</span>
+                  <span class="cart-metric-val" id="cartTotalMass">0.00 kg</span>
+                </div>
+              </div>
+
+              <div class="cart-nesting-banner" id="cartNestingBanner">
+                <div class="cart-nest-left">
+                  <span class="cart-nest-icon">📊</span>
+                  <span id="cartNestingText" class="cart-nest-text">Nesting: 1 Sheet of 8×4 ft</span>
+                </div>
+                <button id="btnNestCartOnBed" class="btn btn-secondary btn-xs">View Layout</button>
+              </div>
+
+              <!-- Pricing Breakdown -->
+              <div class="quote-breakdown" style="margin-top: 0.75rem;">
+                <div class="breakdown-row">
+                  <span>Material Subtotal:</span>
+                  <span id="cartCostMaterial">₹0.00</span>
+                </div>
+                <div class="breakdown-row">
+                  <span>Laser Cutting:</span>
+                  <span id="cartCostCut">₹0.00</span>
+                </div>
+                <div class="breakdown-row">
+                  <span>Piercing Charges:</span>
+                  <span id="cartCostPierce">₹0.00</span>
+                </div>
+                <div class="breakdown-row">
+                  <span>Secondary Operations:</span>
+                  <span id="cartCostSecondary">₹0.00</span>
+                </div>
+                <div class="breakdown-row discount-row" id="cartDiscountRow">
+                  <span id="cartDiscountLabel">Volume Discount:</span>
+                  <span id="cartCostDiscount">-0%</span>
+                </div>
+                <div class="breakdown-row gst-row">
+                  <span id="cartGstLabel">GST (18%):</span>
+                  <span id="cartCostGst">₹0.00</span>
+                </div>
+                <div class="breakdown-row total-inc-gst">
+                  <span style="font-weight: 700; color: #fff;">Project Total (Inc. GST):</span>
+                  <span id="cartTotalIncGst" style="font-weight: 800; color: #38bdf8; font-size: 1.25rem;">₹0.00</span>
+                </div>
+              </div>
+
+              <!-- Project Action Buttons -->
+              <div class="action-stack" style="margin-top: 1rem;">
+                <button id="shareCartWhatsAppBtn" class="btn btn-email btn-lg">
+                  <span class="btn-icon" id="shareCartBtnIcon">✉️</span> <span id="shareCartBtnText">Copy Project Quote for Email</span>
+                </button>
+                <div class="btn-split-row">
+                  <button id="printCartInvoiceBtn" class="btn btn-secondary" style="flex: 1;">
+                    <span class="btn-icon">📄</span> <span id="printCartInvoiceText">Commercial Quote (PDF)</span>
+                  </button>
+                  <button id="printCartJobCardBtn" class="btn btn-secondary" style="flex: 1;">
+                    <span class="btn-icon">🛠️</span> Shop Job Card
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Shop Admin Settings -->
+        <div id="adminView" class="tab-pane hidden">
+          <div id="adminPanel" class="admin-card">
+            <div class="admin-header">
+              <div class="admin-title-row">
+                <div class="admin-title-left">
+                  <div class="admin-icon-box">⚙️</div>
+                  <div class="admin-title-text-group">
+                    <h3 class="admin-heading">Shop Admin & Rates</h3>
+                    <span class="admin-sub">Tune shop steel rates, cutting fees & CAM defaults. All changes auto-save.</span>
+                  </div>
+                </div>
+                <span id="storageBadge" class="save-badge">💾 Auto-Saved</span>
+              </div>
+            </div>
+
+            <!-- Section 1: Shop Profile & Minimums -->
+            <div class="admin-section">
+              <div class="admin-section-header">
+                <span class="section-tag">SHOP IDENTITY & ORDER MINIMUMS</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="adminShopName">Shop Display Name</label>
+                <div class="input-adornment-wrap">
+                  <span class="input-icon-adornment">🏢</span>
+                  <input type="text" id="adminShopName" class="form-input custom-admin-input" value="Shree Balaji Laser Tech (Bhosari, Pune)" placeholder="Shop or Business Name" />
+                </div>
+              </div>
+
+              <div class="form-group" id="groupAdminGstin">
+                <label class="form-label" for="adminGstin">Shop GSTIN (15-digit)</label>
+                <div class="input-adornment-wrap">
+                  <span class="input-icon-adornment">🏛️</span>
+                  <input type="text" id="adminGstin" class="form-input custom-admin-input" value="27AABCS1429B1Z8" placeholder="27AABCS1429B1Z8" />
+                </div>
+              </div>
+
+              <div class="form-group" id="groupAdminUpi">
+                <label class="form-label" for="adminUpiId">Shop UPI ID (for QR Code)</label>
+                <div class="input-adornment-wrap">
+                  <span class="input-icon-adornment">📱</span>
+                  <input type="text" id="adminUpiId" class="form-input custom-admin-input" value="balajilaser@upi" placeholder="shop@upi" />
+                </div>
+              </div>
+
+              <div class="admin-two-col-grid">
+                <div class="form-group">
+                  <label class="form-label" for="adminMinOrder">Min. Order Floor (<span id="adminCurrencySym">₹</span>)</label>
+                  <input type="number" id="adminMinOrder" class="form-input custom-admin-input rate-numeric-input" value="500" min="0" step="10" />
+                </div>
+
+                <div class="form-group" id="groupSheetLoading">
+                  <label class="form-label" for="adminSheetLoading" id="labelSheetLoading">Plate Loading / Handling Fee (₹/sheet)</label>
+                  <input type="number" id="adminSheetLoading" class="form-input custom-admin-input rate-numeric-input" value="250" min="0" step="25" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Active Material Rates -->
+            <div class="admin-section">
+              <div class="admin-rates-box">
+                <div class="rates-box-title">
+                  <div class="rates-title-left">
+                    <span class="rates-bolt-icon">⚡</span>
+                    <span id="activeGaugeLabel" class="active-rates-label">Active Material Rates</span>
+                  </div>
+                  <span class="badge-active-gauge" id="activeGaugeBadge">IS 2062 6mm</span>
+                </div>
+                <div class="rates-grid">
+                  <div class="rate-item">
+                    <label class="rate-label" id="labelPricePerKg">Material Rate (₹/kg)</label>
+                    <input type="number" id="adminPricePerKg" class="form-input rate-input" step="0.001" />
+                  </div>
+                  <div class="rate-item">
+                    <label class="rate-label" id="labelPricePerMeterCut">Cut Rate (₹/meter)</label>
+                    <input type="number" id="adminPricePerMeterCut" class="form-input rate-input" step="0.001" />
+                  </div>
+                  <div class="rate-item">
+                    <label class="rate-label" id="labelPricePerPierce">Pierce Fee (₹/pt)</label>
+                    <input type="number" id="adminPricePerPierce" class="form-input rate-input" step="0.01" />
+                  </div>
+                  <div class="rate-item">
+                    <label class="rate-label" id="labelAdminTax">GST / Tax (%)</label>
+                    <input type="number" id="adminGstPercent" class="form-input rate-input" min="0" max="100" step="0.5" value="18" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Machine CAM & Tax Calibration -->
+            <div class="admin-section">
+              <div class="admin-section-header">
+                <span class="section-tag">CALIBRATION & CAM INTEGRATION</span>
+              </div>
+
+              <div class="form-group" id="groupAdminTaxType">
+                <label class="form-label">Tax Type</label>
+                <select id="adminTaxType" class="form-select custom-admin-select">
+                  <option value="intrastate">Intra-State (CGST 9% + SGST 9%)</option>
+                  <option value="interstate">Inter-State (IGST 18%)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Export CAM Post-Processor Profile</label>
+                <select id="camProfileSelect" class="form-select custom-admin-select"></select>
+              </div>
+
+              <div class="form-group">
+                <div class="label-with-val">
+                  <label class="form-label">Linear Cut Speed Multiplier</label>
+                  <span class="slider-val-badge" id="cutMultVal">1.0x (Standard)</span>
+                </div>
+                <input type="range" id="adminCutMultiplier" min="0.5" max="2.0" step="0.1" value="1.0" class="form-slider admin-slider" />
+              </div>
+            </div>
+
+            <div class="admin-footer-actions">
+              <button id="resetRatesBtn" class="btn btn-benchmark-reset" style="width: 100%;">
+                <span class="btn-icon">↺</span> Reset Factory Benchmark Rates
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Floating Edge Restore Tabs (when panels are collapsed) -->
+    <button id="restoreLeftBtn" class="restore-panel-btn restore-left hidden" title="Expand Drafting Panel (Alt+1)">
+      <span>▶</span>
+      <span class="vertical-text" id="restoreLeftLabel">Drafting</span>
+      <span>📐</span>
+    </button>
+
+    <button id="restoreRightBtn" class="restore-panel-btn restore-right hidden" title="Expand Quotation & CAM (Alt+2)">
+      <span>◀</span>
+      <span class="vertical-text" id="restoreRightLabel">Quotation</span>
+      <span>📋</span>
+    </button>
+
+    <!-- Document Print Container Modal (Hidden from view, used for popup/print) -->
+    <div id="docModal" class="modal-backdrop hidden">
+      <div class="doc-modal-card">
+        <div class="modal-header">
+          <h3 id="docModalTitle">Document Preview</h3>
+          <button id="closeDocModalBtn" class="close-btn">&times;</button>
+        </div>
+        <div class="doc-modal-body">
+          <iframe id="docFrame" style="width: 100%; height: 600px; border: none;"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast hidden">📋 Quotation copied to clipboard!</div>
+
+  </body>
+</html>

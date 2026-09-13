@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 140" width="100%" height="100%">
+  <defs>
+    <linearGradient id="lightCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0ea5e9" />
+    </linearGradient>
+    <linearGradient id="lightOrange" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+
+    <!-- Embedded Mark Elements -->
+    <linearGradient id="lBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="lRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+    <linearGradient id="lNozzleMetal" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#64748b" />
+      <stop offset="50%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+    <linearGradient id="lBrassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="50%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#92400e" />
+    </linearGradient>
+    <linearGradient id="lBeamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="70%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+    <linearGradient id="lKerfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="50%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+    <radialGradient id="lPlasmaGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="30%" stop-color="#fff59d" />
+      <stop offset="60%" stop-color="#ff9100" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#ff1744" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Left Icon Mark -->
+  <g transform="translate(16, 10) scale(0.234)">
+    <path d="M 256 22 L 440 101 A 24 24 0 0 1 452 122 L 452 390 A 24 24 0 0 1 440 411 L 256 490 A 24 24 0 0 1 244 490 L 72 411 A 24 24 0 0 1 60 390 L 60 122 A 24 24 0 0 1 72 101 L 256 22 Z" 
+          fill="url(#lBgGrad)" stroke="url(#lRimGrad)" stroke-width="14" stroke-linejoin="round" />
+
+    <g opacity="0.4" stroke="#38bdf8" stroke-width="2">
+      <circle cx="256" cy="320" r="90" fill="none" stroke-dasharray="6 8" />
+      <line x1="120" y1="320" x2="392" y2="320" stroke-dasharray="6 6" />
+      <line x1="256" y1="190" x2="256" y2="420" stroke-dasharray="6 6" />
+    </g>
+
+    <path d="M 130 376 C 165 345, 200 320, 256 320 C 322 320, 372 278, 390 215" 
+          fill="none" stroke="url(#lKerfGrad)" stroke-width="12" stroke-linecap="round" />
+    <path d="M 130 376 C 165 345, 200 320, 256 320" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" />
+
+    <rect x="228" y="44" width="56" height="34" rx="5" fill="url(#lNozzleMetal)" stroke="#0f172a" stroke-width="2.5" />
+    <rect x="220" y="78" width="72" height="15" rx="3.5" fill="url(#lBrassGrad)" stroke="#78350f" stroke-width="2" />
+    <polygon points="226,93 286,93 273,176 239,176" fill="url(#lNozzleMetal)" stroke="#1e293b" stroke-width="2" />
+    <polygon points="239,176 273,176 265,216 247,216" fill="url(#lBrassGrad)" stroke="#78350f" stroke-width="2" />
+    <rect x="249" y="216" width="14" height="8" rx="2" fill="#0f172a" />
+
+    <line x1="256" y1="224" x2="256" y2="320" stroke="#ffffff" stroke-width="5" stroke-linecap="round" />
+    <polygon points="251,224 261,224 260,320 252,320" fill="url(#lBeamGrad)" />
+
+    <circle cx="256" cy="320" r="42" fill="url(#lPlasmaGlow)" />
+    <circle cx="256" cy="320" r="30" fill="none" stroke="#ffffff" stroke-width="2.8" opacity="0.85" />
+    <polygon points="256,254 263,313 322,320 263,327 256,386 249,327 190,320 249,313" fill="#ffffff" />
+    <polygon points="256,276 261,315 300,320 261,325 256,364 251,325 212,320 251,315" fill="#ffe600" opacity="0.95" transform="rotate(45 256 320)" />
+    <circle cx="256" cy="320" r="10" fill="#ffffff" />
+    <circle cx="310" cy="272" r="4.5" fill="#ffd000" />
+    <circle cx="204" cy="368" r="4" fill="#ff4500" />
+  </g>
+
+  <!-- Divider Line -->
+  <line x1="150" y1="24" x2="150" y2="116" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="4 4" />
+
+  <!-- Typography for Light Backgrounds -->
+  <g transform="translate(172, 0)">
+    <text x="0" y="56" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="900" letter-spacing="-0.02em" fill="#0f172a">
+      CNC <tspan fill="url(#lightCyan)">LASER</tspan> <tspan fill="url(#lightOrange)">CPQ</tspan>
+    </text>
+
+    <g transform="translate(378, 32)">
+      <rect x="0" y="0" width="134" height="26" rx="13" fill="#ecfdf5" stroke="#10b981" stroke-width="1.2" />
+      <circle cx="14" cy="13" r="4" fill="#059669" />
+      <text x="26" y="17.5" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="#047857" letter-spacing="0.05em">TRUMPF READY</text>
+    </g>
+
+    <text x="1" y="85" font-family="'Inter', -apple-system, sans-serif" font-size="14.5" font-weight="700" fill="#334155" letter-spacing="0.01em">
+      PARAMETRIC DRAFTING <tspan fill="#0284c7">•</tspan> AUTO-NESTING <tspan fill="#0284c7">•</tspan> INSTANT QUOTING
+    </text>
+
+    <text x="1" y="108" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#64748b" letter-spacing="0.06em">
+      TRUMPF <tspan fill="#94a3b8">|</tspan> SIGMANEST <tspan fill="#94a3b8">|</tspan> CYPCUT <tspan fill="#94a3b8">|</tspan> AMADA DXF ENGINE
+    </text>
+  </g>
+</svg>

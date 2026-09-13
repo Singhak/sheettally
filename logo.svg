@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 140" width="100%" height="100%">
+  <defs>
+    <!-- Cyan Gradient -->
+    <linearGradient id="textCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#00f5ff" />
+    </linearGradient>
+
+    <!-- Hot Orange Gradient -->
+    <linearGradient id="textOrange" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+
+    <!-- CAM Ready Badge Gradient -->
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(16, 185, 129, 0.2)" />
+      <stop offset="100%" stop-color="rgba(5, 150, 105, 0.08)" />
+    </linearGradient>
+
+    <!-- Embedded Mark Elements -->
+    <linearGradient id="fullBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141e30" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <linearGradient id="fullRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#00f0ff" />
+    </linearGradient>
+    <linearGradient id="fullNozzleMetal" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="50%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+    <linearGradient id="fullBrassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#92400e" />
+      <stop offset="50%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <linearGradient id="fullBeamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="70%" stop-color="#00f5ff" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+    <linearGradient id="fullKerfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff3b00" />
+      <stop offset="50%" stop-color="#ff9500" />
+      <stop offset="100%" stop-color="#ffd000" />
+    </linearGradient>
+    <radialGradient id="fullPlasmaGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="30%" stop-color="#fff59d" />
+      <stop offset="60%" stop-color="#ff9100" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#ff1744" stop-opacity="0" />
+    </radialGradient>
+    <filter id="fullLaserGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Left Icon Mark (x=16, y=10, size=120x120) -->
+  <g transform="translate(16, 10) scale(0.234)">
+    <!-- Base Plate Hexagon -->
+    <path d="M 256 22 L 440 101 A 24 24 0 0 1 452 122 L 452 390 A 24 24 0 0 1 440 411 L 256 490 A 24 24 0 0 1 244 490 L 72 411 A 24 24 0 0 1 60 390 L 60 122 A 24 24 0 0 1 72 101 L 256 22 Z" 
+          fill="url(#fullBgGrad)" stroke="url(#fullRimGrad)" stroke-width="14" stroke-linejoin="round" />
+
+    <!-- Reticle -->
+    <g opacity="0.4" stroke="#38bdf8" stroke-width="2">
+      <circle cx="256" cy="320" r="90" fill="none" stroke-dasharray="6 8" />
+      <line x1="120" y1="320" x2="392" y2="320" stroke-dasharray="6 6" />
+      <line x1="256" y1="190" x2="256" y2="420" stroke-dasharray="6 6" />
+    </g>
+
+    <!-- Molten Cut Path -->
+    <path d="M 130 376 C 165 345, 200 320, 256 320 C 322 320, 372 278, 390 215" 
+          fill="none" stroke="url(#fullKerfGrad)" stroke-width="12" stroke-linecap="round" filter="url(#fullLaserGlow)" />
+    <path d="M 130 376 C 165 345, 200 320, 256 320" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" />
+
+    <!-- Laser Torch -->
+    <rect x="228" y="44" width="56" height="34" rx="5" fill="url(#fullNozzleMetal)" stroke="#0f172a" stroke-width="2.5" />
+    <rect x="220" y="78" width="72" height="15" rx="3.5" fill="url(#fullBrassGrad)" stroke="#78350f" stroke-width="2" />
+    <polygon points="226,93 286,93 273,176 239,176" fill="url(#fullNozzleMetal)" stroke="#1e293b" stroke-width="2" />
+    <polygon points="239,176 273,176 265,216 247,216" fill="url(#fullBrassGrad)" stroke="#78350f" stroke-width="2" />
+    <rect x="249" y="216" width="14" height="8" rx="2" fill="#0f172a" />
+
+    <!-- Laser Beam -->
+    <line x1="256" y1="224" x2="256" y2="320" stroke="#ffffff" stroke-width="5" stroke-linecap="round" filter="url(#fullLaserGlow)" />
+    <polygon points="251,224 261,224 260,320 252,320" fill="url(#fullBeamGrad)" />
+
+    <!-- Plasma Spark -->
+    <circle cx="256" cy="320" r="42" fill="url(#fullPlasmaGlow)" />
+    <circle cx="256" cy="320" r="30" fill="none" stroke="#ffffff" stroke-width="2.8" opacity="0.85" />
+    <polygon points="256,254 263,313 322,320 263,327 256,386 249,327 190,320 249,313" fill="#ffffff" filter="url(#fullLaserGlow)" />
+    <polygon points="256,276 261,315 300,320 261,325 256,364 251,325 212,320 251,315" fill="#ffe600" opacity="0.95" transform="rotate(45 256 320)" />
+    <circle cx="256" cy="320" r="10" fill="#ffffff" />
+    <circle cx="310" cy="272" r="4.5" fill="#ffd000" />
+    <circle cx="204" cy="368" r="4" fill="#ff4500" />
+  </g>
+
+  <!-- High-Precision Vertical Divider Line -->
+  <line x1="150" y1="24" x2="150" y2="116" stroke="rgba(56, 189, 248, 0.25)" stroke-width="2" stroke-dasharray="4 4" />
+
+  <!-- Typography Lockup -->
+  <g transform="translate(172, 0)">
+    <!-- Main Title -->
+    <text x="0" y="56" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="900" letter-spacing="-0.02em" fill="#f8fafc">
+      CNC <tspan fill="url(#textCyan)">LASER</tspan> <tspan fill="url(#textOrange)">CPQ</tspan>
+    </text>
+
+    <!-- CAM Ready Pill Badge -->
+    <g transform="translate(378, 32)">
+      <rect x="0" y="0" width="134" height="26" rx="13" fill="url(#badgeGrad)" stroke="rgba(16, 185, 129, 0.45)" stroke-width="1.2" />
+      <circle cx="14" cy="13" r="4" fill="#10b981" />
+      <text x="26" y="17.5" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="#34d399" letter-spacing="0.05em">TRUMPF READY</text>
+    </g>
+
+    <!-- Subtitle: Core Capabilities -->
+    <text x="1" y="85" font-family="'Inter', -apple-system, sans-serif" font-size="14.5" font-weight="600" fill="#94a3b8" letter-spacing="0.01em">
+      PARAMETRIC DRAFTING <tspan fill="#38bdf8">•</tspan> AUTO-NESTING <tspan fill="#38bdf8">•</tspan> INSTANT QUOTING
+    </text>
+
+    <!-- Sub-tagline: CAM Systems -->
+    <text x="1" y="108" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="500" fill="#64748b" letter-spacing="0.06em">
+      TRUMPF <tspan fill="#334155">|</tspan> SIGMANEST <tspan fill="#334155">|</tspan> CYPCUT <tspan fill="#334155">|</tspan> AMADA DXF ENGINE
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,271 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient: Deep Industrial Titanium -->
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#141e30" />
+      <stop offset="50%" stop-color="#0b111e" />
+      <stop offset="100%" stop-color="#030712" />
+    </radialGradient>
+
+    <!-- Outer Rim Glow Gradient: Electric Cyan to Cobalt -->
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="40%" stop-color="#0284c7" />
+      <stop offset="70%" stop-color="#00f0ff" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+
+    <!-- Outer Rim Contrast Shadow -->
+    <linearGradient id="rimHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4" />
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Laser Nozzle Metal Gradient -->
+    <linearGradient id="nozzleMetal" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="20%" stop-color="#94a3b8" />
+      <stop offset="50%" stop-color="#f8fafc" />
+      <stop offset="80%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+
+    <!-- Brass / Copper Gas Collar Gradient -->
+    <linearGradient id="brassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#92400e" />
+      <stop offset="30%" stop-color="#f59e0b" />
+      <stop offset="50%" stop-color="#fef08a" />
+      <stop offset="75%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+
+    <!-- Laser Beam Vertical Gradient -->
+    <linearGradient id="beamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00f5ff" stop-opacity="0.8" />
+      <stop offset="40%" stop-color="#38bdf8" />
+      <stop offset="80%" stop-color="#00f5ff" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+
+    <!-- Molten Cut Kerf Gradient (Molten Orange-Amber to White) -->
+    <linearGradient id="kerfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="30%" stop-color="#ff7b00" />
+      <stop offset="60%" stop-color="#ffb700" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+
+    <!-- Plasma Bloom Core -->
+    <radialGradient id="plasmaGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="25%" stop-color="#fff59d" />
+      <stop offset="50%" stop-color="#ff9100" stop-opacity="0.9" />
+      <stop offset="75%" stop-color="#ff3d00" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#ff1744" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Cyan Ambient Glow -->
+    <radialGradient id="cyanHalo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.45" />
+      <stop offset="50%" stop-color="#0284c7" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Glow Filter -->
+    <filter id="laserGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur1" />
+      <feGaussianBlur stdDeviation="14" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="intenseGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer Protective Halo / Contrast Ring (Ensures visibility on black/white/colored backgrounds) -->
+  <path d="M 256 12 
+           L 448 94 
+           A 28 28 0 0 1 462 118
+           L 462 394 
+           A 28 28 0 0 1 448 418
+           L 256 500 
+           A 28 28 0 0 1 240 500
+           L 64 418 
+           A 28 28 0 0 1 50 394
+           L 50 118 
+           A 28 28 0 0 1 64 94
+           L 256 12 
+           Z" 
+        fill="#040711" 
+        stroke="#38bdf8" 
+        stroke-width="3" 
+        opacity="0.9" />
+
+  <!-- Base Plate: Machined Precision Chamfered Rounded Hexagon -->
+  <path d="M 256 22 
+           L 440 101 
+           A 24 24 0 0 1 452 122
+           L 452 390 
+           A 24 24 0 0 1 440 411
+           L 256 490 
+           A 24 24 0 0 1 244 490
+           L 72 411 
+           A 24 24 0 0 1 60 390
+           L 60 122 
+           A 24 24 0 0 1 72 101
+           L 256 22 
+           Z" 
+        fill="url(#bgGrad)" 
+        stroke="url(#rimGrad)" 
+        stroke-width="14" 
+        stroke-linejoin="round" />
+
+  <!-- Rim Top-Bevel Light Reflection -->
+  <path d="M 72 101 L 256 22 L 440 101" 
+        fill="none" 
+        stroke="url(#rimHighlight)" 
+        stroke-width="5" 
+        stroke-linecap="round" />
+
+  <!-- Inner Plate CAD Grid Contour -->
+  <path d="M 256 48 
+           L 426 121 
+           L 426 371 
+           L 256 444 
+           L 86 371 
+           L 86 121 
+           Z" 
+        fill="none" 
+        stroke="#1e293b" 
+        stroke-width="2.5" 
+        stroke-dasharray="8 6" />
+
+  <!-- CAD Coordinate Crosshairs & Precision Reticle -->
+  <g opacity="0.4" stroke="#38bdf8" stroke-width="2">
+    <!-- Center Target Reticle Circles -->
+    <circle cx="256" cy="320" r="105" fill="none" stroke="#0284c7" stroke-dasharray="5 7" />
+    <circle cx="256" cy="320" r="54" fill="none" stroke="#38bdf8" stroke-width="1.8" />
+    
+    <!-- Horizontal Crosshair with Precision Tick Marks -->
+    <line x1="106" y1="320" x2="406" y2="320" stroke-dasharray="6 6" />
+    <line x1="151" y1="311" x2="151" y2="329" stroke-width="2.5" />
+    <line x1="202" y1="314" x2="202" y2="326" stroke-width="1.8" />
+    <line x1="310" y1="314" x2="310" y2="326" stroke-width="1.8" />
+    <line x1="361" y1="311" x2="361" y2="329" stroke-width="2.5" />
+    
+    <!-- Vertical Crosshair Axis -->
+    <line x1="256" y1="180" x2="256" y2="425" stroke-dasharray="6 6" />
+    
+    <!-- CAD Dimension Angle Arc -->
+    <path d="M 330 320 A 74 74 0 0 0 308 268" fill="none" stroke="#38bdf8" stroke-width="2.2" />
+    <polygon points="308,268 318,272 312,278" fill="#38bdf8" />
+  </g>
+
+  <!-- Ambient Laser Plasma Glow Field -->
+  <circle cx="256" cy="320" r="130" fill="url(#cyanHalo)" />
+
+  <!-- Molten CAD Cut Kerf Path (Showing Laser Slicing the Steel Plate) -->
+  <g filter="url(#laserGlow)">
+    <!-- Hot Orange Toolpath Arc with Lead-in -->
+    <path d="M 130 376 C 165 345, 200 320, 256 320" 
+          fill="none" 
+          stroke="url(#kerfGrad)" 
+          stroke-width="12" 
+          stroke-linecap="round" />
+    <path d="M 256 320 C 322 320, 372 278, 390 215" 
+          fill="none" 
+          stroke="url(#kerfGrad)" 
+          stroke-width="9" 
+          stroke-linecap="round" 
+          stroke-dasharray="14 7" />
+    <!-- White Molten Core of Cut Kerf -->
+    <path d="M 130 376 C 165 345, 200 320, 256 320" 
+          fill="none" 
+          stroke="#ffffff" 
+          stroke-width="3.5" 
+          stroke-linecap="round" />
+  </g>
+
+  <!-- High-Precision CNC Laser Cutting Torch / Nozzle Assembly -->
+  <g id="laserTorch">
+    <!-- Upper Torch Housing / Collet -->
+    <rect x="228" y="44" width="56" height="34" rx="5" fill="url(#nozzleMetal)" stroke="#0f172a" stroke-width="2.5" />
+    <!-- Upper Flange / Gas Inlet Ring -->
+    <rect x="220" y="78" width="72" height="15" rx="3.5" fill="url(#brassGrad)" stroke="#78350f" stroke-width="2" />
+    <!-- Main Conical Nozzle Body -->
+    <polygon points="226,93 286,93 273,176 239,176" fill="url(#nozzleMetal)" stroke="#1e293b" stroke-width="2" />
+    <!-- Cooling Ribs / Gripping Grooves -->
+    <line x1="230" y1="113" x2="282" y2="113" stroke="#0f172a" stroke-width="3" />
+    <line x1="234" y1="128" x2="278" y2="128" stroke="#0f172a" stroke-width="3" />
+    <line x1="237" y1="143" x2="275" y2="143" stroke="#0f172a" stroke-width="3" />
+    <!-- Hardened Copper Tip -->
+    <polygon points="239,176 273,176 265,216 247,216" fill="url(#brassGrad)" stroke="#78350f" stroke-width="2" />
+    <!-- Micro Nozzle Orifice -->
+    <rect x="249" y="216" width="14" height="8" rx="2" fill="#0f172a" />
+    <!-- Tip Highlight Shimmer -->
+    <ellipse cx="256" cy="221" rx="5.5" ry="2" fill="#00f5ff" />
+  </g>
+
+  <!-- Focused Ultra-Intense Laser Beam -->
+  <g filter="url(#intenseGlow)">
+    <!-- Outer Laser Beam Cone -->
+    <polygon points="251,224 261,224 260,320 252,320" fill="url(#beamGrad)" />
+    <!-- Intense Inner White Core Filament -->
+    <line x1="256" y1="224" x2="256" y2="320" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" />
+    <!-- Coaxial Gas Jet Cone -->
+    <polygon points="246,224 266,224 270,318 242,318" fill="#38bdf8" opacity="0.3" />
+  </g>
+
+  <!-- Piercing Point Plasma Detonation / Spark Flare -->
+  <g id="plasmaSpark">
+    <!-- Outer Radial Plasma Heat Ball -->
+    <circle cx="256" cy="320" r="42" fill="url(#plasmaGlow)" />
+    
+    <!-- Shockwave Expansion Rings -->
+    <circle cx="256" cy="320" r="30" fill="none" stroke="#ffffff" stroke-width="2.8" opacity="0.85" />
+    <circle cx="256" cy="320" r="46" fill="none" stroke="#ff9100" stroke-width="1.8" stroke-dasharray="6 4" opacity="0.75" />
+
+    <!-- 8-Point Diamond Laser Starburst Flare -->
+    <polygon points="256,254 263,313 322,320 263,327 256,386 249,327 190,320 249,313" fill="#ffffff" filter="url(#laserGlow)" />
+    <!-- Secondary Angled Diamond Flare -->
+    <polygon points="256,276 261,315 300,320 261,325 256,364 251,325 212,320 251,315" fill="#ffe600" opacity="0.95" transform="rotate(45 256 320)" />
+
+    <!-- Ultra-White Core Singularity -->
+    <circle cx="256" cy="320" r="10" fill="#ffffff" />
+
+    <!-- Dynamic Molten Flying Sparks / Metal Ejecta -->
+    <!-- Top-Right Sparks -->
+    <circle cx="310" cy="272" r="4.5" fill="#ffd000" />
+    <line x1="256" y1="320" x2="320" y2="262" stroke="#ff9500" stroke-width="2.2" stroke-linecap="round" />
+    <circle cx="325" cy="256" r="2.8" fill="#ffffff" />
+    
+    <!-- Bottom-Right Sparks -->
+    <circle cx="316" cy="368" r="4" fill="#ff6b00" />
+    <line x1="256" y1="320" x2="336" y2="384" stroke="#ffd000" stroke-width="2" stroke-linecap="round" />
+    <circle cx="342" cy="390" r="2.5" fill="#ffffff" />
+
+    <!-- Left & Bottom Ejecta -->
+    <circle cx="190" cy="282" r="3.5" fill="#ff9500" />
+    <line x1="256" y1="320" x2="178" y2="276" stroke="#ffd000" stroke-width="1.8" stroke-linecap="round" />
+    <circle cx="204" cy="368" r="4" fill="#ff4500" />
+    <line x1="256" y1="320" x2="194" y2="390" stroke="#ff9500" stroke-width="2.2" stroke-linecap="round" />
+    <circle cx="188" cy="396" r="2.2" fill="#ffffff" />
+  </g>
+
+  <!-- Precision Pierce Badge P1 (Clean Industrial Vector Badge) -->
+  <g transform="translate(178, 230)">
+    <rect x="0" y="0" width="38" height="22" rx="11" fill="#0b1324" stroke="#10b981" stroke-width="2" />
+    <circle cx="11" cy="11" r="4" fill="#10b981" />
+    <text x="25" y="15" fill="#10b981" font-family="'JetBrains Mono', 'Segoe UI', monospace" font-size="11" font-weight="800" text-anchor="middle">P1</text>
+  </g>
+</svg>

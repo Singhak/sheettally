@@ -11,8 +11,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/assets/index-DEAyMc_i.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DegUXN02.css">
+    <script type="module" crossorigin src="/assets/index-BWQZ-eLR.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D6CshlWT.css">
   </head>
   <body>
     <!-- Top Navigation Header -->
@@ -218,105 +218,140 @@
 
       <!-- Center: 2D Interactive CAD Canvas & Telemetry -->
       <section class="panel panel-center" id="panelCenter">
-        <!-- Canvas Toolbar -->
-        <div class="canvas-header">
+        <!-- Slim Top Name / Status Bar (Green Area) -->
+        <div class="canvas-top-bar" id="canvasTopBar">
           <div class="canvas-status">
             <span class="status-indicator"></span>
             <span id="canvasTitle">Part Geometry Preview</span>
           </div>
-          <div class="canvas-right-controls">
+          <div class="canvas-top-telemetry">
+            <span class="telemetry-pill">2D CAM READY</span>
+          </div>
+        </div>
+
+        <!-- Slim Actions Toolbar (Red Area) -->
+        <div class="canvas-header canvas-slim-toolbar" id="canvasHeader">
+          <div class="canvas-right-controls canvas-full-controls">
             <!-- Cut Order Simulator Controls -->
             <div class="simulator-btn-group" id="simulatorControls">
-              <button class="sim-btn" id="btnSimulateCut" title="Simulate laser cut sequence (Holes first, Outer last)">
-                <span id="simBtnIcon">▶</span> <span id="simBtnText">Simulate Cut</span>
+              <button class="sim-btn slim-btn" id="btnSimulateCut" title="Simulate laser cut sequence (Holes first, Outer last)">
+                <span id="simBtnIcon">▶</span> <span id="simBtnText">Simulate</span>
               </button>
-              <select id="simSpeedSelect" class="sim-speed-select" title="Simulation Speed">
+              <select id="simSpeedSelect" class="sim-speed-select slim-select" title="Simulation Speed">
                 <option value="1">1x</option>
                 <option value="2" selected>2x</option>
                 <option value="5">5x</option>
                 <option value="10">10x</option>
               </select>
-              <button class="sim-pill-toggle active" id="btnToggleCamBadges" title="Toggle CAM cut order badges (①, ②, ③)">
-                CAM Badges
+              <button class="sim-pill-toggle slim-toggle active" id="btnToggleCamBadges" title="Toggle Hole Numbers & CAM cut order badges (①, ②, ③)">
+                ① Hole Numbers
               </button>
             </div>
 
             <!-- View Mode Switch: Single Part vs Sheet Nesting -->
-            <div class="view-switch-group">
-              <button class="view-btn active" id="btnViewPart">Part CAD</button>
-              <button class="view-btn" id="btnViewNesting">📊 Sheet Nesting</button>
-            </div>
-            <div class="units-toggle">
-              <button class="unit-btn" id="unitMm">MM</button>
-              <button class="unit-btn active" id="unitInch">INCH</button>
+            <div class="view-switch-group slim-switch">
+              <button class="view-btn slim-btn active" id="btnViewPart">Part</button>
+              <button class="view-btn slim-btn" id="btnViewNesting">📊 Nesting</button>
             </div>
 
+            <!-- Units Toggle -->
+            <div class="units-toggle slim-units">
+              <button class="unit-btn slim-unit-btn" id="unitMm">MM</button>
+              <button class="unit-btn slim-unit-btn active" id="unitInch">INCH</button>
+            </div>
+
+            <!-- 30-Second Video Demo Trigger (Slim) -->
+            <button class="nav-demo-btn slim-demo-btn" id="btnOpenDemoModal" title="Watch 30-Second Quick Tour">
+              <span class="demo-play-icon">▶</span>
+              <span class="demo-btn-label">Demo</span>
+              <span class="demo-badge-pulse">30s</span>
+            </button>
+
             <!-- Quick Export Preview Action -->
-            <button class="canvas-action-btn" id="btnExportImage" title="Export Client High-Res Render (PNG for WhatsApp / Proposal)">
-              📸 Export PNG
+            <button class="canvas-action-btn slim-action-btn" id="btnExportImage" title="Export Client High-Res Render (PNG for WhatsApp / Proposal)">
+              📸 Export
             </button>
           </div>
         </div>
 
-        <!-- Architectural CNC Jali & Gate Studio Toolbar -->
+        <!-- Architectural CNC Jali & Gate Studio Toolbar (Collapsible) -->
         <div id="gateStudioToolbar" class="gate-studio-toolbar hidden">
-          <div class="gate-tool-group">
-            <span class="gate-tool-label">View:</span>
-            <button class="gate-view-toggle active" id="btnJaliViewRealistic" title="Photorealistic Architectural Gate View with Finishes & Backlight">
-              ✨ Realistic Gate
-            </button>
-            <button class="gate-view-toggle" id="btnJaliViewCam" title="CypCut 2D CAM Wireframe & Toolpath">
-              📐 CAM Toolpath
-            </button>
-          </div>
-
-          <div class="gate-tool-divider"></div>
-
-          <div class="gate-tool-group" id="gateFinishGroup">
-            <span class="gate-tool-label">Finish:</span>
-            <div class="gate-finish-swatches">
-              <button class="finish-swatch active" data-finish="matte_black" title="Matte Black Powder Coat">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #2a303c, #111418);"></span>
-                <span class="swatch-name">Matte Black</span>
+          <!-- Expanded Main Toolbar Controls -->
+          <div class="gate-toolbar-main" id="gateToolbarMain">
+            <div class="gate-tool-group">
+              <span class="gate-tool-label">View:</span>
+              <button class="gate-view-toggle active" id="btnJaliViewRealistic" title="Photorealistic Architectural Gate View with Finishes & Backlight">
+                ✨ Realistic Gate
               </button>
-              <button class="finish-swatch" data-finish="royal_gold" title="Royal Brass / Antique Gold">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #fde047, #b45309);"></span>
-                <span class="swatch-name">Royal Gold</span>
-              </button>
-              <button class="finish-swatch" data-finish="corten_rust" title="Corten Weathered Rust Steel">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #ea580c, #7c2d12);"></span>
-                <span class="swatch-name">Corten Rust</span>
-              </button>
-              <button class="finish-swatch" data-finish="brushed_stainless" title="Satin Stainless Steel 304">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #f8fafc, #64748b);"></span>
-                <span class="swatch-name">Stainless 304</span>
-              </button>
-              <button class="finish-swatch" data-finish="champagne_bronze" title="Champagne Bronze">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #fbbf24, #78350f);"></span>
-                <span class="swatch-name">Bronze</span>
+              <button class="gate-view-toggle" id="btnJaliViewCam" title="CypCut 2D CAM Wireframe & Toolpath">
+                📐 CAM Toolpath
               </button>
             </div>
-          </div>
 
-          <div class="gate-tool-divider"></div>
+            <div class="gate-tool-divider"></div>
 
-          <div class="gate-tool-group" id="gateBacklightGroup">
-            <span class="gate-tool-label">Backlight:</span>
-            <div class="gate-backlight-pills">
-              <button class="backlight-pill active" data-backlight="warm_white" title="Warm 3000K LED Glow">💡 Warm 3000K</button>
-              <button class="backlight-pill" data-backlight="cool_white" title="Cool 6000K LED Glow">❄️ Cool 6000K</button>
-              <button class="backlight-pill" data-backlight="amber_gold" title="Sunset Amber Gold">🌅 Amber</button>
-              <button class="backlight-pill" data-backlight="none" title="Daylight / Off">Off</button>
+            <div class="gate-tool-group" id="gateFinishGroup">
+              <span class="gate-tool-label">Finish:</span>
+              <div class="gate-finish-swatches">
+                <button class="finish-swatch active" data-finish="matte_black" title="Matte Black Powder Coat">
+                  <span class="swatch-color" style="background: linear-gradient(135deg, #2a303c, #111418);"></span>
+                  <span class="swatch-name">Matte Black</span>
+                </button>
+                <button class="finish-swatch" data-finish="royal_gold" title="Royal Brass / Antique Gold">
+                  <span class="swatch-color" style="background: linear-gradient(135deg, #fde047, #b45309);"></span>
+                  <span class="swatch-name">Royal Gold</span>
+                </button>
+                <button class="finish-swatch" data-finish="corten_rust" title="Corten Weathered Rust Steel">
+                  <span class="swatch-color" style="background: linear-gradient(135deg, #ea580c, #7c2d12);"></span>
+                  <span class="swatch-name">Corten Rust</span>
+                </button>
+                <button class="finish-swatch" data-finish="brushed_stainless" title="Satin Stainless Steel 304">
+                  <span class="swatch-color" style="background: linear-gradient(135deg, #f8fafc, #64748b);"></span>
+                  <span class="swatch-name">Stainless 304</span>
+                </button>
+                <button class="finish-swatch" data-finish="champagne_bronze" title="Champagne Bronze">
+                  <span class="swatch-color" style="background: linear-gradient(135deg, #fbbf24, #78350f);"></span>
+                  <span class="swatch-name">Bronze</span>
+                </button>
+              </div>
             </div>
+
+            <div class="gate-tool-divider"></div>
+
+            <div class="gate-tool-group" id="gateBacklightGroup">
+              <span class="gate-tool-label">Backlight:</span>
+              <div class="gate-backlight-pills">
+                <button class="backlight-pill active" data-backlight="warm_white" title="Warm 3000K LED Glow">💡 Warm 3000K</button>
+                <button class="backlight-pill" data-backlight="cool_white" title="Cool 6000K LED Glow">❄️ Cool 6000K</button>
+                <button class="backlight-pill" data-backlight="amber_gold" title="Sunset Amber Gold">🌅 Amber</button>
+                <button class="backlight-pill" data-backlight="none" title="Daylight / Off">Off</button>
+              </div>
+            </div>
+
+            <div class="gate-tool-divider"></div>
+
+            <div class="gate-tool-group" id="gateTypeGroup">
+              <span class="gate-tool-label">Type:</span>
+              <button class="gate-type-btn active" data-gatetype="single_swing">Single Gate</button>
+              <button class="gate-type-btn" data-gatetype="double_swing">Double Swing</button>
+              <button class="gate-type-btn" data-gatetype="wall_panel">Wall Jali</button>
+            </div>
+
+            <!-- Fold Button for Gate Studio Toolbar -->
+            <button class="hud-fold-btn gate-fold-btn" id="btnFoldGateToolbar" title="Fold Gate Controls (Maximize Drawing Area)">
+              <span class="fold-btn-arrow">▲</span> Fold
+            </button>
           </div>
 
-          <div class="gate-tool-divider"></div>
-
-          <div class="gate-tool-group" id="gateTypeGroup">
-            <span class="gate-tool-label">Type:</span>
-            <button class="gate-type-btn active" data-gatetype="single_swing">Single Gate</button>
-            <button class="gate-type-btn" data-gatetype="double_swing">Double Swing</button>
-            <button class="gate-type-btn" data-gatetype="wall_panel">Wall Jali</button>
+          <!-- Folded Compact State Bar -->
+          <div class="gate-folded-bar hidden" id="gateFoldedBar" title="Click to Expand Gate Studio Controls">
+            <div class="gate-folded-info">
+              <span class="gate-folded-badge">✨ Architectural Gate Studio</span>
+              <span class="gate-folded-summary" id="gateFoldedSummary">Matte Black • Warm 3000K • Single Gate</span>
+            </div>
+            <button class="hud-expand-btn gate-expand-btn" id="btnExpandGateToolbar" title="Expand Gate Studio Controls">
+              <span class="expand-btn-arrow">▼</span> Expand
+            </button>
           </div>
         </div>
 
@@ -363,58 +398,83 @@
           </div>
         </div>
 
-        <!-- CypCut Layer Legend Bar (Visible in CAM Toolpath View) -->
-        <div class="cam-legend-bar" id="camLegendBar">
-          <div class="legend-item"><span class="legend-dot dot-outer"></span> Layer 0 (White/Green): Outer Cut</div>
-          <div class="legend-item"><span class="legend-dot dot-inner"></span> Layer 1 (Yellow): Inner Cutouts</div>
-          <div class="legend-item"><span class="legend-dot dot-center"></span> Crosshair: Center Pierce Point</div>
-        </div>
+        <!-- Bottom Telemetry & Specifications Section (Collapsible) -->
+        <div class="canvas-bottom-hud-wrapper" id="canvasBottomHud">
+          <!-- Folded Compact Restore Bar (Visible only when folded) -->
+          <div class="bottom-hud-folded-bar hidden" id="bottomHudFoldedBar" title="Click to Expand Telemetry & Specifications">
+            <div class="bottom-hud-folded-info">
+              <span class="bottom-hud-folded-badge">📊 Telemetry & Specs</span>
+              <span class="bottom-hud-folded-summary" id="bottomHudFoldedSummary">0.00 in • 0 Pierces • 0.00 lbs • 0" × 0"</span>
+            </div>
+            <button class="hud-expand-btn bottom-hud-expand-btn" id="btnExpandBottomHud" title="Expand Telemetry & Specifications">
+              <span class="expand-btn-arrow">▲</span> Expand
+            </button>
+          </div>
 
-        <!-- Architectural Gate Specifications Legend (Shown in Realistic Gate mode) -->
-        <div class="arch-legend-bar hidden" id="archLegendBar">
-          <div class="legend-item"><span class="arch-legend-icon">🎨</span> <span class="arch-legend-label">Finish:</span> <span class="arch-legend-val" id="archLegendFinish">Matte Black</span></div>
-          <div class="legend-item"><span class="arch-legend-icon">💡</span> <span class="arch-legend-label">Lighting:</span> <span class="arch-legend-val" id="archLegendLight">Warm 3000K</span></div>
-          <div class="legend-item"><span class="arch-legend-icon">🚪</span> <span class="arch-legend-label">Frame:</span> <span class="arch-legend-val" id="archLegendFrame">50mm Box Tube</span></div>
-          <div class="legend-item"><span class="arch-legend-icon">🔩</span> <span class="arch-legend-label">Hardware:</span> <span class="arch-legend-val" id="archLegendHardware">Bullet Hinges + Bar Pull</span></div>
-        </div>
+          <!-- Expanded Content Container -->
+          <div class="bottom-hud-expanded-content" id="bottomHudExpandedContent">
+            <!-- Floating Fold Button in top-right -->
+            <button class="hud-fold-btn bottom-hud-fold-btn" id="btnFoldBottomHud" title="Fold Metrics & Specs (Maximize Drawing Area)">
+              <span class="fold-btn-arrow">▼</span> Fold
+            </button>
 
-        <!-- Real-time HUD Metrics Bar -->
-        <div class="hud-bar">
-          <div class="hud-item">
-            <span class="hud-label">Cut Perimeter</span>
-            <span class="hud-val" id="hudCutLength">0.00 mm</span>
-          </div>
-          <div class="hud-item">
-            <span class="hud-label">Piercing Points</span>
-            <span class="hud-val" id="hudPierces">0</span>
-          </div>
-          <div class="hud-item">
-            <span class="hud-label">Est. Part Weight</span>
-            <span class="hud-val" id="hudWeight">0.00 kg</span>
-          </div>
-          <div class="hud-item">
-            <span class="hud-label">Bounding Box</span>
-            <span class="hud-val" id="hudBoundingBox">0 x 0 mm</span>
-          </div>
-        </div>
+            <!-- CypCut Layer Legend Bar (Visible in CAM Toolpath View) -->
+            <div class="cam-legend-bar" id="camLegendBar">
+              <div class="legend-item"><span class="legend-dot dot-outer"></span> Layer 0 (White/Green): Outer Cut</div>
+              <div class="legend-item"><span class="legend-dot dot-inner"></span> Layer 1 (Yellow): Inner Cutouts</div>
+              <div class="legend-item"><span class="legend-dot dot-center"></span> Crosshair: Center Pierce Point</div>
+              <div class="legend-item legend-toggle-item active" id="legendBadgeToggle" title="Click to toggle Hole Numbers / CAM Cut Order Badges">
+                <span class="legend-badge-pill">①</span> Hole Numbers & Badges
+              </div>
+            </div>
 
-        <!-- 2D Sheet Nesting Telemetry Bar (Visible when quantity > 1 or in nesting mode) -->
-        <div class="nesting-hud-bar" id="nestingHudBar">
-          <div class="nest-hud-item">
-            <span class="nest-hud-label">Sheets Required</span>
-            <span class="nest-hud-val" id="nestHudSheets">1 Sheet</span>
-          </div>
-          <div class="nest-hud-item">
-            <span class="nest-hud-label">Sheet Utilization</span>
-            <span class="nest-hud-val" id="nestHudUtil">0.0%</span>
-          </div>
-          <div class="nest-hud-item">
-            <span class="nest-hud-label">Skeleton Scrap</span>
-            <span class="nest-hud-val" id="nestHudScrap">0.00 kg</span>
-          </div>
-          <div class="nest-hud-item">
-            <span class="nest-hud-label">Reusable Remnant</span>
-            <span class="nest-hud-val" id="nestHudRemnant">0 × 0 mm</span>
+            <!-- Architectural Gate Specifications Legend (Shown in Realistic Gate mode) -->
+            <div class="arch-legend-bar hidden" id="archLegendBar">
+              <div class="legend-item"><span class="arch-legend-icon">🎨</span> <span class="arch-legend-label">Finish:</span> <span class="arch-legend-val" id="archLegendFinish">Matte Black</span></div>
+              <div class="legend-item"><span class="arch-legend-icon">💡</span> <span class="arch-legend-label">Lighting:</span> <span class="arch-legend-val" id="archLegendLight">Warm 3000K</span></div>
+              <div class="legend-item"><span class="arch-legend-icon">🚪</span> <span class="arch-legend-label">Frame:</span> <span class="arch-legend-val" id="archLegendFrame">50mm Box Tube</span></div>
+              <div class="legend-item"><span class="arch-legend-icon">🔩</span> <span class="arch-legend-label">Hardware:</span> <span class="arch-legend-val" id="archLegendHardware">Bullet Hinges + Bar Pull</span></div>
+            </div>
+
+            <!-- Real-time HUD Metrics Bar -->
+            <div class="hud-bar">
+              <div class="hud-item">
+                <span class="hud-label">Cut Perimeter</span>
+                <span class="hud-val" id="hudCutLength">0.00 mm</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">Piercing Points</span>
+                <span class="hud-val" id="hudPierces">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">Est. Part Weight</span>
+                <span class="hud-val" id="hudWeight">0.00 kg</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">Bounding Box</span>
+                <span class="hud-val" id="hudBoundingBox">0 x 0 mm</span>
+              </div>
+            </div>
+
+            <!-- 2D Sheet Nesting Telemetry Bar (Visible when quantity > 1 or in nesting mode) -->
+            <div class="nesting-hud-bar" id="nestingHudBar">
+              <div class="nest-hud-item">
+                <span class="nest-hud-label">Sheets Required</span>
+                <span class="nest-hud-val" id="nestHudSheets">1 Sheet</span>
+              </div>
+              <div class="nest-hud-item">
+                <span class="nest-hud-label">Sheet Utilization</span>
+                <span class="nest-hud-val" id="nestHudUtil">0.0%</span>
+              </div>
+              <div class="nest-hud-item">
+                <span class="nest-hud-label">Skeleton Scrap</span>
+                <span class="nest-hud-val" id="nestHudScrap">0.00 kg</span>
+              </div>
+              <div class="nest-hud-item">
+                <span class="nest-hud-label">Reusable Remnant</span>
+                <span class="nest-hud-val" id="nestHudRemnant">0 × 0 mm</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -670,13 +730,11 @@
               <div class="admin-title-row">
                 <div class="admin-title-left">
                   <div class="admin-icon-box">⚙️</div>
-                  <div class="admin-title-text-group">
-                    <h3 class="admin-heading">Shop Admin & Rates</h3>
-                    <span class="admin-sub">Tune shop steel rates, cutting fees & CAM defaults. All changes auto-save.</span>
-                  </div>
+                  <h3 class="admin-heading">Shop Admin & Rates</h3>
                 </div>
                 <span id="storageBadge" class="save-badge">💾 Auto-Saved</span>
               </div>
+              <p class="admin-sub">Tune shop steel rates, cutting fees & CAM defaults. All changes auto-save.</p>
             </div>
 
             <!-- Section 1: Shop Profile & Minimums -->
@@ -817,8 +875,42 @@
       </div>
     </div>
 
+    <!-- 30-Second Video Demo & Quick-Start Modal -->
+    <div id="demoVideoModal" class="modal-backdrop hidden">
+      <div class="modal-card demo-modal-card">
+        <div class="modal-header demo-modal-header">
+          <div class="demo-header-title-wrap">
+            <span class="demo-header-badge">⚡ QUICK TOUR</span>
+            <h3 class="demo-modal-title">Browser CAD/CAM & Quoting in 30 Seconds</h3>
+          </div>
+          <button id="closeDemoModalBtn" class="close-btn" title="Close (Esc)">&times;</button>
+        </div>
+
+        <div class="modal-body demo-modal-body" style="padding: 1rem 1.25rem 1.25rem;">
+          <!-- Video Player Container (Plays public demo video directly) -->
+          <div class="demo-player-container" id="demoPlayerContainer">
+            <video id="demoLocalVideo" class="demo-video-element" controls autoplay playsinline preload="auto">
+              <source src="/demo_cnc_quoting_engine.webm" type="video/webm">
+              <source src="/demo.mp4" type="video/mp4">
+              Your browser does not support HTML5 video.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toastNotification" class="toast hidden">📋 Quotation copied to clipboard!</div>
 
+    <script>
+      // Silent visitor analytics (no visible parameters needed)
+      try {
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon('/ping.php');
+        } else {
+          fetch('/ping.php', { method: 'POST', keepalive: true }).catch(function(){});
+        }
+      } catch (e) {}
+    </script>
   </body>
 </html>

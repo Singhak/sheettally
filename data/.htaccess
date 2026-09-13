@@ -1,0 +1,9 @@
+# Protect SQLite database and logs from direct public downloads
+<FilesMatch "\.(sqlite|db|csv)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</FilesMatch>

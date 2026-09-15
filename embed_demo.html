@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bob's Precision Metal Fab | Milwaukee, WI — Online Laser Quoting Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      line-height: 1.6;
+    }
+    header {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .shop-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .shop-logo-badge {
+      background: #0284c7;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.25rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+    }
+    .shop-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .shop-sub {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+    nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover, nav a.active {
+      color: #38bdf8;
+    }
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(2, 132, 199, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+      padding: 4px 14px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      max-width: 750px;
+      margin: 0 auto 2rem;
+    }
+    .widget-section {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+    .widget-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .widget-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    .widget-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .demo-switch-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .demo-btn {
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .demo-btn:hover, .demo-btn.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+    }
+    footer {
+      background: #090d16;
+      border-top: 1px solid #1e293b;
+      padding: 2rem;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sample Fabricator Header -->
+  <header>
+    <div class="shop-brand">
+      <div class="shop-logo-badge">BOB'S</div>
+      <div>
+        <div class="shop-name">Bob's Precision Metal & Laser Fab</div>
+        <div class="shop-sub">Custom Sheet Metal Fabrication • Milwaukee, WI</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Capabilities (6kW Trumpf)</a>
+      <a href="#" class="active">⚡ Instant Online Quote</a>
+      <a href="#">Materials & Stock</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Banner on Host Website -->
+  <section class="hero">
+    <div class="hero-badge">⚡ Live Embeddable Widget Demo</div>
+    <h1>Drop Instant Laser Quoting Directly Onto Your Website</h1>
+    <p>
+      Independent US job shops use this single-line script tag to turn their existing WordPress, Wix, Squarespace, or Webflow website into an automated 2D laser quoting storefront.
+    </p>
+  </section>
+
+  <!-- Main Quoting Widget Container -->
+  <section class="widget-section">
+    <div class="widget-card">
+      <div class="widget-header-bar">
+        <div class="widget-title">
+          <span>📐</span>
+          <span>Interactive Laser Quoting & 2D Nesting Canvas (Embedded via widget.js)</span>
+        </div>
+        <div class="demo-switch-bar">
+          <span style="font-size: 0.85rem; color: #94a3b8;">Widget Mode:</span>
+          <button class="demo-btn active" id="btnModeInline">Inline Canvas</button>
+          <button class="demo-btn" id="btnModeFloating">Floating Badge</button>
+        </div>
+      </div>
+
+      <!-- Single-line Script Tag Demonstration -->
+      <div id="laserQuotingContainer">
+        <!-- The widget script mounts the quoting engine right here -->
+        <script
+          src="/widget.js"
+          data-shop-id="bobs-precision-milwaukee"
+          data-currency="USD"
+          data-view="industrial"
+          data-theme="dark"
+          data-mode="inline"
+          data-height="820px"
+          data-container="#laserQuotingContainer"
+        ></script>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Bob's Precision Metal Fab LLC • 1204 Industrial Way, Milwaukee, WI • NAICS 332813 • Net 30 Terms Available</p>
+    <p style="margin-top: 6px; font-size: 0.8rem;">Quoting Widget Powered by US CNC Laser CPQ Engine</p>
+  </footer>
+
+  <script>
+    document.getElementById('btnModeInline').onclick = function() {
+      window.location.search = '';
+    };
+    document.getElementById('btnModeFloating').onclick = function() {
+      alert('In floating launcher mode, a sticky "⚡ Get Instant Laser Quote" badge appears in the bottom right corner of your site that opens a full modal upon clicking!');
+    };
+  </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 <?php
 // ====================================================================
 // SheetTally - Clean Demo Redirect & Tracker (SQLite)
-// Accessible as: https://sheettally.infynetic.com/demo
+// Accessible as: https://sheetdxf.com/demo
 // (No parameters, no .php in URL, 100% natural)
 // ====================================================================
 
@@ -87,5 +87,5 @@ if (!preg_match($bot_pattern, $user_agent)) {
 
 // Redirect instantly to root application
 header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Location: https://sheettally.infynetic.com/");
+header("Location: https://sheetdxf.com/");
 exit;

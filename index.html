@@ -17,8 +17,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/assets/index-VYZbSz0Y.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CiuiDvVz.css">
+    <script type="module" crossorigin src="/assets/index-CQbL3l_C.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CIxP4aEz.css">
   </head>
   <body>
     <!-- Top Navigation Header -->
@@ -74,9 +74,9 @@
           </button>
         </div>
 
-        <div class="cam-preset-badge" id="navCamBadge" title="Selected CAM Profile: Trumpf Laser">
+        <div class="cam-preset-badge" id="navCamBadge" title="Selected CAM Profile: Standard Machine Layers (CUT_OUTER / CUT_INNER)">
           <span class="badge-dot"></span>
-          <span id="navCamName">Trumpf</span>
+          <span id="navCamName">Standard CAM</span>
         </div>
 
         <!-- Embed Widget Script Modal Launcher -->
@@ -110,14 +110,67 @@
           </button>
         </div>
 
-        <!-- Input Mode Tabs -->
+        <!-- Input Mode Tabs (Option A: Upload 2D DXF is Primary Default) -->
         <div class="tab-group">
-          <button class="tab-btn active" id="tabParametric">Parametric Builder</button>
-          <button class="tab-btn" id="tabUpload">Upload 2D DXF</button>
+          <button class="tab-btn active" id="tabUpload">📁 Upload 2D DXF</button>
+          <button class="tab-btn" id="tabParametric">⚙️ Parametric Builder</button>
         </div>
 
-        <!-- Parametric Generator Section -->
-        <div id="parametricContainer" class="config-section">
+        <!-- Upload DXF Section (Default Landing Mode) -->
+        <div id="uploadContainer" class="config-section">
+          <div class="upload-dropzone" id="dropzone" title="Click or Drag DXF file here">
+            <div class="upload-icon">📥</div>
+            <div class="upload-title">Drop 2D DXF File Here</div>
+            <div class="upload-sub">Auto-detects scale • Sanitizes topology • Instant quote</div>
+            <div class="upload-btn-wrap" style="margin-top: 0.65rem;">
+              <button type="button" class="btn btn-sm btn-primary" id="btnBrowseDxf" style="font-size: 0.8rem; padding: 0.35rem 0.85rem; pointer-events: none;">
+                📂 Browse DXF File
+              </button>
+            </div>
+            <div class="upload-formats-badge" style="font-size: 0.68rem; color: #94a3b8; margin-top: 0.6rem; font-family: var(--font-mono);">
+              Supports AutoCAD ASCII DXF (Lines, Arcs, Polylines, Splines)
+            </div>
+            <input type="file" id="dxfFileInput" accept=".dxf" class="file-input-hidden" />
+          </div>
+          <div id="uploadFileInfo" class="file-info hidden">
+            <div class="file-info-header">
+              <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
+                <span style="font-size: 0.85rem; flex-shrink: 0;">📄</span>
+                <span class="file-name" id="loadedFileName" title="Uploaded DXF">filename.dxf</span>
+              </div>
+              <span class="file-status">✓ Validated</span>
+            </div>
+            <!-- DXF Unit Verification & Switcher Bar -->
+            <div id="dxfUnitConfirmBar" class="dxf-unit-bar">
+              <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
+                <span style="flex-shrink: 0;">📏</span>
+                <span id="dxfDetectedDims" style="color: #f1f5f9; font-weight: 600; font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Size: 0.00" × 0.00"</span>
+                <span id="dxfUnitBadge" style="background: #0284c7; color: #fff; padding: 1px 5px; border-radius: 3px; font-size: 0.66rem; font-weight: 700; flex-shrink: 0;">Inches</span>
+              </div>
+              <button type="button" id="btnToggleDxfUnits" class="btn btn-xs btn-secondary" style="font-size: 0.72rem; padding: 3px 8px; flex-shrink: 0; border-color: rgba(56,189,248,0.4); white-space: nowrap;" title="Switch DXF interpretation between Inches and Millimeters">
+                🔄 Switch to mm
+              </button>
+            </div>
+            <div id="dxfSmallDimWarning" class="dxf-dim-warning hidden" style="font-size: 0.74rem; color: #f59e0b; margin-top: 4px;">
+              ⚠️ Dimensions appear small (&lt; 25). Confirm if drawn in Inches or MM.
+            </div>
+
+            <!-- Multi-Part DXF Intake Cards Section (ToolpathCloud Style) -->
+            <div id="dxfPartsSection" class="dxf-parts-section hidden" style="margin-top: 0.75rem;">
+              <div class="dxf-parts-header">
+                <span class="dxf-parts-title">PARTS IN DXF (<span id="dxfPartsCount">1</span>)</span>
+                <span class="dxf-parts-hint">Click part to view</span>
+              </div>
+              <div id="dxfPartsList" class="dxf-parts-list"></div>
+              <button type="button" id="btnAddAllPartsToCart" class="btn btn-sm btn-primary" style="width: 100%; margin-top: 0.5rem; font-size: 0.78rem;">
+                ⚡ Add All Parts to Nesting Sheet / RFQ
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Parametric Generator Section (Fast Standard CAD Builder) -->
+        <div id="parametricContainer" class="config-section hidden">
           <!-- Part Type Selector -->
           <div class="form-group">
             <label class="form-label">Part Geometry Family</label>
@@ -135,36 +188,6 @@
           <div id="dynamicControls" class="dynamic-controls"></div>
         </div>
 
-        <!-- Upload DXF Section -->
-        <div id="uploadContainer" class="config-section hidden">
-          <div class="upload-dropzone" id="dropzone">
-            <div class="upload-icon">📥</div>
-            <div class="upload-title">Drop 2D DXF File Here</div>
-            <div class="upload-sub">Auto-cleans micro-gaps, layers & duplicate lines</div>
-            <input type="file" id="dxfFileInput" accept=".dxf" class="file-input-hidden" />
-          </div>
-          <div id="uploadFileInfo" class="file-info hidden">
-            <div class="file-info-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-              <span class="file-name" id="loadedFileName">filename.dxf</span>
-              <span class="file-status">Sanitized & Validated</span>
-            </div>
-            <!-- DXF Unit Verification & Switcher Bar -->
-            <div id="dxfUnitConfirmBar" class="dxf-unit-bar" style="display: flex; align-items: center; justify-content: space-between; background: rgba(2,132,199,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 6px; padding: 6px 10px; margin-top: 6px;">
-              <div style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
-                <span>📏</span>
-                <span id="dxfDetectedDims" style="color: #f1f5f9; font-weight: 600;">Size: 0.00" × 0.00"</span>
-                <span id="dxfUnitBadge" style="background: #0284c7; color: #fff; padding: 1px 6px; border-radius: 3px; font-size: 0.7rem; font-weight: 700;">Inches</span>
-              </div>
-              <button type="button" id="btnToggleDxfUnits" class="btn btn-xs btn-secondary" style="font-size: 0.74rem; padding: 3px 8px; border-color: rgba(56,189,248,0.4);" title="Switch DXF interpretation between Inches and Millimeters">
-                🔄 Switch to mm
-              </button>
-            </div>
-            <div id="dxfSmallDimWarning" class="dxf-dim-warning hidden" style="font-size: 0.74rem; color: #f59e0b; margin-top: 4px;">
-              ⚠️ Dimensions appear small (&lt; 25). Confirm if drawn in Inches or MM.
-            </div>
-          </div>
-        </div>
-
         <hr class="divider" />
 
         <!-- Material, Assist Gas & Sheet Selection -->
@@ -177,6 +200,32 @@
           <div class="form-group">
             <label class="form-label" for="gaugeSelect">Sheet Thickness / Gauge</label>
             <select id="gaugeSelect" class="form-select"></select>
+          </div>
+
+          <!-- Cutting Process Selector (Fiber Laser / Waterjet / HD Plasma) -->
+          <div class="form-group" id="cuttingProcessGroup">
+            <label class="form-label" for="cuttingProcessSelect">Cutting Process</label>
+            <select id="cuttingProcessSelect" class="form-select">
+              <option value="laser" selected>⚡ Fiber Laser (High Precision &amp; Speed)</option>
+              <option value="waterjet">💧 Waterjet (Cold Cut • Zero HAZ • Heavy Plate)</option>
+              <option value="plasma">🔥 HD Plasma (Heavy Structural Plate)</option>
+            </select>
+          </div>
+
+          <!-- Hole Cutting & DFM Auto-Deselection Box (ToolpathCloud Style) -->
+          <div class="form-group" id="holeSelectionBox" style="display: none;">
+            <div class="hole-selection-card">
+              <div class="hole-selection-header">
+                <span class="hole-selection-title">Holes &amp; Pockets:</span>
+                <button type="button" class="hole-toggle-pill" id="btnToggleHoleCut" title="Toggle between cutting all holes vs skipping undersized">
+                  <span class="hole-pill-icon">◉</span>
+                  <span id="holeToggleLabel">Cut All Holes</span>
+                </button>
+              </div>
+              <div id="holeAutoSkipNotice" class="hole-skip-notice hidden">
+                ⚠️ <span id="holeSkipCountText">0 holes</span> smaller than plate thickness (<span id="holeSkipThickText">0 mm</span>) auto-skipped to prevent blowout.
+              </div>
+            </div>
           </div>
 
           <!-- Assist Gas Selector -->
@@ -431,10 +480,48 @@
             </div>
           </div>
 
+          <!-- Floating CAD Measure HUD Pill (Ultra-Compact Single-Row CAD Ribbon) -->
+          <div class="measure-hud-pill hidden" id="measureHudPill" title="Drag anywhere to reposition">
+            <div class="measure-hud-drag-handle" title="Drag to reposition">
+              <span class="measure-hud-icon">📐</span>
+              <span class="measure-hud-badge" id="measureSnapBadge">SNAP</span>
+            </div>
+            <div class="measure-hud-sep"></div>
+            <div class="measure-hud-item highlight" title="Direct Distance (D)">
+              <span class="m-label">D</span>
+              <span class="m-val" id="measureValDist">0.000 in</span>
+              <span class="m-sub" id="measureValDistAlt">0.0 mm</span>
+            </div>
+            <div class="measure-hud-sep"></div>
+            <div class="measure-hud-item" title="Horizontal Offset (Delta X)">
+              <span class="m-label">ΔX</span>
+              <span class="m-val" id="measureValDx">0.000 in</span>
+            </div>
+            <div class="measure-hud-sep"></div>
+            <div class="measure-hud-item" title="Vertical Offset (Delta Y)">
+              <span class="m-label">ΔY</span>
+              <span class="m-val" id="measureValDy">0.000 in</span>
+            </div>
+            <div class="measure-hud-sep"></div>
+            <div class="measure-hud-item" title="Angle from Horizontal">
+              <span class="m-label">θ</span>
+              <span class="m-val" id="measureValAngle">0.0°</span>
+            </div>
+            <div class="measure-hud-sep"></div>
+            <div class="measure-hud-tip-compact" id="measureHudTip" title="Guidance / Hotkeys">
+              💡 Click 1st pt
+            </div>
+            <button class="measure-hud-close" id="btnCloseMeasureHud" title="Exit Measure Mode (Esc)">✕</button>
+          </div>
+
           <div id="svgContainer" class="svg-container"></div>
+
+          <!-- Floating Bounding Box Envelope Badge (FabEngineer Standard) -->
+          <div class="canvas-bbox-badge" id="canvasBboxBadge" title="Part Envelope Bounding Box">W: 0.00 in × H: 0.00 in</div>
 
           <!-- Floating Interactive Zoom / Pan Controls -->
           <div class="canvas-zoom-controls" id="canvasZoomControls">
+            <button class="zoom-btn zoom-measure-btn" id="btnMeasureTool" title="Measure Distance, ΔX, ΔY (Hot-key: M)">📐 Measure</button>
             <button class="zoom-btn" id="btnZoomIn" title="Zoom In (or Scroll Wheel Up)">➕</button>
             <span class="zoom-display" id="zoomLevelDisplay">100%</span>
             <button class="zoom-btn" id="btnZoomOut" title="Zoom Out (or Scroll Wheel Down)">➖</button>
@@ -462,13 +549,15 @@
               <span class="fold-btn-arrow">▼</span> Fold
             </button>
 
-            <!-- CypCut Layer Legend Bar (Visible in CAM Toolpath View) -->
+            <!-- CypCut / FabEngineer Layer Legend Bar (Visible in CAM Toolpath View) -->
             <div class="cam-legend-bar" id="camLegendBar">
-              <div class="legend-item"><span class="legend-dot dot-outer"></span> Layer 0 (White/Green): Outer Cut</div>
-              <div class="legend-item"><span class="legend-dot dot-inner"></span> Layer 1 (Yellow): Inner Cutouts</div>
-              <div class="legend-item"><span class="legend-dot dot-center"></span> Crosshair: Center Pierce Point</div>
+              <div class="legend-item"><span class="legend-dot dot-outer"></span> Green: Outer Cut</div>
+              <div class="legend-item"><span class="legend-dot" style="background: #38bdf8;"></span> Cyan: Closed Cuts</div>
+              <div class="legend-item"><span class="legend-dot" style="background: #f59e0b;"></span> Amber: Open Gaps</div>
+              <div class="legend-item"><span class="legend-dot" style="background: #ef4444;"></span> Red: Collisions</div>
+              <div class="legend-item"><span class="legend-dash" style="border-top: 2px dashed #22c55e; width: 14px; display: inline-block; vertical-align: middle;"></span> Green Dashes: Bounding Box</div>
               <div class="legend-item legend-toggle-item active" id="legendBadgeToggle" title="Click to toggle Hole Numbers / CAM Cut Order Badges">
-                <span class="legend-badge-pill">①</span> Hole Numbers & Badges
+                <span class="legend-badge-pill">①</span> Hole Numbers
               </div>
             </div>
 

@@ -1,0 +1,45 @@
+# SheetDXF (https://sheetdxf.com)
+# Robots.txt for Web Crawlers, Search Engines, and AI / LLM Agents
+
+User-agent: *
+Allow: /
+Disallow: /data/
+Disallow: /api/private/
+Disallow: /*.sqlite
+Disallow: /ping.php?*
+
+# Allow Generative AI & Large Language Model Crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# LLM Direct Context Documentation
+# Standard format for AI discovery: https://sheetdxf.com/llms.txt
+
+Sitemap: https://sheetdxf.com/sitemap.xml

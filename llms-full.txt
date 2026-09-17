@@ -1,0 +1,96 @@
+# SheetDXF Comprehensive Technical Specification & AI Documentation
+
+## 1. Overview & Architecture
+SheetDXF (https://sheetdxf.com) is a client-side, browser-based CPQ (Configure, Price, Quote) and 2D CAD/CAM engine for precision CNC laser cutting and sheet metal fabrication.
+- **Client Technology**: TypeScript, HTML5 Canvas, SVG Vector Engine, Vite
+- **Zero Backend Dependency**: All DXF parsing, geometric repairing, polygon offseting, nesting, and costing run locally in the browser with Web Workers.
+- **Target Audience**: Custom sheet metal job shops, precision laser cutting services, manufacturing estimators, and mechanical engineers.
+
+## 2. Supported File Formats & Geometry Engine
+- **Input Formats**:
+  - AutoCAD DXF (ASCII DXF R12 through 2018): ENTITIES section parsing including `LINE`, `LWPOLYLINE`, `POLYLINE`, `ARC`, `CIRCLE`, `SPLINE`.
+  - Scalable Vector Graphics (`.svg`): Path parsing with quadratic & cubic bezier curve flattening.
+  - Multi-part DXFs: Automatic separation into discrete parts based on bounding box clustering and closed outer topology.
+- **Geometry Sanitization**:
+  - Automatic tolerance-based endpoint snapping (default 0.05mm / 0.002").
+  - Duplicate segment removal and colinear segment simplification.
+  - Directional winding normalization (outer perimeters counter-clockwise, internal holes clockwise).
+- **DFM Analysis**:
+  - Hole Blowout Check: Compares hole diameter ($D$) to sheet thickness ($T$). If $D < T$ on steel/aluminum, flags blowout risk.
+  - Minimum web thickness and tab spacing verification.
+
+## 3. Calibrated Fiber Laser Feed Tables (IPM & Piercing Delays)
+
+### A36 Carbon / Mild Steel (Oxygen O2 / Nitrogen N2 Assist)
+- 16 Gauge (0.0598"): 4kW = 550 IPM, 6kW = 780 IPM, Pierce = 0.05s
+- 14 Gauge (0.0747"): 4kW = 480 IPM, 6kW = 680 IPM, Pierce = 0.05s
+- 12 Gauge (0.1046"): 4kW = 380 IPM, 6kW = 540 IPM, Pierce = 0.06s
+- 11 Gauge (0.1196"): 4kW = 320 IPM, 6kW = 420 IPM, Pierce = 0.08s
+- 10 Gauge (0.1345"): 4kW = 260 IPM, 6kW = 360 IPM, Pierce = 0.10s
+- 3/16" Plate (0.1875"): 4kW = 190 IPM, 6kW = 280 IPM, Pierce = 0.18s
+- 1/4" Plate (0.2500"): 4kW = 150 IPM, 6kW = 240 IPM, Pierce = 0.25s
+- 3/8" Plate (0.3750"): 4kW = 75 IPM, 6kW = 130 IPM, Pierce = 0.60s
+- 1/2" Plate (0.5000"): 4kW = 45 IPM, 6kW = 75 IPM, Pierce = 1.20s
+
+### 304 & 316 Stainless Steel (High-Pressure Nitrogen N2 Assist)
+- 20 Gauge (0.0359"): 4kW = 850 IPM, 6kW = 1150 IPM, Pierce = 0.02s
+- 16 Gauge (0.0598"): 4kW = 520 IPM, 6kW = 760 IPM, Pierce = 0.04s
+- 14 Gauge (0.0747"): 4kW = 420 IPM, 6kW = 600 IPM, Pierce = 0.05s
+- 11 Gauge (0.1196"): 4kW = 240 IPM, 6kW = 360 IPM, Pierce = 0.08s
+- 3/16" Plate (0.1875"): 4kW = 140 IPM, 6kW = 220 IPM, Pierce = 0.15s
+- 1/4" Plate (0.2500"): 4kW = 95 IPM, 6kW = 160 IPM, Pierce = 0.25s
+
+### 5052 & 6061 Aluminum (Nitrogen / Shop Air Assist)
+- 0.040" Sheet: 4kW = 900 IPM, 6kW = 1200 IPM, Pierce = 0.02s
+- 0.063" Sheet (1/16"): 4kW = 620 IPM, 6kW = 880 IPM, Pierce = 0.04s
+- 0.090" Sheet: 4kW = 450 IPM, 6kW = 680 IPM, Pierce = 0.06s
+- 0.125" Sheet (1/8"): 4kW = 310 IPM, 6kW = 480 IPM, Pierce = 0.08s
+- 0.190" Sheet (3/16"): 4kW = 180 IPM, 6kW = 290 IPM, Pierce = 0.16s
+- 0.250" Plate (1/4"): 4kW = 110 IPM, 6kW = 190 IPM, Pierce = 0.24s
+
+## 4. Costing & Quoting Formulas
+
+1. **Cutting Motion Time ($T_{cut}$)**:
+   $$T_{cut} = \frac{\text{Cut Length (inches)}}{\text{Cutting Feed Rate (IPM)}} \times 60 \text{ seconds}$$
+
+2. **Piercing Time ($T_{pierce}$)**:
+   $$T_{pierce} = \text{Total Pierces} \times \text{Pierce Delay (seconds)}$$
+
+3. **Total Machine Run Time ($T_{total}$)**:
+   $$T_{total} = T_{cut} + T_{pierce} + (\text{Rapid Traverses} \times \text{Rapid Delay})$$
+
+4. **Machine Labor & Overhead Cost**:
+   $$\text{Machine Cost} = \frac{T_{total}}{3600} \times \text{Hourly Machine Rate (\$/hr)}$$
+   *(Default US shop rates range from $120/hr to $180/hr depending on laser kW)*
+
+5. **Material Cost with Scrap Yield**:
+   $$\text{Material Cost} = \text{Part Area} \times \text{Density} \times \text{Price/lb} \times (1 + \text{Scrap Factor})$$
+
+6. **Assist Gas Cost**:
+   $$\text{Gas Cost} = \frac{T_{cut}}{60} \times \text{Gas Flow Rate} \times \text{Gas Price/unit}$$
+
+## 5. CAM Layer Export Standards
+SheetDXF produces standardized DXFs conforming to Trumpf TruTops, SigmaNEST, Bystronic BySoft, and Amada AP100:
+- `CUT_OUTER` (Color 3 - Green): Outer boundary profile cut paths with kerf offset
+- `CUT_INNER` (Color 2 - Yellow): Internal holes and cutouts cut before the outer boundary
+- `MARK` / `ETCH` (Color 4 - Cyan): Surface marking, part numbers, and bend relief centerlines
+- `RAPID` (Color 1 - Red): Non-cutting positioning traverse visualization
+
+## 6. Embeddable Widget API (`widget.js`)
+Job shops can embed the instant quoting calculator into their existing website:
+```html
+<div id="sheetdxf-widget"
+     data-shop-id="your-shop-name"
+     data-currency="USD"
+     data-hourly-rate="145"
+     data-min-order="150"
+     data-shop-email="quotes@yourmetalshop.com"
+     data-sales-tax="7.25">
+</div>
+<script src="https://sheetdxf.com/widget.js" async></script>
+```
+
+## 7. Contact & Official Sources
+- **URL**: https://sheetdxf.com
+- **Maintainer**: SheetDXF Engineering (Anil Kumar)
+- **LinkedIn**: https://www.linkedin.com/in/anilsingh09/

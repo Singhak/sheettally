@@ -22,6 +22,10 @@
   <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
   <link rel="canonical" href="https://sheetdxf.com/" />
 
+  <!-- Preload Demo CAD & Media Assets for Instant Zero-Wait Load -->
+  <link rel="preload" href="/demo/jeep_wall_art.dxf" as="fetch" crossorigin="anonymous" />
+  <link rel="preload" href="/demo/jeep_wall_art.svg" as="image" />
+
   <!-- Open Graph / Facebook / LinkedIn / WhatsApp / Slack -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="SheetDXF" />
@@ -202,9 +206,9 @@
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" />
   </noscript>
-  <script type="module" crossorigin src="/assets/index-CnRUz1KQ.js"></script>
+  <script type="module" crossorigin src="/assets/index-CBXp7chJ.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/auxiliary-3HlIIhEJ.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-WE8TlUW_.css">
+  <link rel="stylesheet" crossorigin href="/assets/index-Cex_o2Q5.css">
 </head>
 
 <body>
@@ -706,6 +710,23 @@
 
       <!-- SVG CAD Canvas Viewport -->
       <div class="canvas-viewport" id="canvasViewport">
+        <!-- High-Tech Central CAD Demo & File Loading Overlay -->
+        <div id="cadLoadingOverlay" class="cad-loading-overlay hidden" aria-live="polite">
+          <div class="cad-loading-card">
+            <div class="cad-loading-spinner-wrap">
+              <div class="cad-spinner-ring"></div>
+              <div class="cad-spinner-core">⚡</div>
+            </div>
+            <div class="cad-loading-text-group">
+              <div class="cad-loading-title" id="cadLoadingTitle">Loading CAD Geometry...</div>
+              <div class="cad-loading-subtitle" id="cadLoadingSubtitle">Downloading Laser Cut Demo (jeep_wall_art.dxf)</div>
+            </div>
+            <div class="cad-loading-progress-bar">
+              <div class="cad-loading-progress-indeterminate"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- Laser Simulation Real-time Telemetry HUD Overlay -->
         <div id="simHudOverlay" class="sim-hud-overlay hidden">
           <div class="sim-hud-inner">

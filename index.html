@@ -206,9 +206,9 @@
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" />
   </noscript>
-  <script type="module" crossorigin src="/assets/index-CBXp7chJ.js"></script>
+  <script type="module" crossorigin src="/assets/index-B9pX9eto.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/auxiliary-3HlIIhEJ.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-Cex_o2Q5.css">
+  <link rel="stylesheet" crossorigin href="/assets/index-CdoFIsND.css">
 </head>
 
 <body>
@@ -296,6 +296,13 @@
         <span class="panel-btn-label">Embed</span>
       </button>
 
+      <!-- Contact Us Link -->
+      <a href="mailto:contact@sheetdxf.com" class="nav-panel-btn nav-contact-btn" id="navContactLink"
+        title="Email Support: contact@sheetdxf.com">
+        <span class="panel-btn-icon">✉️</span>
+        <span class="panel-btn-label">Contact Us</span>
+      </a>
+
       <!-- Workspace Panel Toggles -->
       <div class="panel-toggles-group" id="panelTogglesGroup">
         <button class="nav-panel-btn active" id="btnToggleLeftPanel" title="Toggle Drafting Panel (Alt+1)">
@@ -350,32 +357,38 @@
       <!-- Upload DXF Section (Default Landing Mode) -->
       <div id="uploadContainer" class="config-section">
         <div class="upload-dropzone" id="dropzone" title="Click or Drag DXF file here">
-          <div class="upload-icon">📥</div>
-          <div class="upload-title">Drop 2D DXF File Here</div>
-          <div class="upload-sub">Auto-detects scale • Sanitizes topology • Instant quote</div>
-          <div class="upload-btn-wrap" style="margin-top: 0.65rem;">
-            <button type="button" class="btn btn-sm btn-primary" id="btnBrowseDxf"
-              style="font-size: 0.8rem; padding: 0.35rem 0.85rem; pointer-events: none;">
-              📂 Browse DXF File
-            </button>
-          </div>
-          <div class="upload-formats-badge"
-            style="font-size: 0.68rem; color: #94a3b8; margin-top: 0.6rem; font-family: var(--font-mono);">
-            Supports AutoCAD ASCII DXF (Lines, Arcs, Polylines, Splines)
+          <div class="dropzone-compact-inner">
+            <div class="upload-icon-badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </div>
+            <div class="upload-text-group">
+              <div class="upload-main-line">
+                <span class="upload-title">Drop 2D DXF File</span>
+                <span class="upload-or">or</span>
+                <button type="button" class="btn btn-xs btn-primary upload-browse-pill" id="btnBrowseDxf" style="pointer-events: none;">
+                  📂 Browse
+                </button>
+              </div>
+              <div class="upload-sub" title="AutoCAD ASCII DXF: Lines, Arcs, Polylines, Splines">Auto-scale • Instant quote • ASCII DXF</div>
+            </div>
           </div>
           <input type="file" id="dxfFileInput" accept=".dxf" class="file-input-hidden" />
         </div>
 
         <!-- Ultra-compact sample hint (Zero space consumed) -->
-        <div class="dropzone-sample-hint" style="margin-top: 0.5rem; font-size: 0.72rem; color: #64748b; text-align: center;">
-          Need a sample CAD? <button type="button" id="linkLoadSampleJeep" class="btn-link" style="background: none; border: none; color: #38bdf8; text-decoration: underline; font-size: 0.72rem; cursor: pointer; padding: 0; font-weight: 600;">⚡ Load Jeep 4×4 Art</button>
+        <div class="dropzone-sample-hint" style="margin-top: 0.35rem; font-size: 0.7rem; color: #64748b; text-align: center;">
+          Need a sample CAD? <button type="button" id="linkLoadSampleJeep" class="btn-link" style="background: none; border: none; color: #38bdf8; text-decoration: underline; font-size: 0.7rem; cursor: pointer; padding: 0; font-weight: 600;">⚡ Load Jeep 4×4 Art</button>
         </div>
 
         <div id="uploadFileInfo" class="file-info hidden">
           <div class="file-info-header">
             <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
               <span style="font-size: 0.85rem; flex-shrink: 0;">📄</span>
-              <span class="file-name" id="loadedFileName" title="Uploaded DXF">filename.dxf</span>
+              <span class="file-name" id="loadedFileName" title="">filename.dxf</span>
             </div>
             <span class="file-status">✓ Validated</span>
           </div>
@@ -1395,6 +1408,9 @@
             <button id="resetRatesBtn" class="btn btn-benchmark-reset" style="width: 100%;">
               <span class="btn-icon">↺</span> Reset Factory Benchmark Rates
             </button>
+            <div style="text-align: center; margin-top: 0.75rem; font-size: 0.72rem; color: #64748b;">
+              Need help or custom shop rates? <a href="mailto:contact@sheetdxf.com" style="color: #38bdf8; text-decoration: underline;">contact@sheetdxf.com</a>
+            </div>
           </div>
         </div>
       </div>

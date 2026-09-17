@@ -92,5 +92,6 @@ Job shops can embed the instant quoting calculator into their existing website:
 
 ## 7. Contact & Official Sources
 - **URL**: https://sheetdxf.com
+- **Email**: contact@sheetdxf.com
 - **Maintainer**: SheetDXF Engineering (Anil Kumar)
 - **LinkedIn**: https://www.linkedin.com/in/anilsingh09/

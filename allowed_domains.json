@@ -1,0 +1,10 @@
+{
+  "_comment": "Add authorized client domains below to allow them to embed the SheetDXF quoting widget. No build/redeploy needed.",
+  "allowedDomains": [
+    "sheetdxf.com",
+    "www.sheetdxf.com",
+    "localhost",
+    "127.0.0.1",
+    "bobs-precision-milwaukee.com"
+  ]
+}

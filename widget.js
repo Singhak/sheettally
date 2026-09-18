@@ -43,13 +43,15 @@
   // Resolve base URL from the script source
   var scriptUrl = new URL(currentScript.src, window.location.href);
   var baseUrl = scriptUrl.origin;
+  var hostOrigin = window.location.origin || (window.location.protocol + '//' + window.location.host);
   var widgetSrc =
     baseUrl +
-    '/?embed=true' +
+    '/app?embed=true' +
     '&shopId=' + encodeURIComponent(shopId) +
     '&currency=' + encodeURIComponent(currency) +
     '&view=' + encodeURIComponent(view) +
-    '&theme=' + encodeURIComponent(theme);
+    '&theme=' + encodeURIComponent(theme) +
+    '&embedOrigin=' + encodeURIComponent(hostOrigin);
 
   if (shopName) widgetSrc += '&shopName=' + encodeURIComponent(shopName);
   if (shopEmail) widgetSrc += '&shopEmail=' + encodeURIComponent(shopEmail);

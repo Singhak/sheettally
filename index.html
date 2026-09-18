@@ -1,1906 +1,464 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <!-- CNC Laser CPQ Brand Favicons -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <meta name="theme-color" content="#0b0f19" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Primary Search Engine & SEO Meta Tags -->
-  <title>SheetDXF | Free Online CNC Laser Cutting Quoting, DXF Nesting &amp; Estimating CAD Engine</title>
-  <meta name="description" content="Instant in-browser CNC laser cutting quoting software &amp; 2D DXF nesting engine for sheet metal fabricators and job shops. Calculate cut length, pierces, sheet scrap yields, and generate professional Net 30 quotes in 10s. Trumpf, Amada &amp; SigmaNEST CAM ready." />
-  <meta name="keywords" content="cnc laser quoting, sheet metal quoting software, dxf nesting online, laser cutting cost calculator, fiber laser quoting, dxf cut length calculator, sheet metal fabrication estimating, trumpf cam layer export, sigmanest dxf quote, laser cutting pierce rate, instant sheet metal quote, 2d cad nesting tool, free dxf quoting tool, job shop cpq software" />
-  <meta name="author" content="SheetDXF" />
-  <meta name="publisher" content="SheetDXF" />
-  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-  <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <title>SheetDXF — Instant Laser Cutting Quotes from DXF Files</title>
+  <meta name="description" content="Instant in-browser CNC laser cutting quoting software & 2D DXF nesting engine. Drop a DXF file to get cut inches, pierces, scrap yields, and generate instant PDF quotes." />
   <link rel="canonical" href="https://sheetdxf.com/" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
 
-  <!-- Preload Demo CAD & Media Assets for Instant Zero-Wait Load -->
-  <link rel="preload" href="/demo/jeep_wall_art.dxf" as="fetch" crossorigin="anonymous" />
-  <link rel="preload" href="/demo/jeep_wall_art.svg" as="image" />
-
-  <!-- Open Graph / Facebook / LinkedIn / WhatsApp / Slack -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="SheetDXF" />
-  <meta property="og:url" content="https://sheetdxf.com/" />
-  <meta property="og:title" content="SheetDXF | Instant CNC Laser Cutting Quoting &amp; DXF Nesting Engine" />
-  <meta property="og:description" content="Calculate cut inches, pierces, sheet scrap yields, and generate instant laser cutting quotes from customer DXFs. Trumpf, Amada &amp; SigmaNEST ready." />
-  <meta property="og:image" content="https://sheetdxf.com/demo_jeep_play_thumbnail.png" />
-  <meta property="og:image:secure_url" content="https://sheetdxf.com/demo_jeep_play_thumbnail.png" />
-  <meta property="og:image:type" content="image/png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="SheetDXF CNC Laser Cutting Instant Estimator and DXF Nesting Engine" />
-  <meta property="og:locale" content="en_US" />
-
-  <!-- Twitter / X Cards -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="SheetDXF | Free CNC Laser Cutting Quoting &amp; DXF Nesting Engine" />
-  <meta name="twitter:description" content="Instant in-browser DXF nesting, cut length, pierce cost calculator, and PDF quoting for sheet metal job shops. Free &amp; Trumpf / SigmaNEST ready." />
-  <meta name="twitter:image" content="https://sheetdxf.com/demo_jeep_play_thumbnail.png" />
-  <meta name="twitter:image:alt" content="SheetDXF Laser Cutting Quoting Platform" />
-
-  <!-- Mobile & Application Meta -->
-  <meta name="application-name" content="SheetDXF" />
-  <meta name="apple-mobile-web-app-title" content="SheetDXF" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="format-detection" content="telephone=no" />
-
-  <!-- LLM & Search Engine Structured Data (JSON-LD) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebApplication",
-        "@id": "https://sheetdxf.com/#webapp",
-        "name": "SheetDXF",
-        "alternateName": ["SheetDXF Quoting Engine", "SheetDXF CPQ", "SheetDXF Laser CAD/CAM"],
-        "url": "https://sheetdxf.com/",
-        "applicationCategory": "DesignApplication, BusinessApplication, ManufacturingApplication",
-        "operatingSystem": "All modern web browsers (Chrome, Edge, Firefox, Safari)",
-        "browserRequirements": "Requires JavaScript and HTML5 Canvas support",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD",
-          "availability": "https://schema.org/InStock"
-        },
-        "description": "SheetDXF is a high-speed, browser-based CNC laser cutting quoting and 2D DXF nesting engine. Estimators, job shops, and fabricators upload customer DXF/DWG/SVG files to instantly compute cut length, pierce count, cutting machine cycle time, sheet yield, and generate professional Net 30 PDF quotations in seconds without heavyweight CAM software.",
-        "featureList": [
-          "Instant 2D DXF, DWG & SVG CAD file parsing and topology sanitization",
-          "Calculates linear cut length (inches & mm) and pierce count automatically",
-          "Calibrated fiber laser cutting feed rate tables (4kW, 6kW, 10kW, 12kW)",
-          "Automatic 2D sheet nesting on standard 4x8, 5x10, and custom metal sheets",
-          "True-shape offcut tracking and material scrap percentage calculation",
-          "Multi-material support: A36 Mild Steel, 304/316 Stainless Steel, 5052/6061 Aluminum, Brass, Copper",
-          "Assist gas cost modeling: Nitrogen (N2), Oxygen (O2), and High-Pressure Shop Air",
-          "Automated DFM check: detects undersized holes prone to thermal blowout on thick plate",
-          "Trumpf, Amada, Bystronic, and SigmaNEST standard CAM layer export (CUT_OUTER, CUT_INNER, MARK)",
-          "Built-in parametric shape generator for baseplates, ASME flanges, gussets, brackets, and discs",
-          "Instant professional Net 30 PDF proforma invoice and email RFQ formatting",
-          "Embeddable quoting widget for job shop websites (WordPress, Wix, Squarespace, Shopify)"
-        ],
-        "softwareVersion": "2.5.0",
-        "screenshot": "https://sheetdxf.com/demo_jeep_play_thumbnail.png",
-        "author": {
-          "@type": "Organization",
-          "@id": "https://sheetdxf.com/#organization",
-          "name": "SheetDXF",
-          "url": "https://sheetdxf.com/",
-          "logo": "https://sheetdxf.com/logo-mark.svg"
-        }
-      },
-      {
-        "@type": "Organization",
-        "@id": "https://sheetdxf.com/#organization",
-        "name": "SheetDXF",
-        "url": "https://sheetdxf.com/",
-        "logo": "https://sheetdxf.com/logo-mark.svg",
-        "sameAs": [
-          "https://www.linkedin.com/in/anilsingh09/"
-        ]
-      },
-      {
-        "@type": "FAQPage",
-        "@id": "https://sheetdxf.com/#faq",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is SheetDXF?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "SheetDXF is a free, in-browser CNC laser cutting CPQ (Configure, Price, Quote) and 2D DXF nesting engine designed for metal job shops, laser cutting service providers, estimators, and fabricators. It allows users to drag and drop DXF files to instantly calculate cut inches, pierce counts, sheet utilization, and generate itemized manufacturing quotes in under 10 seconds without installing heavy CAM desktop software."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How does SheetDXF calculate laser cutting costs from a DXF file?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "SheetDXF parses 2D AutoCAD ASCII DXF files (lines, arcs, polylines, splines), joins fragmented vectors into closed outer and inner contours, calculates exact linear cut length in inches or millimeters, and counts total pierces. It then pairs this geometry with calibrated fiber laser feed rate tables (IPM) based on laser power (4kW-12kW), material type (A36 Steel, Stainless Steel, Aluminum), thickness/gauge, assist gas (N2, O2, Air), and machine hourly rates to compute cycle time and pricing."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Which CAM software and CNC laser controllers are supported?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "SheetDXF is compatible with leading CNC laser and CAM systems including Trumpf TruTops, SigmaNEST, Bystronic BySoft, Amada AP100/Dr.ABE, Cincinnati, and standard G-code post-processors. It formats and exports clean DXF layers matching standard industry conventions: CUT_OUTER (green), CUT_INNER (yellow), ETCH/MARK (cyan), and RAPID."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can SheetDXF nest multiple parts on 4x8 and 5x10 metal sheets?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. SheetDXF includes a high-speed 2D nesting engine that packs parts onto standard sheet sizes (such as 48\"x96\", 60\"x120\", 1250x2500mm, 1500x3000mm) or custom stock dimensions. It accounts for part margins, kerf spacing, sheet borders, and calculates sheet utilization percentage and usable offcut dimensions."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Does SheetDXF check for laser cutting DFM risks like hole blowout?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. SheetDXF features automated Design For Manufacturability (DFM) verification. It checks the 1:1 rule of thumb (hole diameter vs material thickness). If a hole diameter is smaller than the plate thickness on thick steel, SheetDXF flags the blowout risk and allows the estimator to auto-skip cutting those holes so they can be drilled secondary."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can job shops embed SheetDXF on their custom website?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. SheetDXF offers a lightweight embeddable widget (widget.js) that can be embedded into any website (WordPress, Wix, Squarespace, Shopify, Webflow) with a single script tag, allowing job shops to offer instant self-service laser cutting quotes to their customers using their own custom shop rates and branding."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is SheetDXF free and is any installation or account registration needed?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "SheetDXF is 100% free to use directly in any modern web browser. No credit card, account registration, software installation, or plugin is required."
-            }
-          }
-        ]
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://sheetdxf.com/#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://sheetdxf.com/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "DXF Laser Quoting Engine",
-            "item": "https://sheetdxf.com/#industrial"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Jeep Wall Art Demo",
-            "item": "https://sheetdxf.com/?demo=jeep"
-          }
-        ]
-      }
-    ]
-  }
-  </script>
+  <!-- Preload Assets for Immediate Impact -->
+  <link rel="preload" href="/demo_jeep_laser_cpq.gif" as="image" />
   <link rel="preload" href="/logo-mark.svg" as="image" type="image/svg+xml" />
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" as="style" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" media="print" onload="this.media='all'" />
-  <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" />
-  </noscript>
-  <script type="module" crossorigin src="/assets/index-CqPHXmgd.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/auxiliary-3HlIIhEJ.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-CdoFIsND.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" crossorigin href="/assets/index-DkmehVWW.css">
 </head>
+<body class="lp-body lp-grid-bg">
 
-<body>
-  <!-- Top Navigation Header -->
-  <header class="top-nav app-header">
-    <div class="nav-left header-left">
-      <div class="brand-logo" title="US CNC Laser CPQ &amp; Drafting Engine">
-        <div class="logo-icon-wrap">
-          <img src="/logo-mark.svg" alt="CNC Laser CPQ" class="brand-logo-img" />
-        </div>
-        <div class="brand-text">
-          <h1 class="brand-title" id="brandTitle">US CNC LASER CPQ</h1>
-          <span class="brand-subtitle" id="brandSubtitle">Precision CAD/CAM &amp; Quoting</span>
-        </div>
-      </div>
+  <!-- ========================================================================
+       TOP NAVIGATION BAR
+       ======================================================================== -->
+  <nav class="lp-nav">
+    <a href="/" class="lp-nav-brand" title="SheetDXF Quoting Engine">
+      <img src="/logo-mark.svg" alt="SheetDXF Logo" class="lp-brand-logo" />
+      <span class="lp-brand-name">SheetDXF</span>
+    </a>
+
+    <div class="lp-nav-links">
+      <a href="#features" class="lp-nav-link">Features</a>
+      <a href="#how-it-works" class="lp-nav-link">How It Works</a>
+      <a href="#demo" class="lp-nav-link">Live Demo</a>
+      <a href="#pricing" class="lp-nav-link">Pricing</a>
+      <a href="#widget" class="lp-nav-link">Embed Widget</a>
     </div>
 
-    <!-- Center Controls: Workspace Switcher & Quoting Modes -->
-    <div class="header-center" id="headerCenter">
-      <!-- Primary Workspace Switcher: Precision Industrial vs Architectural Studio (Hidden in US Default) -->
-      <div class="workspace-tab-switcher hidden" id="workspaceTabSwitcher" style="display: none;">
-        <button class="ws-tab-btn active" id="tabPrecisionIndustrial" data-ws="industrial"
-          title="Clean Precision CNC/Laser CAD/CAM (Baseplates, Flanges, Gussets, Brackets, DXFs)">
-          <span class="ws-tab-icon">⚙️</span>
-          <span class="ws-tab-text">Industrial CAD</span>
-        </button>
-        <button class="ws-tab-btn hidden" id="tabArchitecturalStudio" data-ws="architectural"
-          title="Architectural Gates, Fences, Decorative Panels & Backlighting" style="display: none;">
-          <span class="ws-tab-icon">🏛️</span>
-          <span class="ws-tab-text">Gate Studio</span>
-        </button>
-      </div>
-
-      <!-- Top Quoting Mode Pill Bar -->
-      <div class="quoting-mode-bar" id="quotingModeBar">
-        <button class="mode-pill active" id="modeJobWork" data-mode="job_work"
-          title="Labor Only (Customer supplies sheet; Quote by Cut Inches + Pierces)">
-          🔧 Labor Only
-        </button>
-        <button class="mode-pill" id="modeWithMaterial" data-mode="with_material"
-          title="Turnkey (Shop supplies sheet; Quote by Material + Cut Inches)">
-          📦 Turnkey
-        </button>
-        <button class="mode-pill" id="modeSqFtJali" data-mode="sqft_jali"
-          title="Architectural Panels & Screens quoted per sq.ft" style="display: none;">
-          🏛️ Arch Panels
-        </button>
-      </div>
-
-      <!-- Compact Live Demo Widget in Header (Space-Saving & Fast) -->
-      <div class="header-demo-pill" id="headerDemoWidget" title="Featured Laser Cut Jeep Wall Art Demo">
-        <button type="button" class="header-demo-load-btn" id="btnLoadJeepDemo"
-          title="⚡ 1-Click Load Laser Cut Metal Jeep Wall Art into CAD & Run Simulation">
-          <img src="/demo/jeep_wall_art.svg" alt="Jeep" class="header-demo-icon" />
-          <span class="header-demo-label">⚡ Load Jeep Demo</span>
-        </button>
-        <button type="button" class="header-demo-showcase-btn" id="btnOpenJeepShowcase"
-          title="Open Full Showcase (Blueprint PDF, 3D Finishes, DXF Download)">
-          ⭐ Showcase
-        </button>
-      </div>
-    </div>
-
-    <div class="nav-right header-right">
-      <!-- Currency & Region Switcher (Preserved for compatibility, hidden in UI) -->
-      <div class="currency-toggle" id="currencyToggleGroup" style="display: none !important;">
-        <button class="currency-btn" id="btnCurrencyINR" style="display: none !important;" title="INR">
-          INR
-        </button>
-        <button class="currency-btn active" id="btnCurrencyUSD" style="display: none !important;" title="USD">
-          USD
-        </button>
-      </div>
-
-      <div class="cam-preset-badge" id="navCamBadge"
-        title="Selected CAM Profile: Standard Machine Layers (CUT_OUTER / CUT_INNER)">
-        <span class="badge-dot"></span>
-        <span id="navCamName">Standard CAM</span>
-      </div>
-
-      <!-- Embed Widget Script Modal Launcher -->
-      <button class="nav-panel-btn embed-widget-nav-btn" id="btnOpenEmbedModal"
-        title="Get Embed Script for WordPress, Wix, Squarespace, Webflow">
-        <span class="panel-btn-icon">🔌</span>
-        <span class="panel-btn-label">Embed</span>
-      </button>
-
-      <!-- Contact Us Link -->
-      <a href="mailto:contact@sheetdxf.com" class="nav-panel-btn nav-contact-btn" id="navContactLink"
-        title="Email Support: contact@sheetdxf.com">
-        <span class="panel-btn-icon">✉️</span>
-        <span class="panel-btn-label">Contact Us</span>
+    <div class="lp-nav-actions">
+      <a href="/app" class="lp-btn-cta" id="navBtnTryApp">
+        <span>⚡ Try Quoting App</span>
+        <span>→</span>
       </a>
+    </div>
+  </nav>
 
-      <!-- Workspace Panel Toggles -->
-      <div class="panel-toggles-group" id="panelTogglesGroup">
-        <button class="nav-panel-btn active" id="btnToggleLeftPanel" title="Toggle Drafting Panel (Alt+1)">
-          <span class="panel-btn-icon">📐</span>
-          <span class="panel-btn-label">Drafting</span>
-        </button>
-        <button class="nav-panel-btn active" id="btnToggleRightPanel" title="Toggle Quotation & CAM (Alt+2)">
-          <span class="panel-btn-icon">📋</span>
-          <span class="panel-btn-label">Quotation</span>
-        </button>
+  <!-- ========================================================================
+       SECTION 1: HERO (Above the fold with live demo GIF)
+       ======================================================================== -->
+  <header class="lp-hero-section">
+    <div class="lp-badge-tag">
+      <span>⚡</span>
+      <span>Instant 2D CAD/CAM Quoting & Nesting Engine</span>
+    </div>
+
+    <h1 class="lp-hero-h1">
+      Instant Laser Cutting Quotes <br />
+      from <span class="gradient-text">DXF Files</span>
+    </h1>
+
+    <p class="lp-hero-p">
+      Drop a DXF. Get cut time, pierces, nesting yields, and a commercial PDF quote in seconds.
+      No installation. No account required. Runs 100% in your browser.
+    </p>
+
+    <div class="lp-hero-buttons">
+      <a href="/app?demo=jeep" class="lp-btn-primary" id="heroBtnDropDxf">
+        <span>📁 Drop DXF File or Try Demo</span>
+        <span>→</span>
+      </a>
+      <a href="#demo" class="lp-btn-secondary" id="heroBtnWatchDemo">
+        <span>▶ Interactive Preview</span>
+      </a>
+    </div>
+
+    <div class="lp-trust-bar">
+      Calibrated for Trumpf • Bystronic • Amada • Fiber Lasers (4kW – 12kW) • US & India Job Shops
+    </div>
+
+    <!-- Live Animated High-Tech Demonstration Console Window Frame -->
+    <div class="lp-showcase-frame">
+      <div class="lp-showcase-bar">
+        <div class="lp-window-dots">
+          <span class="lp-dot red"></span>
+          <span class="lp-dot yellow"></span>
+          <span class="lp-dot green"></span>
+        </div>
+        <div class="lp-showcase-title">SheetDXF Engine v2.5 — jeep_wall_art.dxf (Simulating CNC Laser Cut Order)</div>
+        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: #22c55e; font-weight: 700;">● SIMULATION ACTIVE</div>
+      </div>
+      <div class="lp-showcase-body">
+        <img
+          src="/demo_jeep_laser_cpq.gif"
+          alt="SheetDXF Laser Cutting Quoting Simulation Demo"
+          class="lp-demo-gif-img"
+          loading="eager"
+        />
       </div>
     </div>
   </header>
 
-  <!-- Main Workspace Splitter Container -->
-  <main class="main-layout app-workspace" id="appWorkspace">
-    <!-- Crawler & LLM-Friendly Semantic SEO Knowledge Block (Accessible to Search Bots, AI Crawlers and Screen Readers) -->
-    <article class="sr-only" id="seoKnowledgeOverview" aria-label="SheetDXF CNC Laser Cutting Quoting &amp; Nesting Engine Overview">
-      <h2>Free Online CNC Laser Cutting Quoting Software &amp; 2D DXF Nesting Engine</h2>
-      <p>
-        SheetDXF is a high-speed in-browser CAD/CAM quoting and nesting platform for precision sheet metal job shops,
-        estimators, and laser cutting fabricators. Drop customer 2D DXF files to automatically calculate linear cut inches,
-        pierce count, machine run-time, sheet scrap yields, and generate professional Net 30 manufacturing estimates in under 10 seconds.
+  <!-- ========================================================================
+       SECTION 2: HOW IT WORKS (3 Simple Steps)
+       ======================================================================== -->
+  <section class="lp-section-header" id="how-it-works" style="margin-top: 5rem;">
+    <span class="lp-section-tag">Workflow</span>
+    <h2 class="lp-section-title">How It Works in 3 Steps</h2>
+    <p class="lp-section-desc">From customer drawing to billable PDF proposal in under 10 seconds.</p>
+  </section>
+
+  <div class="lp-steps-grid">
+    <div class="lp-step-card">
+      <div class="lp-step-num">01</div>
+      <h3 class="lp-step-card-title">📁 1. Drop DXF File</h3>
+      <p class="lp-step-card-desc">
+        Drag & drop any AutoCAD ASCII 2D DXF or SVG. The engine heals broken polylines, connects open contours, detects inch vs mm units, and isolates outer borders from internal cutouts.
       </p>
-      <h3>Core Manufacturing &amp; Estimating Features</h3>
-      <ul>
-        <li><strong>Auto-Sanitizing DXF Parser:</strong> Parses AutoCAD ASCII DXF files, detects units (Inches / Millimeters), connects fragmented geometry, and classifies outer perimeters vs interior cutouts.</li>
-        <li><strong>Calibrated Fiber Laser Feed Rates:</strong> Calibrated cutting speeds (IPM) for 4kW, 6kW, 10kW, and 12kW fiber lasers across A36 Carbon Steel, 304/316 Stainless Steel, and 5052/6061 Aluminum.</li>
-        <li><strong>2D Sheet Auto-Nesting:</strong> Efficient nesting algorithms pack single or multiple parts onto standard 4x8 ft (48x96 in), 5x10 ft (60x120 in), and custom sheet dimensions with offcut tracking.</li>
-        <li><strong>DFM Hole Blowout Detection:</strong> Identifies undersized holes where diameter is less than material thickness to prevent thermal blowout on thick plate.</li>
-        <li><strong>Trumpf, Amada &amp; SigmaNEST CAM Ready:</strong> Exports clean CAD layers conforming to standard CAM conventions: CUT_OUTER, CUT_INNER, and MARK.</li>
-        <li><strong>Parametric Shape Drafter:</strong> Instant parametric CAD builder for baseplates, pipe flanges, gussets, brackets, and decorative panels without needing CAD software.</li>
-        <li><strong>Instant Net 30 Commercial PDF Quotes:</strong> One-click professional manufacturing quotation generation with itemized labor, material, piercing, and assist gas breakdown.</li>
+    </div>
+
+    <div class="lp-step-card">
+      <div class="lp-step-num">02</div>
+      <h3 class="lp-step-card-title">⚙️ 2. Engine Computes</h3>
+      <p class="lp-step-card-desc">
+        Instantly computes exact linear cut inches, total pierce points, machine cycle time based on 4kW–12kW feed tables, assist gas consumption, and packs parts onto 4×8 or 5×10 sheets.
+      </p>
+    </div>
+
+    <div class="lp-step-card">
+      <div class="lp-step-num">03</div>
+      <h3 class="lp-step-card-title">📄 3. Get Commercial Quote</h3>
+      <p class="lp-step-card-desc">
+        Download a branded Net 30 commercial PDF quote, copy an itemized email breakdown, or share directly to WhatsApp. Machine operator job card generated automatically.
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       SECTION 3: DEEP APP FEATURES SHOWCASE
+       ======================================================================== -->
+  <section class="lp-section-header" id="features">
+    <span class="lp-section-tag">Manufacturing Intelligence</span>
+    <h2 class="lp-section-title">Built Specifically for Sheet Metal Job Shops</h2>
+    <p class="lp-section-desc">Everything required to price jobs accurately without waiting on heavy desktop CAM seats.</p>
+  </section>
+
+  <div class="lp-features-grid">
+    <!-- Feature 1 -->
+    <div class="lp-feature-card">
+      <div class="lp-feature-icon-badge">📐</div>
+      <h3 class="lp-feature-title">Auto-Sanitizing DXF & Polyline Healer</h3>
+      <p class="lp-feature-desc">
+        Customer CAD files are notoriously messy. SheetDXF heals fragmented vectors, bridges micro-gaps, identifies outer perimeters vs interior cutouts, and detects drawing units automatically.
+      </p>
+    </div>
+
+    <!-- Feature 2 -->
+    <div class="lp-feature-card">
+      <div class="lp-feature-icon-badge">⚡</div>
+      <h3 class="lp-feature-title">Calibrated Fiber Laser Feed Rates</h3>
+      <p class="lp-feature-desc">
+        Not rough guesses. Speeds are based on calibrated cutting tables for 4kW, 6kW, 10kW, and 12kW fiber lasers across Carbon Steel (A36), Stainless (304/316), and Aluminum (5052/6061) with N2, O2, and Air.
+      </p>
+    </div>
+
+    <!-- Feature 3 -->
+    <div class="lp-feature-card">
+      <div class="lp-feature-icon-badge">🔲</div>
+      <h3 class="lp-feature-title">True-Shape 2D Sheet Nesting</h3>
+      <p class="lp-feature-desc">
+        Packs single parts or multi-part assembly batches onto standard 4×8 ft, 5×10 ft, or custom mill sheets. Accounts for kerf spacing, sheet margins, and calculates true skeleton scrap percentage.
+      </p>
+    </div>
+
+    <!-- Feature 4 -->
+    <div class="lp-feature-card">
+      <div class="lp-feature-icon-badge">🔍</div>
+      <h3 class="lp-feature-title">Automated DFM Hole Blowout Check</h3>
+      <p class="lp-feature-desc">
+        Enforces the 1:1 thickness rule. Flags hole diameters smaller than plate thickness (<span style="font-family: var(--font-mono); color: var(--accent-amber);">d &lt; t</span>) where thermal blowout risks laser nozzle damage, with a 1-click auto-skip toggle.
+      </p>
+    </div>
+
+    <!-- Feature 5 -->
+    <div class="lp-feature-card">
+      <div class="lp-feature-icon-badge">📄</div>
+      <h3 class="lp-feature-title">Net 30 Proforma Quotes & Job Cards</h3>
+      <p class="lp-feature-desc">
+        One-click professional manufacturing PDF proposals itemizing cutting labor, piercing, plate handling, and secondary operations (bending, tapping, powder coat) plus machine operator cut sheets.
+      </p>
+    </div>
+
+    <!-- Feature 6 -->
+    <div class="lp-feature-card">
+      <div class="lp-feature-icon-badge">🔌</div>
+      <h3 class="lp-feature-title">1-Line Embeddable Website Widget</h3>
+      <p class="lp-feature-desc">
+        Paste a single script tag onto your WordPress, Wix, Squarespace, or Webflow site. Let prospective buyers upload DXFs and receive self-service quotes based strictly on your shop rates.
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       SECTION 4: LIVE INTERACTIVE DEMO (Interactive Tool + Live Telemetry)
+       ======================================================================== -->
+  <section class="lp-section-header" id="demo">
+    <span class="lp-section-tag">Interactive Sandbox</span>
+    <h2 class="lp-section-title">Try It Now — No Signup Required</h2>
+    <p class="lp-section-desc">Experience the speed of the engine directly below, or switch to the animated simulation walkthrough.</p>
+  </section>
+
+  <div class="lp-interactive-demo-container">
+    <div class="lp-demo-tabs-bar">
+      <button type="button" class="lp-demo-tab-btn active" id="tabShowAppDemo">⚡ Interactive Quoting App</button>
+      <button type="button" class="lp-demo-tab-btn" id="tabShowGifDemo">📹 Animated Simulation GIF</button>
+    </div>
+
+    <div class="lp-interactive-split">
+      <div class="lp-interactive-iframe-wrap" id="demoDisplayContainer">
+        <iframe
+          src="/app?embed=true&demo=jeep"
+          title="SheetDXF Interactive Quoting App"
+          class="lp-interactive-iframe"
+          id="lpInteractiveIframe"
+          loading="lazy"
+        ></iframe>
+      </div>
+
+      <!-- Live HUD Telemetry Card -->
+      <div class="lp-live-hud-card">
+        <div>
+          <div class="lp-hud-card-header">
+            <span style="font-size: 0.72rem; font-weight: 700; color: var(--accent-blue); letter-spacing: 0.08em; text-transform: uppercase;">
+              ● REAL-TIME ESTIMATOR HUD
+            </span>
+            <h4 style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-top: 4px;">Jeep 4×4 Wall Art</h4>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">A36 Carbon Steel • 11 Gauge (0.1196″ / 3.0mm)</span>
+          </div>
+
+          <div class="lp-hud-metric-row">
+            <span class="lp-hud-label">Linear Cut:</span>
+            <span class="lp-hud-val">214.2 in</span>
+          </div>
+          <div class="lp-hud-metric-row">
+            <span class="lp-hud-label">Pierce Count:</span>
+            <span class="lp-hud-val">21 Points</span>
+          </div>
+          <div class="lp-hud-metric-row">
+            <span class="lp-hud-label">Machine Run-Time:</span>
+            <span class="lp-hud-val">4m 12s</span>
+          </div>
+          <div class="lp-hud-metric-row">
+            <span class="lp-hud-label">Theoretical Weight:</span>
+            <span class="lp-hud-val">6.82 lbs</span>
+          </div>
+          <div class="lp-hud-metric-row">
+            <span class="lp-hud-label">Dimensions:</span>
+            <span class="lp-hud-val">13.4″ × 13.4″</span>
+          </div>
+
+          <hr style="border: none; border-top: 1px solid var(--panel-border); margin: 16px 0;" />
+
+          <div class="lp-hud-metric-row">
+            <span class="lp-hud-label">Estimated Price:</span>
+            <span class="lp-hud-price-val">$47.20</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <a href="/app?demo=jeep" class="btn-primary-action" style="text-decoration: none;">
+            <span>🚀 Open in Full CAD Quoting Suite</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       SECTION 5: PRICING (Simple, Honest, Transparent)
+       ======================================================================== -->
+  <section class="lp-section-header" id="pricing">
+    <span class="lp-section-tag">Pricing</span>
+    <h2 class="lp-section-title">Simple, Transparent Pricing</h2>
+    <p class="lp-section-desc">Free for estimators and engineers. Pro for growing fabricators and job shops.</p>
+  </section>
+
+  <div class="lp-pricing-grid">
+    <!-- Free Tier -->
+    <div class="lp-pricing-card">
+      <h3 class="lp-pricing-title">Free Plan</h3>
+      <p class="lp-pricing-subtitle">Instant estimates directly in your browser. No signup required.</p>
+
+      <div class="lp-price-row">
+        <span class="lp-price-amount">$0</span>
+        <span class="lp-price-interval">/ forever</span>
+      </div>
+
+      <ul class="lp-pricing-features">
+        <li class="checked"><span>✓</span> AutoCAD ASCII DXF & SVG Parser</li>
+        <li class="checked"><span>✓</span> Broken Polyline & Vector Topology Healer</li>
+        <li class="checked"><span>✓</span> Linear Cut Inches & Pierce Point Counter</li>
+        <li class="checked"><span>✓</span> 4kW–12kW Calibrated Feed Tables</li>
+        <li class="checked"><span>✓</span> Standard Net 30 Commercial PDF Quotes</li>
+        <li class="checked"><span>✓</span> Automated DFM Hole Blowout Verification</li>
+        <li class="disabled"><span>✕</span> Embeddable Website Quoting Widget</li>
+        <li class="disabled"><span>✕</span> Custom Shop Logo & White-Label Branding</li>
+        <li class="disabled"><span>✕</span> Multi-Part Assembly RFQ Cart & Nesting</li>
       </ul>
-    </article>
 
-    <!-- Left: Parametric Controls & Material Selection Drawer -->
-    <section class="panel panel-left" id="panelLeft">
-      <div class="panel-header-bar">
-        <span class="panel-header-title">DESIGN & MATERIAL CONFIG</span>
-        <button id="collapseLeftBtn" class="collapse-icon-btn" title="Collapse Panel (Alt+1)">
-          ◀
-        </button>
-      </div>
-
-      <!-- Input Mode Tabs (Option A: Upload 2D DXF is Primary Default) -->
-      <div class="tab-group">
-        <button class="tab-btn active" id="tabUpload">📁 Upload 2D DXF</button>
-        <button class="tab-btn" id="tabParametric">⚙️ Parametric Builder</button>
-      </div>
-
-      <!-- Upload DXF Section (Default Landing Mode) -->
-      <div id="uploadContainer" class="config-section">
-        <div class="upload-dropzone" id="dropzone" title="Click or Drag DXF file here">
-          <div class="dropzone-compact-inner">
-            <div class="upload-icon-badge">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="17 8 12 3 7 8"></polyline>
-                <line x1="12" y1="3" x2="12" y2="15"></line>
-              </svg>
-            </div>
-            <div class="upload-text-group">
-              <div class="upload-main-line">
-                <span class="upload-title">Drop 2D DXF File</span>
-                <span class="upload-or">or</span>
-                <button type="button" class="btn btn-xs btn-primary upload-browse-pill" id="btnBrowseDxf" style="pointer-events: none;">
-                  📂 Browse
-                </button>
-              </div>
-              <div class="upload-sub" title="AutoCAD ASCII DXF: Lines, Arcs, Polylines, Splines">Auto-scale • Instant quote • ASCII DXF</div>
-            </div>
-          </div>
-          <input type="file" id="dxfFileInput" accept=".dxf" class="file-input-hidden" />
-        </div>
-
-        <!-- Ultra-compact sample hint (Zero space consumed) -->
-        <div class="dropzone-sample-hint" style="margin-top: 0.35rem; font-size: 0.7rem; color: #64748b; text-align: center;">
-          Need a sample CAD? <button type="button" id="linkLoadSampleJeep" class="btn-link" style="background: none; border: none; color: #38bdf8; text-decoration: underline; font-size: 0.7rem; cursor: pointer; padding: 0; font-weight: 600;">⚡ Load Jeep 4×4 Art</button>
-        </div>
-
-        <div id="uploadFileInfo" class="file-info hidden">
-          <div class="file-info-header">
-            <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
-              <span style="font-size: 0.85rem; flex-shrink: 0;">📄</span>
-              <span class="file-name" id="loadedFileName" title="">filename.dxf</span>
-            </div>
-            <span class="file-status">✓ Validated</span>
-          </div>
-          <!-- DXF Unit Verification & Switcher Bar -->
-          <div id="dxfUnitConfirmBar" class="dxf-unit-bar">
-            <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
-              <span style="flex-shrink: 0;">📏</span>
-              <span id="dxfDetectedDims"
-                style="color: #f1f5f9; font-weight: 600; font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Size:
-                0.00" × 0.00"</span>
-              <span id="dxfUnitBadge"
-                style="background: #0284c7; color: #fff; padding: 1px 5px; border-radius: 3px; font-size: 0.66rem; font-weight: 700; flex-shrink: 0;">Inches</span>
-            </div>
-            <button type="button" id="btnToggleDxfUnits" class="btn btn-xs btn-secondary"
-              style="font-size: 0.72rem; padding: 3px 8px; flex-shrink: 0; border-color: rgba(56,189,248,0.4); white-space: nowrap;"
-              title="Switch DXF interpretation between Inches and Millimeters">
-              🔄 Switch to mm
-            </button>
-          </div>
-          <div id="dxfSmallDimWarning" class="dxf-dim-warning hidden"
-            style="font-size: 0.74rem; color: #f59e0b; margin-top: 4px;">
-            ⚠️ Dimensions appear small (&lt; 25). Confirm if drawn in Inches or MM.
-          </div>
-
-          <!-- Multi-Part DXF Intake Cards Section (ToolpathCloud Style) -->
-          <div id="dxfPartsSection" class="dxf-parts-section hidden" style="margin-top: 0.75rem;">
-            <div class="dxf-parts-header">
-              <span class="dxf-parts-title">PARTS IN DXF (<span id="dxfPartsCount">1</span>)</span>
-              <span class="dxf-parts-hint">Click part to view</span>
-            </div>
-            <div id="dxfPartsList" class="dxf-parts-list"></div>
-            <button type="button" id="btnAddAllPartsToCart" class="btn btn-sm btn-primary"
-              style="width: 100%; margin-top: 0.5rem; font-size: 0.78rem;">
-              ⚡ Add All Parts to Nesting Sheet / RFQ
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Parametric Generator Section (Fast Standard CAD Builder) -->
-      <div id="parametricContainer" class="config-section hidden">
-        <!-- Part Type Selector -->
-        <div class="form-group">
-          <label class="form-label">Part Geometry Family</label>
-          <div class="shape-selector">
-            <button class="shape-btn active" data-shape="baseplate">Baseplate</button>
-            <button class="shape-btn" data-shape="flange">Flange (ASME/ANSI)</button>
-            <button class="shape-btn" data-shape="gusset">Gusset (Snipe)</button>
-            <button class="shape-btn" data-shape="jali">CNC Panels/Gates</button>
-            <button class="shape-btn" data-shape="bracket">Bracket</button>
-            <button class="shape-btn" data-shape="disc">Disc</button>
-          </div>
-        </div>
-
-        <!-- Dynamic Parameter Controls Container -->
-        <div id="dynamicControls" class="dynamic-controls"></div>
-      </div>
-
-      <hr class="divider" />
-
-      <!-- Material, Assist Gas & Sheet Selection -->
-      <div class="config-section">
-        <div class="form-group">
-          <label class="form-label" for="materialSelect">Cutting Material</label>
-          <select id="materialSelect" class="form-select"></select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="gaugeSelect">Sheet Thickness / Gauge</label>
-          <select id="gaugeSelect" class="form-select"></select>
-        </div>
-
-        <!-- Cutting Process Selector (Fiber Laser / Waterjet / HD Plasma) -->
-        <div class="form-group" id="cuttingProcessGroup">
-          <label class="form-label" for="cuttingProcessSelect">Cutting Process</label>
-          <select id="cuttingProcessSelect" class="form-select">
-            <option value="laser" selected>⚡ Fiber Laser (High Precision &amp; Speed)</option>
-            <option value="waterjet">💧 Waterjet (Cold Cut • Zero HAZ • Heavy Plate)</option>
-            <option value="plasma">🔥 HD Plasma (Heavy Structural Plate)</option>
-          </select>
-        </div>
-
-        <!-- Hole Cutting & DFM Auto-Deselection Box (ToolpathCloud Style) -->
-        <div class="form-group" id="holeSelectionBox" style="display: none;">
-          <div class="hole-selection-card">
-            <div class="hole-selection-header">
-              <span class="hole-selection-title">Holes &amp; Pockets:</span>
-              <button type="button" class="hole-toggle-pill" id="btnToggleHoleCut"
-                title="Toggle between cutting all holes vs skipping undersized">
-                <span class="hole-pill-icon">◉</span>
-                <span id="holeToggleLabel">Cut All Holes</span>
-              </button>
-            </div>
-            <div id="holeAutoSkipNotice" class="hole-skip-notice hidden">
-              ⚠️ <span id="holeSkipCountText">0 holes</span> smaller than plate thickness (<span
-                id="holeSkipThickText">0 mm</span>) auto-skipped to prevent blowout.
-            </div>
-          </div>
-        </div>
-
-        <!-- Assist Gas Selector -->
-        <div class="form-group">
-          <label class="form-label" for="assistGasSelect">Assist Gas</label>
-          <select id="assistGasSelect" class="form-select">
-            <option value="air">Compressed Air (16–20 Bar) - Most Economical</option>
-            <option value="oxygen">Oxygen (O2) - Mild Steel Plate</option>
-            <option value="nitrogen">Nitrogen (N2) - High-Pressure Clean Edge</option>
-          </select>
-        </div>
-
-        <!-- Standard Sheet Size for Nesting -->
-        <div class="form-group">
-          <label class="form-label" for="sheetSizeSelect">Mill Sheet Size (Nesting)</label>
-          <select id="sheetSizeSelect" class="form-select">
-            <option value="sheet_8x4">8 × 4 ft (48 × 96 in / 2500 × 1250 mm) - Standard Industrial Sheet</option>
-            <option value="sheet_10x5">10 × 5 ft (3000 × 1500 mm) - Standard Laser Bed</option>
-            <option value="sheet_20x5">20 × 5 ft (6000 × 1500 mm) - Heavy Plate</option>
-            <option value="sheet_small">4 × 4 ft (1250 × 1250 mm) - Half Offcut Sheet</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="partQuantity">Order Quantity (pcs)</label>
-          <div class="qty-control">
-            <button class="qty-btn" id="qtyMinus">-</button>
-            <input type="number" id="partQuantity" class="form-input text-center" value="1" min="1" max="5000" />
-            <button class="qty-btn" id="qtyPlus">+</button>
-          </div>
-        </div>
-
-        <!-- Secondary Value-Add Operations Accordion -->
-        <div class="secondary-ops-box">
-          <div class="secondary-title" id="toggleSecOpsBtn"
-            style="cursor: pointer; display: flex; justify-content: space-between;">
-            <span>⚙️ Secondary Operations (Bending / Tapping / Coating)</span>
-            <span id="secOpsChevron">▼</span>
-          </div>
-          <div id="secOpsContent" class="secondary-content">
-            <div class="sec-row">
-              <label>CNC Press Brake Bends:</label>
-              <input type="number" id="secBendsCount" class="form-input text-center sec-input" value="0" min="0"
-                max="20" />
-              <span class="sec-rate-hint">@ $0.75/bend</span>
-            </div>
-            <div class="sec-row">
-              <label>Tapped Thread Holes:</label>
-              <input type="number" id="secTapsCount" class="form-input text-center sec-input" value="0" min="0"
-                max="50" />
-              <span class="sec-rate-hint">@ $1.25/hole</span>
-            </div>
-            <div class="sec-row">
-              <label>Edge Deburring & Grinding:</label>
-              <input type="checkbox" id="secDeburringCheck" class="form-checkbox" />
-              <span class="sec-rate-hint">@ $0.15/lb</span>
-            </div>
-            <div class="sec-row">
-              <label>Surface Treatment:</label>
-              <select id="secSurfaceFinish" class="form-select sec-select">
-                <option value="none">None (Raw Cut Edge)</option>
-                <option value="primer">Zinc-Rich Primer ($0.45/sq.ft)</option>
-                <option value="powder_coating">Polyester Powder Coating ($1.20/sq.ft)</option>
-                <option value="galvanizing">Hot-Dip Galvanizing ($0.65/lb)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add to RFQ Project Cart Action -->
-        <div class="cart-add-wrapper" style="margin-top: 1.25rem;">
-          <button id="addToCartBtn" class="btn btn-primary btn-lg"
-            style="width: 100%; background: linear-gradient(135deg, #10b981, #059669); border-color: #34d399; font-weight: 700; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);">
-            <span class="btn-icon">➕</span> Add Part to RFQ Cart
-          </button>
-          <span style="font-size: 0.72rem; color: #94a3b8; display: block; text-align: center; margin-top: 0.35rem;">
-            Add multiple distinct shapes to pack & quote together
-          </span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Left Splitter Handle -->
-    <div class="splitter" id="splitterLeft" title="Drag to resize left panel | Double-click to reset width">
-      <div class="splitter-handle"></div>
+      <a href="/app" class="lp-btn-secondary" style="justify-content: center; width: 100%;">
+        Use Free Version Now
+      </a>
     </div>
 
-    <!-- Center: 2D Interactive CAD Canvas & Telemetry -->
-    <section class="panel panel-center" id="panelCenter">
-      <!-- Slim Top Name / Status Bar (Green Area) -->
-      <div class="canvas-top-bar" id="canvasTopBar">
-        <div class="canvas-status">
-          <span class="status-indicator"></span>
-          <span id="canvasTitle">Part Geometry Preview</span>
-        </div>
-        <div class="canvas-top-telemetry">
-          <span class="telemetry-pill">2D CAM READY</span>
-        </div>
+    <!-- Pro Shop Tier -->
+    <div class="lp-pricing-card pro-tier">
+      <div class="lp-pro-badge">Most Popular</div>
+      <h3 class="lp-pricing-title">Pro Shop</h3>
+      <p class="lp-pricing-subtitle">Turn your job shop website into an automated quoting storefront.</p>
+
+      <div class="lp-price-row">
+        <span class="lp-price-amount">$49</span>
+        <span class="lp-price-interval">/ month (or ₹999/mo India)</span>
       </div>
 
-      <!-- Slim Actions Toolbar (Red Area) -->
-      <div class="canvas-header canvas-slim-toolbar" id="canvasHeader">
-        <div class="canvas-right-controls canvas-full-controls">
-          <!-- Cut Order Simulator Controls -->
-          <div class="simulator-btn-group" id="simulatorControls">
-            <button class="sim-btn slim-btn" id="btnSimulateCut"
-              title="Simulate laser cut sequence (Holes first, Outer last)">
-              <span id="simBtnIcon">▶</span> <span id="simBtnText">Simulate</span>
-            </button>
-            <select id="simSpeedSelect" class="sim-speed-select slim-select" title="Simulation Speed">
-              <option value="1" selected>1x</option>
-              <option value="2">2x</option>
-              <option value="5">5x</option>
-              <option value="10">10x</option>
-            </select>
-            <button class="sim-pill-toggle slim-toggle active" id="btnToggleCamBadges"
-              title="Toggle Hole Numbers & CAM cut order badges (①, ②, ③)">
-              ① Hole Numbers
-            </button>
-          </div>
-
-          <!-- View Mode Switch: Single Part vs Sheet Nesting -->
-          <div class="view-switch-group slim-switch">
-            <button class="view-btn slim-btn active" id="btnViewPart">Part</button>
-            <button class="view-btn slim-btn" id="btnViewNesting">📊 Nesting</button>
-          </div>
-
-          <!-- Units Toggle -->
-          <div class="units-toggle slim-units">
-            <button class="unit-btn slim-unit-btn" id="unitMm">MM</button>
-            <button class="unit-btn slim-unit-btn active" id="unitInch">INCH</button>
-          </div>
-
-          <!-- Interactive Live Demo & Video Showcase Trigger -->
-          <button class="nav-demo-btn slim-demo-btn" id="btnOpenDemoModal"
-            title="Interactive Live Demo & Video Showcase (Jeep 4x4 Wall Art)">
-            <span class="demo-play-icon">⭐</span>
-            <span class="demo-btn-label">Live Demo</span>
-            <span class="demo-badge-pulse">Jeep</span>
-          </button>
-
-          <!-- Quick Export Preview Action -->
-          <button class="canvas-action-btn slim-action-btn" id="btnExportImage"
-            title="Export Client High-Res Render (PNG for Proposal / RFQ)">
-            📸 Export
-          </button>
-        </div>
-      </div>
-
-      <!-- Architectural CNC Jali & Gate Studio Toolbar (Collapsible) -->
-      <div id="gateStudioToolbar" class="gate-studio-toolbar hidden">
-        <!-- Expanded Main Toolbar Controls -->
-        <div class="gate-toolbar-main" id="gateToolbarMain">
-          <div class="gate-tool-group">
-            <span class="gate-tool-label">View:</span>
-            <button class="gate-view-toggle active" id="btnJaliViewRealistic"
-              title="Photorealistic Architectural Gate View with Finishes & Backlight">
-              ✨ Realistic Gate
-            </button>
-            <button class="gate-view-toggle" id="btnJaliViewCam" title="CNC 2D CAM Wireframe & Toolpath">
-              📐 CAM Toolpath
-            </button>
-          </div>
-
-          <div class="gate-tool-divider"></div>
-
-          <div class="gate-tool-group" id="gateFinishGroup">
-            <span class="gate-tool-label">Finish:</span>
-            <div class="gate-finish-swatches">
-              <button class="finish-swatch active" data-finish="matte_black" title="Matte Black Powder Coat">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #2a303c, #111418);"></span>
-                <span class="swatch-name">Matte Black</span>
-              </button>
-              <button class="finish-swatch" data-finish="royal_gold" title="Royal Brass / Antique Gold">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #fde047, #b45309);"></span>
-                <span class="swatch-name">Royal Gold</span>
-              </button>
-              <button class="finish-swatch" data-finish="corten_rust" title="Corten Weathered Rust Steel">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #ea580c, #7c2d12);"></span>
-                <span class="swatch-name">Corten Rust</span>
-              </button>
-              <button class="finish-swatch" data-finish="brushed_stainless" title="Satin Stainless Steel 304">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #f8fafc, #64748b);"></span>
-                <span class="swatch-name">Stainless 304</span>
-              </button>
-              <button class="finish-swatch" data-finish="champagne_bronze" title="Champagne Bronze">
-                <span class="swatch-color" style="background: linear-gradient(135deg, #fbbf24, #78350f);"></span>
-                <span class="swatch-name">Bronze</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="gate-tool-divider"></div>
-
-          <div class="gate-tool-group" id="gateBacklightGroup">
-            <span class="gate-tool-label">Backlight:</span>
-            <div class="gate-backlight-pills">
-              <button class="backlight-pill active" data-backlight="warm_white" title="Warm 3000K LED Glow">💡 Warm
-                3000K</button>
-              <button class="backlight-pill" data-backlight="cool_white" title="Cool 6000K LED Glow">❄️ Cool
-                6000K</button>
-              <button class="backlight-pill" data-backlight="amber_gold" title="Sunset Amber Gold">🌅 Amber</button>
-              <button class="backlight-pill" data-backlight="none" title="Daylight / Off">Off</button>
-            </div>
-          </div>
-
-          <div class="gate-tool-divider"></div>
-
-          <div class="gate-tool-group" id="gateTypeGroup">
-            <span class="gate-tool-label">Type:</span>
-            <button class="gate-type-btn active" data-gatetype="single_swing">Single Gate</button>
-            <button class="gate-type-btn" data-gatetype="double_swing">Double Swing</button>
-            <button class="gate-type-btn" data-gatetype="wall_panel">Wall Panel</button>
-          </div>
-
-          <!-- Fold Button for Gate Studio Toolbar -->
-          <button class="hud-fold-btn gate-fold-btn" id="btnFoldGateToolbar"
-            title="Fold Gate Controls (Maximize Drawing Area)">
-            <span class="fold-btn-arrow">▲</span> Fold
-          </button>
-        </div>
-
-        <!-- Folded Compact State Bar -->
-        <div class="gate-folded-bar hidden" id="gateFoldedBar" title="Click to Expand Gate Studio Controls">
-          <div class="gate-folded-info">
-            <span class="gate-folded-badge">✨ Architectural Gate Studio</span>
-            <span class="gate-folded-summary" id="gateFoldedSummary">Matte Black • Warm 3000K • Single Gate</span>
-          </div>
-          <button class="hud-expand-btn gate-expand-btn" id="btnExpandGateToolbar" title="Expand Gate Studio Controls">
-            <span class="expand-btn-arrow">▼</span> Expand
-          </button>
-        </div>
-      </div>
-
-      <!-- SVG CAD Canvas Viewport -->
-      <div class="canvas-viewport" id="canvasViewport">
-        <!-- High-Tech Central CAD Demo & File Loading Overlay -->
-        <div id="cadLoadingOverlay" class="cad-loading-overlay hidden" aria-live="polite">
-          <div class="cad-loading-card">
-            <div class="cad-loading-spinner-wrap">
-              <div class="cad-spinner-ring"></div>
-              <div class="cad-spinner-core">⚡</div>
-            </div>
-            <div class="cad-loading-text-group">
-              <div class="cad-loading-title" id="cadLoadingTitle">Loading CAD Geometry...</div>
-              <div class="cad-loading-subtitle" id="cadLoadingSubtitle">Downloading Laser Cut Demo (jeep_wall_art.dxf)</div>
-            </div>
-            <div class="cad-loading-progress-bar">
-              <div class="cad-loading-progress-indeterminate"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Laser Simulation Real-time Telemetry HUD Overlay -->
-        <div id="simHudOverlay" class="sim-hud-overlay hidden">
-          <div class="sim-hud-inner">
-            <div class="sim-hud-left">
-              <span class="sim-pulse-dot"></span>
-              <span id="simStatusText" class="sim-status-text">Piercing Hole 1 (Yellow)...</span>
-            </div>
-            <div class="sim-progress-track">
-              <div id="simProgressBar" class="sim-progress-bar" style="width: 0%;"></div>
-            </div>
-            <div class="sim-hud-right">
-              <span id="simStepText" class="sim-metric-text">Step 1 of 5</span>
-              <span id="simTimeText" class="sim-metric-text">0.0s / 12.0s</span>
-              <button id="btnStopSim" class="sim-stop-btn">✕ Stop</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Multi-Sheet Pagination & Nest Source Bar -->
-        <div id="sheetPaginationBar" class="sheet-pagination-bar hidden">
-          <button id="btnPrevSheet" class="sheet-page-btn" disabled>◀ Prev Sheet</button>
-          <span id="sheetPageIndicator" class="sheet-page-text">Sheet 1 of 1</span>
-          <button id="btnNextSheet" class="sheet-page-btn" disabled>Next Sheet ▶</button>
-          <div class="nest-source-toggle" id="nestSourceToggle">
-            <span class="nest-source-label">Source:</span>
-            <button class="nest-source-btn active" id="btnNestSourceSingle">Active Part</button>
-            <button class="nest-source-btn" id="btnNestSourceCart">Full RFQ Cart (<span
-                id="nestCartCount">0</span>)</button>
-          </div>
-        </div>
-
-        <!-- Floating CAD Measure HUD Pill (Ultra-Compact Single-Row CAD Ribbon) -->
-        <div class="measure-hud-pill hidden" id="measureHudPill" title="Drag anywhere to reposition">
-          <div class="measure-hud-drag-handle" title="Drag to reposition">
-            <span class="measure-hud-icon">📐</span>
-            <span class="measure-hud-badge" id="measureSnapBadge">SNAP</span>
-          </div>
-          <div class="measure-hud-sep"></div>
-          <div class="measure-hud-item highlight" title="Direct Distance (D)">
-            <span class="m-label">D</span>
-            <span class="m-val" id="measureValDist">0.000 in</span>
-            <span class="m-sub" id="measureValDistAlt">0.0 mm</span>
-          </div>
-          <div class="measure-hud-sep"></div>
-          <div class="measure-hud-item" title="Horizontal Offset (Delta X)">
-            <span class="m-label">ΔX</span>
-            <span class="m-val" id="measureValDx">0.000 in</span>
-          </div>
-          <div class="measure-hud-sep"></div>
-          <div class="measure-hud-item" title="Vertical Offset (Delta Y)">
-            <span class="m-label">ΔY</span>
-            <span class="m-val" id="measureValDy">0.000 in</span>
-          </div>
-          <div class="measure-hud-sep"></div>
-          <div class="measure-hud-item" title="Angle from Horizontal">
-            <span class="m-label">θ</span>
-            <span class="m-val" id="measureValAngle">0.0°</span>
-          </div>
-          <div class="measure-hud-sep"></div>
-          <div class="measure-hud-tip-compact" id="measureHudTip" title="Guidance / Hotkeys">
-            💡 Click 1st pt
-          </div>
-          <button class="measure-hud-close" id="btnCloseMeasureHud" title="Exit Measure Mode (Esc)">✕</button>
-        </div>
-
-        <div id="svgContainer" class="svg-container"></div>
-
-        <!-- Floating Bounding Box Envelope Badge (FabEngineer Standard) -->
-        <div class="canvas-bbox-badge" id="canvasBboxBadge" title="Part Envelope Bounding Box">W: 0.00 in × H: 0.00 in
-        </div>
-
-        <!-- Floating Interactive Zoom / Pan Controls -->
-        <div class="canvas-zoom-controls" id="canvasZoomControls">
-          <button class="zoom-btn zoom-measure-btn" id="btnMeasureTool" title="Measure Distance, ΔX, ΔY (Hot-key: M)">
-            <span class="zoom-btn-icon">📐</span>
-            <span class="zoom-btn-label">Measure</span>
-          </button>
-          <button class="zoom-btn" id="btnZoomIn" title="Zoom In (or Scroll Wheel Up)">➕</button>
-          <span class="zoom-display" id="zoomLevelDisplay">100%</span>
-          <button class="zoom-btn" id="btnZoomOut" title="Zoom Out (or Scroll Wheel Down)">➖</button>
-          <button class="zoom-btn zoom-fit-btn" id="btnZoomFit" title="Fit to Screen (Reset Zoom & Pan)">
-            <span class="zoom-btn-icon">⛶</span>
-            <span class="zoom-btn-label">Fit</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Bottom Telemetry & Specifications Section (Collapsible) -->
-      <div class="canvas-bottom-hud-wrapper" id="canvasBottomHud">
-        <!-- Folded Compact Restore Bar (Visible only when folded) -->
-        <div class="bottom-hud-folded-bar hidden" id="bottomHudFoldedBar"
-          title="Click to Expand Telemetry & Specifications">
-          <div class="bottom-hud-folded-info">
-            <span class="bottom-hud-folded-badge">📊 Telemetry & Specs</span>
-            <span class="bottom-hud-folded-summary" id="bottomHudFoldedSummary">0.00 in • 0 Pierces • 0.00 lbs • 0" ×
-              0"</span>
-          </div>
-          <button class="hud-expand-btn bottom-hud-expand-btn" id="btnExpandBottomHud"
-            title="Expand Telemetry & Specifications">
-            <span class="expand-btn-arrow">▲</span> Expand
-          </button>
-        </div>
-
-        <!-- Expanded Content Container -->
-        <div class="bottom-hud-expanded-content" id="bottomHudExpandedContent">
-          <!-- Floating Fold Button in top-right -->
-          <button class="hud-fold-btn bottom-hud-fold-btn" id="btnFoldBottomHud"
-            title="Fold Metrics & Specs (Maximize Drawing Area)">
-            <span class="fold-btn-arrow">▼</span> Fold
-          </button>
-
-          <!-- CypCut / FabEngineer Layer Legend Bar (Visible in CAM Toolpath View) -->
-          <div class="cam-legend-bar" id="camLegendBar">
-            <div class="legend-item"><span class="legend-dot dot-outer"></span> Green: Outer Cut</div>
-            <div class="legend-item"><span class="legend-dot" style="background: #38bdf8;"></span> Cyan: Closed Cuts
-            </div>
-            <div class="legend-item"><span class="legend-dot" style="background: #f59e0b;"></span> Amber: Open Gaps
-            </div>
-            <div class="legend-item"><span class="legend-dot" style="background: #ef4444;"></span> Red: Collisions</div>
-            <div class="legend-item"><span class="legend-dash"
-                style="border-top: 2px dashed #22c55e; width: 14px; display: inline-block; vertical-align: middle;"></span>
-              Green Dashes: Bounding Box</div>
-            <div class="legend-item legend-toggle-item active" id="legendBadgeToggle"
-              title="Click to toggle Hole Numbers / CAM Cut Order Badges">
-              <span class="legend-badge-pill">①</span> Hole Numbers
-            </div>
-          </div>
-
-          <!-- Architectural Gate Specifications Legend (Shown in Realistic Gate mode) -->
-          <div class="arch-legend-bar hidden" id="archLegendBar">
-            <div class="legend-item"><span class="arch-legend-icon">🎨</span> <span
-                class="arch-legend-label">Finish:</span> <span class="arch-legend-val" id="archLegendFinish">Matte
-                Black</span></div>
-            <div class="legend-item"><span class="arch-legend-icon">💡</span> <span
-                class="arch-legend-label">Lighting:</span> <span class="arch-legend-val" id="archLegendLight">Warm
-                3000K</span></div>
-            <div class="legend-item"><span class="arch-legend-icon">🚪</span> <span
-                class="arch-legend-label">Frame:</span> <span class="arch-legend-val" id="archLegendFrame">50mm Box
-                Tube</span></div>
-            <div class="legend-item"><span class="arch-legend-icon">🔩</span> <span
-                class="arch-legend-label">Hardware:</span> <span class="arch-legend-val" id="archLegendHardware">Bullet
-                Hinges + Bar Pull</span></div>
-          </div>
-
-          <!-- Real-time HUD Metrics Bar -->
-          <div class="hud-bar">
-            <div class="hud-item">
-              <span class="hud-label">Cut Perimeter</span>
-              <span class="hud-val" id="hudCutLength">0.00 mm</span>
-            </div>
-            <div class="hud-item">
-              <span class="hud-label">Piercing Points</span>
-              <span class="hud-val" id="hudPierces">0</span>
-            </div>
-            <div class="hud-item">
-              <span class="hud-label">Est. Part Weight</span>
-              <span class="hud-val" id="hudWeight">0.00 kg</span>
-            </div>
-            <div class="hud-item">
-              <span class="hud-label">Bounding Box</span>
-              <span class="hud-val" id="hudBoundingBox">0 x 0 mm</span>
-            </div>
-          </div>
-
-          <!-- 2D Sheet Nesting Telemetry Bar (Visible when quantity > 1 or in nesting mode) -->
-          <div class="nesting-hud-bar" id="nestingHudBar">
-            <div class="nest-hud-item">
-              <span class="nest-hud-label">Sheets Required</span>
-              <span class="nest-hud-val" id="nestHudSheets">1 Sheet</span>
-            </div>
-            <div class="nest-hud-item">
-              <span class="nest-hud-label">Sheet Utilization</span>
-              <span class="nest-hud-val" id="nestHudUtil">0.0%</span>
-            </div>
-            <div class="nest-hud-item">
-              <span class="nest-hud-label">Skeleton Scrap</span>
-              <span class="nest-hud-val" id="nestHudScrap">0.00 kg</span>
-            </div>
-            <div class="nest-hud-item">
-              <span class="nest-hud-label">Reusable Remnant</span>
-              <span class="nest-hud-val" id="nestHudRemnant">0 × 0 mm</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- DFM Guardrail Alerts -->
-      <div id="dfmAlertContainer" class="dfm-container"></div>
-    </section>
-
-    <!-- Right Splitter Handle -->
-    <div class="splitter" id="splitterRight" title="Drag to resize quote panel | Double-click to reset width">
-      <div class="splitter-handle"></div>
-    </div>
-
-    <!-- Right: Quoting Card & Shop Admin Drawer -->
-    <section class="panel panel-right" id="panelRight">
-      <div class="panel-header-bar">
-        <span class="panel-header-title">QUOTING & SETTINGS</span>
-        <button id="collapseRightBtn" class="collapse-icon-btn" title="Collapse Panel (Alt+2)">
-          ▶
-        </button>
-      </div>
-
-      <!-- Right Panel Tabs: Quote vs Cart vs Admin -->
-      <div class="tab-group right-tabs">
-        <button class="tab-btn active" id="tabQuote">
-          <span>📋 Single Quote</span>
-        </button>
-        <button class="tab-btn" id="tabCart">
-          <span>🛒 RFQ Cart <span id="cartBadge" class="cart-count-badge">0</span></span>
-        </button>
-        <button class="tab-btn" id="tabAdmin">
-          <span>⚙️ Shop Rates</span>
-        </button>
-      </div>
-
-      <!-- Tab 1: Instant Quotation -->
-      <div id="quoteView" class="tab-pane">
-        <div class="quote-card">
-          <div class="quote-header">
-            <span class="quote-badge" id="quoteModeBadge">LABOR ONLY (JOB SHOP)</span>
-            <div class="shop-name-pill" id="quoteShopName">Midwest Precision CNC & Laser</div>
-          </div>
-
-          <div class="price-display">
-            <span class="currency" id="currencySym">$</span>
-            <span class="price-amount" id="totalPrice">0.00</span>
-            <span class="price-sub" id="pricePerUnit">($0.00 / unit)</span>
-          </div>
-
-          <div id="minOrderWarning" class="min-order-pill hidden">
-            ⚠️ Minimum Order Floor Applied
-          </div>
-
-          <div class="quote-breakdown">
-            <div class="breakdown-row" id="rowMaterial">
-              <span>Raw Material:</span>
-              <span id="costMaterial">$0.00</span>
-            </div>
-            <div class="breakdown-row" id="rowCut">
-              <span>Laser Cutting:</span>
-              <span id="costCut">$0.00</span>
-            </div>
-            <div class="breakdown-row" id="rowPierce">
-              <span>Piercing Charges:</span>
-              <span id="costPierce">$0.00</span>
-            </div>
-            <div class="breakdown-row" id="rowHandling">
-              <span>Plate Handling Fee:</span>
-              <span id="costHandling">$0.00</span>
-            </div>
-            <div class="breakdown-row" id="rowSecondary">
-              <span>Secondary Operations:</span>
-              <span id="costSecondary">$0.00</span>
-            </div>
-            <div class="breakdown-row discount-row" id="volumeDiscountRow">
-              <span>Volume Discount:</span>
-              <span id="costDiscount">-0%</span>
-            </div>
-            <div class="breakdown-row gst-row" id="gstBreakdownRow">
-              <span id="gstLabel">Sales Tax (7%):</span>
-              <span id="costGst">$0.00</span>
-            </div>
-            <div class="breakdown-row total-inc-gst">
-              <span style="font-weight: 700; color: #fff;">Total (Inc. Sales Tax):</span>
-              <span id="totalIncGst" style="font-weight: 800; color: #38bdf8;">$0.00</span>
-            </div>
-            <div class="hsn-tag" id="hsnCodeTag">NAICS 332813 (Laser Cutting & Fabrication)</div>
-          </div>
-
-          <div class="whatsapp-box" id="customerContactBox">
-            <div class="label-row">
-              <label class="form-label" for="customerPhoneInput" id="customerPhoneLabel">Customer Email / Phone</label>
-              <span class="phone-badge" id="phoneModeBadge">Email / RFQ</span>
-            </div>
-            <div class="phone-input-group">
-              <span class="phone-prefix" id="phoneCountryPrefix">+1</span>
-              <input type="tel" id="customerPhoneInput" class="phone-input"
-                placeholder="estimator@client.com or (555) 123-4567" maxlength="32" />
-            </div>
-            <span class="phone-hint" id="phoneHint">Enter email to send quote, or copy directly to clipboard</span>
-          </div>
-
-          <div class="action-stack">
-            <!-- WhatsApp Share (India Mode) -->
-            <button id="shareWhatsAppBtn" class="btn btn-whatsapp btn-lg" style="display: none;">
-              <span class="btn-icon" id="shareBtnIcon">📱</span> <span id="shareBtnText">Share Quote on WhatsApp</span>
-            </button>
-
-            <!-- US Regional Share Actions: Email Quotation + Copy RFQ Text -->
-            <div id="usSingleShareGroup" class="us-share-actions-group" style="display: flex;">
-              <button id="btnEmailQuote" class="btn btn-email btn-lg" style="flex: 1.1;">
-                <span class="btn-icon">✉️</span> <span>Email Quotation</span>
-              </button>
-              <button id="btnCopyRfqText" class="btn btn-secondary btn-lg" style="flex: 1;">
-                <span class="btn-icon">📋</span> <span>Copy RFQ Text</span>
-              </button>
-            </div>
-
-            <div class="btn-split-row">
-              <button id="printInvoiceBtn" class="btn btn-secondary" style="flex: 1;">
-                <span class="btn-icon">📄</span> <span id="printInvoiceText">Commercial Quote (PDF)</span>
-              </button>
-              <button id="jobCardBtn" class="btn btn-secondary" style="flex: 1;">
-                <span class="btn-icon">🛠️</span> Job Card
-              </button>
-            </div>
-
-            <div class="btn-split-row">
-              <button id="downloadDxfBtn" class="btn btn-primary" style="flex: 1.2;">
-                <span class="btn-icon">⚡</span> <span id="downloadDxfText">Trumpf DXF</span>
-              </button>
-              <button id="copyQuoteBtn" class="btn btn-secondary" style="flex: 0.8;">
-                <span class="btn-icon">📋</span> Copy
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab 2: Project RFQ Cart -->
-      <div id="cartView" class="tab-pane hidden">
-        <div class="cart-card">
-          <div class="cart-header">
-            <div>
-              <h3 class="cart-title">Project RFQ Cart</h3>
-              <span class="cart-sub">Consolidated Multi-Part Assembly & Nesting</span>
-            </div>
-            <button id="clearCartBtn" class="btn btn-secondary btn-sm" title="Remove all items from cart">
-              🗑️ Clear
-            </button>
-          </div>
-
-          <!-- Customer & Project Details -->
-          <div class="cart-project-meta">
-            <div class="form-group" style="margin-bottom: 0.5rem;">
-              <label class="form-label" for="cartProjectName">Project / Assembly Title</label>
-              <input type="text" id="cartProjectName" class="form-input" value="Industrial Skid Batch #1" />
-            </div>
-            <div class="form-row-2">
-              <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label" for="cartCustomerName">Customer / Company</label>
-                <input type="text" id="cartCustomerName" class="form-input"
-                  placeholder="e.g. Caterpillar / Great Lakes Mfg" />
-              </div>
-              <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label" for="cartCustomerPhone" id="cartCustomerPhoneLabel">Customer Email /
-                  Phone</label>
-                <input type="tel" id="cartCustomerPhone" class="form-input"
-                  placeholder="estimator@client.com or (555) 123-4567" maxlength="48" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Cart Items List Container -->
-          <div id="cartItemsList" class="cart-items-list">
-            <!-- Dynamically populated or empty state -->
-          </div>
-
-          <!-- Consolidated Project Summary Box -->
-          <div id="cartSummaryBox" class="cart-summary-box hidden">
-            <div class="cart-summary-title">CONSOLIDATED BATCH SUMMARY</div>
-            <div class="cart-metrics-grid">
-              <div class="cart-metric-item">
-                <span class="cart-metric-label">Total Parts</span>
-                <span class="cart-metric-val" id="cartTotalParts">0 pcs</span>
-              </div>
-              <div class="cart-metric-item">
-                <span class="cart-metric-label">Total Cut Length</span>
-                <span class="cart-metric-val" id="cartTotalCut">0.0 m</span>
-              </div>
-              <div class="cart-metric-item">
-                <span class="cart-metric-label">Total Pierces</span>
-                <span class="cart-metric-val" id="cartTotalPierces">0</span>
-              </div>
-              <div class="cart-metric-item">
-                <span class="cart-metric-label">Net Steel Mass</span>
-                <span class="cart-metric-val" id="cartTotalMass">0.00 kg</span>
-              </div>
-            </div>
-
-            <div class="cart-nesting-banner" id="cartNestingBanner">
-              <div class="cart-nest-left">
-                <span class="cart-nest-icon">📊</span>
-                <span id="cartNestingText" class="cart-nest-text">Nesting: 1 Sheet of 8×4 ft</span>
-              </div>
-              <button id="btnNestCartOnBed" class="btn btn-secondary btn-xs">View Layout</button>
-            </div>
-
-            <!-- Pricing Breakdown -->
-            <div class="quote-breakdown" style="margin-top: 0.75rem;">
-              <div class="breakdown-row">
-                <span>Material Subtotal:</span>
-                <span id="cartCostMaterial">$0.00</span>
-              </div>
-              <div class="breakdown-row">
-                <span>Laser Cutting:</span>
-                <span id="cartCostCut">$0.00</span>
-              </div>
-              <div class="breakdown-row">
-                <span>Piercing Charges:</span>
-                <span id="cartCostPierce">$0.00</span>
-              </div>
-              <div class="breakdown-row">
-                <span>Secondary Operations:</span>
-                <span id="cartCostSecondary">$0.00</span>
-              </div>
-              <div class="breakdown-row discount-row" id="cartDiscountRow">
-                <span id="cartDiscountLabel">Volume Discount:</span>
-                <span id="cartCostDiscount">-0%</span>
-              </div>
-              <div class="breakdown-row gst-row">
-                <span id="cartGstLabel">Sales Tax (7%):</span>
-                <span id="cartCostGst">$0.00</span>
-              </div>
-              <div class="breakdown-row total-inc-gst">
-                <span style="font-weight: 700; color: #fff;">Project Total (Inc. Tax):</span>
-                <span id="cartTotalIncGst" style="font-weight: 800; color: #38bdf8; font-size: 1.25rem;">$0.00</span>
-              </div>
-            </div>
-
-            <!-- Project Action Buttons -->
-            <div class="action-stack" style="margin-top: 1rem;">
-              <!-- WhatsApp Cart Share (India Mode) -->
-              <button id="shareCartWhatsAppBtn" class="btn btn-whatsapp btn-lg" style="display: none;">
-                <span class="btn-icon" id="shareCartBtnIcon">📱</span> <span id="shareCartBtnText">Share Project Quote
-                  on WhatsApp</span>
-              </button>
-
-              <!-- US Regional Cart Share Actions: Email Project RFQ + Copy RFQ Text -->
-              <div id="usCartShareGroup" class="us-share-actions-group" style="display: flex;">
-                <button id="btnEmailCartQuote" class="btn btn-email btn-lg" style="flex: 1.1;">
-                  <span class="btn-icon">✉️</span> <span>Email Project RFQ</span>
-                </button>
-                <button id="btnCopyCartRfqText" class="btn btn-secondary btn-lg" style="flex: 1;">
-                  <span class="btn-icon">📋</span> <span>Copy RFQ Text</span>
-                </button>
-              </div>
-              <div class="btn-split-row">
-                <button id="printCartInvoiceBtn" class="btn btn-secondary" style="flex: 1;">
-                  <span class="btn-icon">📄</span> <span id="printCartInvoiceText">Commercial Quote (PDF)</span>
-                </button>
-                <button id="printCartJobCardBtn" class="btn btn-secondary" style="flex: 1;">
-                  <span class="btn-icon">🛠️</span> Shop Job Card
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab 3: Shop Admin Settings -->
-      <div id="adminView" class="tab-pane hidden">
-        <div id="adminPanel" class="admin-card">
-          <div class="admin-header">
-            <div class="admin-title-row">
-              <div class="admin-title-left">
-                <div class="admin-icon-box">⚙️</div>
-                <h3 class="admin-heading">Shop Admin & Rates</h3>
-              </div>
-              <span id="storageBadge" class="save-badge">💾 Auto-Saved</span>
-            </div>
-            <p class="admin-sub">Tune shop steel rates, cutting fees & CAM defaults. All changes auto-save.</p>
-          </div>
-
-          <!-- Section 1: Shop Profile & Minimums -->
-          <div class="admin-section">
-            <div class="admin-section-header">
-              <span class="section-tag">SHOP IDENTITY & ORDER MINIMUMS</span>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="adminShopName">Shop Display Name</label>
-              <div class="input-adornment-wrap">
-                <span class="input-icon-adornment">🏢</span>
-                <input type="text" id="adminShopName" class="form-input custom-admin-input"
-                  value="Midwest Precision CNC & Laser" placeholder="Shop or Business Name" />
-              </div>
-            </div>
-
-            <div class="form-group" id="groupAdminGstin" style="display: none;">
-              <label class="form-label" for="adminGstin">Shop GSTIN (15-digit)</label>
-              <div class="input-adornment-wrap">
-                <span class="input-icon-adornment">🏛️</span>
-                <input type="text" id="adminGstin" class="form-input custom-admin-input" value="27AABCS1429B1Z8"
-                  placeholder="27AABCS1429B1Z8" />
-              </div>
-            </div>
-
-            <div class="form-group" id="groupAdminUpi" style="display: none;">
-              <label class="form-label" for="adminUpiId">Shop UPI ID (for QR Code)</label>
-              <div class="input-adornment-wrap">
-                <span class="input-icon-adornment">📱</span>
-                <input type="text" id="adminUpiId" class="form-input custom-admin-input" value="balajilaser@upi"
-                  placeholder="shop@upi" />
-              </div>
-            </div>
-
-            <!-- US Specific Shop Details (Shown when currency is USD) -->
-            <div id="groupAdminUsDetails" class="us-admin-details-group" style="display: block;">
-              <div class="admin-two-col-grid">
-                <div class="form-group">
-                  <label class="form-label" for="adminNaics">NAICS Industry Code</label>
-                  <div class="input-adornment-wrap">
-                    <span class="input-icon-adornment">🏭</span>
-                    <input type="text" id="adminNaics" class="form-input custom-admin-input"
-                      value="332813 - Laser Cutting & Fabrication" placeholder="332813" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="adminTaxId">Federal Tax ID / EIN</label>
-                  <div class="input-adornment-wrap">
-                    <span class="input-icon-adornment">📋</span>
-                    <input type="text" id="adminTaxId" class="form-input custom-admin-input" value="34-8910245"
-                      placeholder="XX-XXXXXXX" />
-                  </div>
-                </div>
-              </div>
-
-              <div class="admin-two-col-grid">
-                <div class="form-group">
-                  <label class="form-label" for="adminPaymentTerms">Standard Payment Terms</label>
-                  <div class="input-adornment-wrap">
-                    <span class="input-icon-adornment">💳</span>
-                    <input type="text" id="adminPaymentTerms" class="form-input custom-admin-input"
-                      value="Net 30, Credit Card, ACH" placeholder="Net 30, Credit Card, ACH" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="adminLaserPower">Fiber Laser Power</label>
-                  <div class="input-adornment-wrap">
-                    <span class="input-icon-adornment">⚡</span>
-                    <select id="adminLaserPower" class="form-input custom-admin-input" style="height: 38px;">
-                      <option value="4" selected>4kW Fiber Laser (Trumpf/Bystronic)</option>
-                      <option value="6">6kW Fiber Laser (High-Throughput)</option>
-                      <option value="10">10kW Fiber Laser (Heavy Plate)</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div class="admin-two-col-grid">
-                <div class="form-group">
-                  <label class="form-label" for="adminHourlyRate">Shop Laser Machine Rate ($/hr)</label>
-                  <div class="input-adornment-wrap">
-                    <span class="input-icon-adornment">⏱️</span>
-                    <input type="number" id="adminHourlyRate" class="form-input custom-admin-input rate-numeric-input"
-                      value="185" min="50" max="500" step="5" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="adminShopEmail">Estimator Intake Email</label>
-                  <div class="input-adornment-wrap">
-                    <span class="input-icon-adornment">✉️</span>
-                    <input type="email" id="adminShopEmail" class="form-input custom-admin-input"
-                      value="quotes@midwestprecision.com" placeholder="quotes@shop.com" />
-                  </div>
-                </div>
-              </div>
-
-              <div class="admin-two-col-grid">
-                <div class="form-group" style="display: flex; align-items: flex-end; padding-bottom: 6px;">
-                  <label class="checkbox-label"
-                    style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #cbd5e1; cursor: pointer;">
-                    <input type="checkbox" id="adminSalesTaxExempt"
-                      style="width: 16px; height: 16px; accent-color: #0284c7;" />
-                    <span>Tax-Exempt Customer (Resale Cert)</span>
-                  </label>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="adminSetupFee">Setup Fee / Programming ($)</label>
-                  <input type="number" id="adminSetupFee" class="form-input custom-admin-input rate-numeric-input"
-                    value="25" min="0" step="5" />
-                </div>
-              </div>
-
-              <!-- 1-Click Copy Configured Embed Widget Button -->
-              <div style="margin-top: 0.75rem; margin-bottom: 0.5rem;">
-                <button type="button" id="btnCopyConfiguredEmbedScript" class="btn btn-secondary"
-                  style="width: 100%; border-color: rgba(56,189,248,0.4); font-weight: 600; font-size: 0.8rem;">
-                  📋 Copy My Configured Website Embed Tag
-                </button>
-              </div>
-            </div>
-
-            <div class="admin-two-col-grid">
-              <div class="form-group">
-                <label class="form-label" for="adminMinOrder">Min. Order Floor (<span
-                    id="adminCurrencySym">$</span>)</label>
-                <input type="number" id="adminMinOrder" class="form-input custom-admin-input rate-numeric-input"
-                  value="75" min="0" step="10" />
-              </div>
-
-              <div class="form-group" id="groupSheetLoading">
-                <label class="form-label" for="adminSheetLoading" id="labelSheetLoading">Handling & Loading Fee
-                  ($/sheet)</label>
-                <input type="number" id="adminSheetLoading" class="form-input custom-admin-input rate-numeric-input"
-                  value="20" min="0" step="25" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 2: Active Material Rates -->
-          <div class="admin-section">
-            <div class="admin-rates-box">
-              <div class="rates-box-title">
-                <div class="rates-title-left">
-                  <span class="rates-bolt-icon">⚡</span>
-                  <span id="activeGaugeLabel" class="active-rates-label">Active Material Rates</span>
-                </div>
-                <span class="badge-active-gauge" id="activeGaugeBadge">A36 1/4" Plate</span>
-              </div>
-              <div class="rates-grid">
-                <div class="rate-item">
-                  <label class="rate-label" id="labelPricePerKg">Material Rate ($/sq.in)</label>
-                  <input type="number" id="adminPricePerKg" class="form-input rate-input" step="0.001" />
-                </div>
-                <div class="rate-item">
-                  <label class="rate-label" id="labelPricePerMeterCut">Cut Rate ($/lin.in)</label>
-                  <input type="number" id="adminPricePerMeterCut" class="form-input rate-input" step="0.001" />
-                </div>
-                <div class="rate-item">
-                  <label class="rate-label" id="labelPricePerPierce">Pierce Fee ($/pt)</label>
-                  <input type="number" id="adminPricePerPierce" class="form-input rate-input" step="0.01" />
-                </div>
-                <div class="rate-item">
-                  <label class="rate-label" id="labelAdminTax">Sales Tax (%)</label>
-                  <input type="number" id="adminGstPercent" class="form-input rate-input" min="0" max="100" step="0.5"
-                    value="7" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 3: Machine CAM & Tax Calibration -->
-          <div class="admin-section">
-            <div class="admin-section-header">
-              <span class="section-tag">CALIBRATION & CAM INTEGRATION</span>
-            </div>
-
-            <div class="form-group" id="groupAdminTaxType" style="display: none;">
-              <label class="form-label">Tax Type</label>
-              <select id="adminTaxType" class="form-select custom-admin-select">
-                <option value="intrastate">Intra-State (CGST 9% + SGST 9%)</option>
-                <option value="interstate">Inter-State (IGST 18%)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Export CAM Post-Processor Profile</label>
-              <select id="camProfileSelect" class="form-select custom-admin-select"></select>
-            </div>
-
-            <div class="form-group">
-              <div class="label-with-val">
-                <label class="form-label">Linear Cut Speed Multiplier</label>
-                <span class="slider-val-badge" id="cutMultVal">1.0x (Standard)</span>
-              </div>
-              <input type="range" id="adminCutMultiplier" min="0.5" max="2.0" step="0.1" value="1.0"
-                class="form-slider admin-slider" />
-            </div>
-          </div>
-
-          <div class="admin-footer-actions">
-            <button id="resetRatesBtn" class="btn btn-benchmark-reset" style="width: 100%;">
-              <span class="btn-icon">↺</span> Reset Factory Benchmark Rates
-            </button>
-            <div style="text-align: center; margin-top: 0.75rem; font-size: 0.72rem; color: #64748b;">
-              Need help or custom shop rates? <a href="mailto:contact@sheetdxf.com" style="color: #38bdf8; text-decoration: underline;">contact@sheetdxf.com</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Floating Edge Restore Tabs (when panels are collapsed) -->
-  <button id="restoreLeftBtn" class="restore-panel-btn restore-left hidden" title="Expand Drafting Panel (Alt+1)">
-    <span>▶</span>
-    <span class="vertical-text" id="restoreLeftLabel">Drafting</span>
-    <span>📐</span>
-  </button>
-
-  <button id="restoreRightBtn" class="restore-panel-btn restore-right hidden" title="Expand Quotation & CAM (Alt+2)">
-    <span>◀</span>
-    <span class="vertical-text" id="restoreRightLabel">Quotation</span>
-    <span>📋</span>
-  </button>
-
-  <!-- Document Print Container Modal (Hidden from view, used for popup/print) -->
-  <div id="docModal" class="modal-backdrop hidden">
-    <div class="doc-modal-card">
-      <div class="modal-header">
-        <h3 id="docModalTitle">Document Preview</h3>
-        <button id="closeDocModalBtn" class="close-btn">&times;</button>
-      </div>
-      <div class="doc-modal-body">
-        <iframe id="docFrame" style="width: 100%; height: 600px; border: none;"></iframe>
-      </div>
+      <ul class="lp-pricing-features">
+        <li class="checked"><span>✓</span> <strong>Everything in Free</strong></li>
+        <li class="checked"><span>✓</span> <strong>Embeddable Website Quoting Widget</strong></li>
+        <li class="checked"><span>✓</span> Custom Shop Hourly Rates & Setup Fees</li>
+        <li class="checked"><span>✓</span> Branded PDF Proposals with Your Logo & Terms</li>
+        <li class="checked"><span>✓</span> Multi-Part Assembly RFQ Cart & 2D Nesting</li>
+        <li class="checked"><span>✓</span> Webhook & CRM Integration (HubSpot / Email)</li>
+        <li class="checked"><span>✓</span> Multi-Currency (USD, CAD, EUR, INR with GST)</li>
+        <li class="checked"><span>✓</span> Priority Support & Machine Calibration Tuning</li>
+      </ul>
+
+      <a href="/app?openEmbed=1" class="btn-primary-action" style="text-decoration: none; justify-content: center;">
+        <span>⚡ Start 14-Day Free Trial</span>
+      </a>
     </div>
   </div>
 
-  <!-- Interactive Live Demo & Asset Showcase Modal -->
-  <div id="demoVideoModal" class="modal-backdrop hidden">
-    <div class="modal-card demo-modal-card">
-      <div class="modal-header demo-modal-header">
-        <div class="demo-header-title-wrap">
-          <span class="demo-header-badge">⭐ LIVE PRODUCT SHOWCASE</span>
-          <h3 class="demo-modal-title">Laser Cut Metal Jeep Wall Art</h3>
-          <span class="demo-header-sub">Production 4×4 Offroad Art • DXF Toolpath • Blueprint PDF • Architectural
-            Vector</span>
-        </div>
-        <button id="closeDemoModalBtn" class="close-btn" title="Close (Esc)">&times;</button>
-      </div>
+  <!-- ========================================================================
+       SECTION 6: SOCIAL PROOF / CREDIBILITY NUMBERS
+       ======================================================================== -->
+  <section class="lp-section-header">
+    <span class="lp-section-tag">Benchmark Telemetry</span>
+    <h2 class="lp-section-title">Engineered for Precision</h2>
+    <p class="lp-section-desc">Real numbers from production laser cutting operations.</p>
+  </section>
 
-      <!-- Showcase Tab Navigation -->
-      <div class="demo-modal-tab-bar">
-        <button type="button" class="demo-modal-tab-btn active" data-demotab="cad" id="tabDemoCad">
-          ⚡ Interactive CAD
-        </button>
-        <button type="button" class="demo-modal-tab-btn" data-demotab="pdf" id="tabDemoPdf">
-          📄 Blueprint PDF Spec
-        </button>
-        <button type="button" class="demo-modal-tab-btn" data-demotab="svg" id="tabDemoSvg">
-          🎨 Architectural Finishes
-        </button>
-        <button type="button" class="demo-modal-tab-btn" data-demotab="dxf" id="tabDemoDxf">
-          🛠️ CAM DXF &amp; DFM
-        </button>
-        <button type="button" class="demo-modal-tab-btn" data-demotab="video" id="tabDemoVideo">
-          🎬 Video Tour
-        </button>
-      </div>
+  <div class="lp-credibility-grid">
+    <div class="lp-credibility-card">
+      <div class="lp-credibility-stat">0.3s</div>
+      <p class="lp-credibility-desc">Average DXF vector calculation, contour healing & pierce analysis time.</p>
+    </div>
 
-      <div class="modal-body demo-modal-body">
-        <!-- Pane 1: Interactive CAD & Instant Quoting -->
-        <div class="demo-tab-pane active" id="paneDemoCad">
-          <div class="demo-pane-grid">
-            <div class="demo-cad-visual-col">
-              <div class="demo-jeep-preview-box">
-                <img src="/demo/jeep_wall_art.svg" alt="Jeep Wall Art Geometry" class="demo-jeep-vector-preview" />
-                <div class="demo-cad-stat-overlay">
-                  <span class="demo-stat-chip">13.45″ × 13.40″</span>
-                  <span class="demo-stat-chip">21 Pierces</span>
-                  <span class="demo-stat-chip">214.3″ Cut Length</span>
-                </div>
-              </div>
-            </div>
-            <div class="demo-cad-info-col">
-              <div class="demo-spec-group">
-                <h4 class="demo-pane-heading">Real-Time Estimating &amp; Toolpath Telemetry</h4>
-                <p class="demo-pane-text">
-                  Experience how an American job shop automates quotation on decorative laser wall art with closed
-                  loops, zero duplicate overlaps, and automated pierce detection.
-                </p>
-              </div>
+    <div class="lp-credibility-card">
+      <div class="lp-credibility-stat">4kW – 12kW</div>
+      <p class="lp-credibility-desc">Calibrated cutting tables for Trumpf, Bystronic, Amada & fiber laser resonators.</p>
+    </div>
 
-              <div class="demo-quick-calc-card">
-                <div class="demo-calc-row">
-                  <span>Cutting Material:</span>
-                  <strong id="demoCalcMaterial">A36 Carbon Steel (11 GA / 0.120″)</strong>
-                </div>
-                <div class="demo-calc-row">
-                  <span>Laser Power &amp; Speed:</span>
-                  <strong>4 kW Fiber @ 280 IPM (O2 Cut)</strong>
-                </div>
-                <div class="demo-calc-row">
-                  <span>Estimated Cycle Time:</span>
-                  <strong style="color: #38bdf8;">~48 sec / piece</strong>
-                </div>
-                <div class="demo-calc-row demo-calc-total-row">
-                  <span>Instant Shop Quote (1 pc):</span>
-                  <span class="demo-calc-price" id="demoCalcPrice">$28.50</span>
-                </div>
-              </div>
+    <div class="lp-credibility-card">
+      <div class="lp-credibility-stat">4×8 & 5×10</div>
+      <p class="lp-credibility-desc">Standard sheet sizes supported with true skeleton scrap and remnant tracking.</p>
+    </div>
 
-              <div class="demo-pane-actions">
-                <button type="button" class="btn btn-primary btn-lg" id="btnModalLoadJeepCad" style="width: 100%;">
-                  ⚡ Load into Active CAD &amp; Run Simulation
-                </button>
-                <div style="display: flex; gap: 8px; margin-top: 8px;">
-                  <a href="/demo/jeep_wall_art.dxf" download="jeep_wall_art.dxf" class="btn btn-secondary btn-sm"
-                    style="flex: 1; text-align: center; text-decoration: none;">
-                    📥 Download DXF
-                  </a>
-                  <a href="/demo/jeep_wall_art.pdf" download="jeep_wall_art.pdf" class="btn btn-secondary btn-sm"
-                    style="flex: 1; text-align: center; text-decoration: none;">
-                    📥 Download PDF
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pane 2: Blueprint PDF Spec -->
-        <div class="demo-tab-pane hidden" id="paneDemoPdf">
-          <div class="demo-pdf-container">
-            <div class="demo-pdf-toolbar">
-              <div class="demo-pdf-meta">
-                <span class="demo-pdf-title">Laser Cut Metal Jeep Wall Art — Technical Drawing (PDF)</span>
-                <span class="demo-pdf-badge">Official Blueprint Spec</span>
-              </div>
-              <div class="demo-pdf-btns">
-                <a href="/demo/jeep_wall_art.pdf" target="_blank" class="btn btn-xs btn-secondary"
-                  style="text-decoration: none;">
-                  🔍 Open Full PDF
-                </a>
-                <a href="/demo/jeep_wall_art.pdf" download="jeep_wall_art.pdf" class="btn btn-xs btn-primary"
-                  style="text-decoration: none;">
-                  📥 Download Blueprint PDF
-                </a>
-              </div>
-            </div>
-            <div class="demo-pdf-frame-wrapper">
-              <iframe data-src="/demo/jeep_wall_art.pdf#toolbar=1&navpanes=0" class="demo-pdf-iframe" loading="lazy"
-                title="Laser Cut Metal Jeep Wall Art PDF Blueprint"></iframe>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pane 3: Architectural Finishes & Vector Preview -->
-        <div class="demo-tab-pane hidden" id="paneDemoSvg">
-          <div class="demo-finish-studio">
-            <div class="demo-finish-preview-col">
-              <div class="demo-finish-stage" id="demoFinishStage">
-                <div class="demo-backlight-glow" id="demoBacklightGlow"></div>
-                <div class="demo-finish-svg-wrap" id="demoFinishSvgWrap">
-                  <img src="/demo/jeep_wall_art.svg" alt="Jeep Wall Art" id="demoFinishJeepImg"
-                    class="demo-finish-jeep-img finish-matte-black" />
-                </div>
-              </div>
-            </div>
-            <div class="demo-finish-controls-col">
-              <h4 class="demo-pane-heading">Architectural Metal Finishes</h4>
-              <p class="demo-pane-text">Select premium powder coats, patinas, and LED wall wash effects for decorative
-                wall art applications:</p>
-
-              <div class="demo-finish-swatches">
-                <button type="button" class="demo-finish-swatch-btn active" data-demofinish="matte_black">
-                  <span class="swatch-dot" style="background: #181c24; border: 1px solid #475569;"></span>
-                  <span>Matte Black Powder Coat</span>
-                </button>
-                <button type="button" class="demo-finish-swatch-btn" data-demofinish="royal_gold">
-                  <span class="swatch-dot" style="background: linear-gradient(135deg, #facc15, #b45309);"></span>
-                  <span>Royal Brass / Gold</span>
-                </button>
-                <button type="button" class="demo-finish-swatch-btn" data-demofinish="corten_rust">
-                  <span class="swatch-dot" style="background: linear-gradient(135deg, #ea580c, #7c2d12);"></span>
-                  <span>Corten Weathered Rust Steel</span>
-                </button>
-                <button type="button" class="demo-finish-swatch-btn" data-demofinish="stainless">
-                  <span class="swatch-dot" style="background: linear-gradient(135deg, #e2e8f0, #94a3b8);"></span>
-                  <span>Satin Stainless 304</span>
-                </button>
-              </div>
-
-              <div style="margin-top: 1rem;">
-                <label
-                  style="font-size: 0.76rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; display: block;">Wall
-                  Backlight LED:</label>
-                <div class="demo-backlight-row">
-                  <button type="button" class="demo-backlight-btn active" data-demolight="warm_white">💡 Warm
-                    3000K</button>
-                  <button type="button" class="demo-backlight-btn" data-demolight="cool_white">❄️ Cool 6000K</button>
-                  <button type="button" class="demo-backlight-btn" data-demolight="amber_gold">🌅 Amber</button>
-                  <button type="button" class="demo-backlight-btn" data-demolight="off">Off</button>
-                </div>
-              </div>
-
-              <div style="margin-top: 1.25rem;">
-                <a href="/demo/jeep_wall_art.svg" download="jeep_wall_art.svg" class="btn btn-secondary btn-sm"
-                  style="width: 100%; text-align: center; text-decoration: none;">
-                  📥 Download Vector Art (SVG)
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pane 4: CAM DXF & DFM Topology -->
-        <div class="demo-tab-pane hidden" id="paneDemoDxf">
-          <div class="demo-dxf-info-pane">
-            <div class="demo-dxf-specs-card">
-              <h4 class="demo-pane-heading">AutoCAD R2010 / AC1015 CNC Laser Specification</h4>
-              <div class="demo-dxf-meta-grid">
-                <div class="demo-dxf-meta-item">
-                  <span class="meta-label">Outer Boundary Loop</span>
-                  <span class="meta-value" style="color: #38bdf8;">1 Closed Polyline (CUT_OUTER)</span>
-                </div>
-                <div class="demo-dxf-meta-item">
-                  <span class="meta-label">Interior Cutouts</span>
-                  <span class="meta-value" style="color: #facc15;">20 Closed Loops (CUT_INNER)</span>
-                </div>
-                <div class="demo-dxf-meta-item">
-                  <span class="meta-label">Total Pierces</span>
-                  <span class="meta-value" style="color: #34d399;">21 Independent Pierces</span>
-                </div>
-                <div class="demo-dxf-meta-item">
-                  <span class="meta-label">Total Cut Length</span>
-                  <span class="meta-value">214.27 Inches (5,442 mm)</span>
-                </div>
-                <div class="demo-dxf-meta-item">
-                  <span class="meta-label">DFM Topology Health</span>
-                  <span class="meta-value" style="color: #4ade80;">✓ 100% Closed Polylines • 0 Overlaps</span>
-                </div>
-                <div class="demo-dxf-meta-item">
-                  <span class="meta-label">Machine Controller Compatibility</span>
-                  <span class="meta-value">Trumpf TruTops, CypCut FSCUT, SigmaNEST, Bystronic</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="demo-dxf-action-row" style="display: flex; gap: 10px; margin-top: 1rem;">
-              <button type="button" class="btn btn-primary btn-md" id="btnModalDxfLoad" style="flex: 1.2;">
-                ⚡ Load into Active CAD Canvas
-              </button>
-              <a href="/demo/jeep_wall_art.dxf" download="jeep_wall_art.dxf" class="btn btn-secondary btn-md"
-                style="flex: 1; text-align: center; text-decoration: none;">
-                📥 Download Clean DXF
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pane 5: Video Tour -->
-        <div class="demo-tab-pane hidden" id="paneDemoVideo">
-          <div class="demo-player-container" id="demoPlayerContainer">
-            <video id="demoLocalVideo" class="demo-video-element" controls playsinline preload="none">
-              <source src="/demo_cnc_quoting_engine.webm" type="video/webm">
-              <source src="/demo.mp4" type="video/mp4">
-              Your browser does not support HTML5 video.
-            </video>
-          </div>
-        </div>
-      </div>
+    <div class="lp-credibility-card">
+      <div class="lp-credibility-stat">100%</div>
+      <p class="lp-credibility-desc">Private client-side processing. CAD geometry never leaves your local browser.</p>
     </div>
   </div>
 
-  <!-- Embed Quoting Widget Code Generator Modal -->
-  <div id="embedWidgetModal" class="modal-backdrop hidden">
-    <div class="modal-card embed-modal-card">
-      <div class="modal-header">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 1.25rem;">🔌</span>
-          <h3 class="modal-title" style="font-size: 1.15rem; font-weight: 700; color: #fff;">Embed Quoting Engine on
-            Your Website</h3>
-        </div>
-        <button id="closeEmbedModalBtn" class="close-btn" title="Close (Esc)">&times;</button>
-      </div>
+  <!-- ========================================================================
+       SECTION 7: EMBED WIDGET CTA (B2B Play)
+       ======================================================================== -->
+  <section class="lp-section-header" id="widget">
+    <span class="lp-section-tag">For Job Shop Owners</span>
+    <h2 class="lp-section-title">Put Instant Laser Quoting on Your Own Website</h2>
+    <p class="lp-section-desc">One script tag turns your existing WordPress, Wix, Squarespace, or Webflow site into a self-service quoting storefront.</p>
+  </section>
 
-      <div class="modal-body" style="padding: 1.25rem;">
-        <p class="embed-modal-desc" style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1rem;">
-          Turn your independent sheet metal shop website into an automated 24/7 laser quoting storefront. Drop this
-          single script tag onto WordPress, Wix, Squarespace, or Webflow.
-        </p>
+  <div class="lp-embed-cta-box">
+    <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto; font-size: 0.95rem;">
+      Your customers drag and drop DXFs on your website and receive instant pricing configured to your machine hourly rates and material margins:
+    </p>
 
-        <!-- Widget Customizer Controls -->
-        <div class="embed-controls-grid"
-          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 1.25rem;">
-          <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label" for="embedShopSlug">Shop Slug ID</label>
-            <input type="text" id="embedShopSlug" class="form-input" value="midwest-precision" />
-          </div>
-          <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label" for="embedDefaultCurrency">Default Currency</label>
-            <select id="embedDefaultCurrency" class="form-input">
-              <option value="USD" selected>🇺🇸 USD ($ / Inches)</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label" for="embedDefaultView">Default View</label>
-            <select id="embedDefaultView" class="form-input">
-              <option value="industrial" selected>⚙️ Precision Industrial CAD/CAM</option>
-              <option value="architectural">🏛️ Architectural Gate Studio</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label" for="embedWidgetMode">Display Mode</label>
-            <select id="embedWidgetMode" class="form-input">
-              <option value="inline" selected>Inline Canvas (780px Height)</option>
-              <option value="button">Floating Corner Launcher Button</option>
-            </select>
-          </div>
-        </div>
+    <div class="lp-embed-code-block" id="sampleEmbedCode">
+      &lt;script src="https://sheetdxf.com/widget.js"<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-shop-id="your-shop-name"<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-currency="USD"&gt;<br />
+      &lt;/script&gt;
+    </div>
 
-        <!-- Live Generated Script Tag Box -->
-        <div class="embed-snippet-box"
-          style="background: #090d16; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; margin-bottom: 1.25rem;">
-          <div class="embed-snippet-header"
-            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px;">SINGLE-LINE
-              SCRIPT TAG</span>
-            <button id="btnCopyEmbedScript" class="btn btn-primary btn-xs"
-              style="padding: 4px 10px; font-size: 0.75rem;">📋 Copy Script Tag</button>
-          </div>
-          <pre class="embed-code-block"
-            style="margin: 0; background: #030712; padding: 10px; border-radius: 6px; overflow-x: auto; color: #a5f3fc; font-family: monospace; font-size: 0.85rem;"><code id="embedScriptCode">&lt;script src="https://engine.yourdomain.com/widget.js" data-shop-id="midwest-precision" data-currency="USD"&gt;&lt;/script&gt;</code></pre>
-        </div>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <button type="button" class="lp-btn-secondary" id="btnCopyLandingSnippet">
+        📋 Copy Script Tag
+      </button>
+      <a href="/app?openEmbed=1" class="lp-btn-primary">
+        🔑 Get Your Widget Key
+      </a>
+    </div>
+  </div>
 
-        <!-- Platform-Specific Drop-In Guides -->
-        <div class="embed-guides-section">
-          <span
-            style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">Platform
-            Drop-In Instructions:</span>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.82rem; color: #cbd5e1;">
-            <div
-              style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
-              <strong style="color: #38bdf8;">WordPress:</strong> Add a "Custom HTML" Block or Elementor HTML Widget.
-            </div>
-            <div
-              style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
-              <strong style="color: #38bdf8;">Wix:</strong> Click Add (+) &rarr; Embed Code &rarr; Embed HTML.
-            </div>
-            <div
-              style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
-              <strong style="color: #38bdf8;">Squarespace:</strong> Add a "Code" Block and select HTML.
-            </div>
-            <div
-              style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
-              <strong style="color: #38bdf8;">Webflow:</strong> Drag an "Embed" component onto your section.
-            </div>
-          </div>
-        </div>
-        <!-- Dedicated US Qualified RFQ Lead Intake Modal -->
-        <div id="rfqSubmitModal" class="modal-backdrop hidden">
-          <div class="modal-card rfq-modal-card" style="max-width: 620px; width: 95%;">
-            <div class="modal-header">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 1.25rem;">📋</span>
-                <h3 class="modal-title" style="font-size: 1.15rem; font-weight: 700; color: #fff;">Submit Manufacturing
-                  RFQ</h3>
-              </div>
-              <button id="closeRfqModalBtn" class="close-btn" title="Close (Esc)">&times;</button>
-            </div>
+  <!-- ========================================================================
+       SECTION 8: FOOTER
+       ======================================================================== -->
+  <footer class="lp-footer">
+    <div class="lp-footer-links">
+      <a href="/" class="lp-footer-link">Home</a>
+      <a href="/app" class="lp-footer-link">Quoting App</a>
+      <a href="#features" class="lp-footer-link">Features</a>
+      <a href="#pricing" class="lp-footer-link">Pricing</a>
+      <a href="#widget" class="lp-footer-link">Website Widget</a>
+      <a href="mailto:contact@sheetdxf.com" class="lp-footer-link">contact@sheetdxf.com</a>
+      <a href="https://www.linkedin.com/in/anilsingh09/" target="_blank" rel="noopener noreferrer" class="lp-footer-link">LinkedIn</a>
+    </div>
 
-            <div class="modal-body" style="padding: 1.25rem;">
-              <p class="rfq-modal-desc"
-                style="color: #94a3b8; font-size: 0.86rem; margin-bottom: 1.1rem; line-height: 1.4;">
-                Submit your CAD geometry and specifications directly to the shop estimating desk. An official
-                engineering proposal will be delivered to your inbox.
-              </p>
+    <p style="margin-bottom: 6px;">
+      SheetDXF · sheetdxf.com · Precision Sheet Metal Quoting &amp; 2D Nesting CAD Engine.
+    </p>
+    <p style="font-size: 0.78rem; color: #475569;">
+      © 2026 SheetDXF. Built for precision metal fabricators and CNC laser job shops.
+    </p>
+  </footer>
 
-              <form id="rfqSubmitForm" onsubmit="return false;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="rfqCustomerName">Full Name *</label>
-                    <input type="text" id="rfqCustomerName" class="form-input" placeholder="e.g. John Miller"
-                      required />
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="rfqCompanyName">Company / Organization</label>
-                    <input type="text" id="rfqCompanyName" class="form-input"
-                      placeholder="e.g. Midwest Automation LLC" />
-                  </div>
-                </div>
+  <!-- Landing Page Tab Script & Clipboard Interactivity -->
+  <script>
+    // Tab switcher between interactive iframe and animated demo gif
+    const tabApp = document.getElementById('tabShowAppDemo');
+    const tabGif = document.getElementById('tabShowGifDemo');
+    const container = document.getElementById('demoDisplayContainer');
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="rfqCustomerEmail">Work Email *</label>
-                    <input type="email" id="rfqCustomerEmail" class="form-input" placeholder="john@company.com"
-                      required />
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="rfqCustomerPhone">Phone Number</label>
-                    <input type="tel" id="rfqCustomerPhone" class="form-input" placeholder="(555) 019-2834" />
-                  </div>
-                </div>
+    if (tabApp && tabGif && container) {
+      tabApp.addEventListener('click', () => {
+        tabApp.classList.add('active');
+        tabGif.classList.remove('active');
+        container.innerHTML = `<iframe src="/app?embed=true&demo=jeep" title="SheetDXF Interactive Quoting App" class="lp-interactive-iframe" loading="lazy"></iframe>`;
+      });
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="rfqProjectRef">Project Name / PO #</label>
-                    <input type="text" id="rfqProjectRef" class="form-input"
-                      placeholder="e.g. Skid Frame Bracket Rev B" />
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="rfqShippingZip">Delivery Zip Code</label>
-                    <input type="text" id="rfqShippingZip" class="form-input" placeholder="e.g. 44135" />
-                  </div>
-                </div>
+      tabGif.addEventListener('click', () => {
+        tabGif.classList.add('active');
+        tabApp.classList.remove('active');
+        container.innerHTML = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#050811;"><img src="/demo_jeep_laser_cpq.gif" alt="Laser Quoting Walkthrough" style="max-width:100%; max-height:100%; object-fit:contain;" /></div>`;
+      });
+    }
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="rfqLeadTimeSelect">Required Turnaround</label>
-                    <select id="rfqLeadTimeSelect" class="form-select">
-                      <option value="standard" selected>Standard (5–7 Business Days)</option>
-                      <option value="expedited">Expedited (2–3 Days, +25%)</option>
-                      <option value="rush">24-Hour Rush (+50%)</option>
-                    </select>
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="rfqDeliveryMethod">Fulfillment Method</label>
-                    <select id="rfqDeliveryMethod" class="form-select">
-                      <option value="dock_pickup" selected>Shop Dock Pickup / Will-Call</option>
-                      <option value="freight">UPS Ground / LTL Freight</option>
-                    </select>
-                  </div>
-                </div>
-
-                <!-- Quality & Compliance Checkboxes -->
-                <div
-                  style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px;">
-                  <label
-                    style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #cbd5e1; cursor: pointer;">
-                    <input type="checkbox" id="rfqMtrCerts" class="form-checkbox" />
-                    <span>Require Material Test Reports (MTRs / Mill Certs) (+$20.00)</span>
-                  </label>
-                  <label
-                    style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #cbd5e1; cursor: pointer;">
-                    <input type="checkbox" id="rfqTaxExempt" class="form-checkbox" />
-                    <span>Tax-Exempt Order (Resale Certificate on File)</span>
-                  </label>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 12px;">
-                  <label class="form-label" for="rfqNotes">Special Instructions / Tolerances / Finish Notes</label>
-                  <textarea id="rfqNotes" class="form-input" rows="2" style="font-size: 0.8rem;"
-                    placeholder="e.g. Deburr edges, maintain tight hole tolerances, package with interleaving paper..."></textarea>
-                </div>
-
-                <!-- Live Quote Summary Box inside Modal -->
-                <div
-                  style="background: #090d16; border: 1px solid rgba(56,189,248,0.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
-                  <div>
-                    <span
-                      style="font-size: 0.72rem; color: #94a3b8; display: block; text-transform: uppercase; font-weight: 700;">ESTIMATED
-                      MANUFACTURING TOTAL</span>
-                    <span id="rfqSummaryPartLabel" style="font-size: 0.84rem; color: #f1f5f9; font-weight: 600;">Custom
-                      Laser Cut Part</span>
-                  </div>
-                  <span id="rfqSummaryTotal" style="font-weight: 800; color: #38bdf8; font-size: 1.3rem;">$0.00</span>
-                </div>
-
-                <div style="display: flex; gap: 10px;">
-                  <button type="button" id="btnSubmitRfqEmail" class="btn btn-primary btn-lg"
-                    style="flex: 1.4; font-weight: 700;">
-                    <span class="btn-icon">📨</span> Send RFQ to Shop Estimator
-                  </button>
-                  <button type="button" id="btnDownloadRfqPdf" class="btn btn-secondary btn-lg" style="flex: 1;">
-                    <span class="btn-icon">📄</span> Download PDF
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Toast Notification -->
-        <div id="toastNotification" class="toast hidden">📋 Quotation copied to clipboard!</div>
-
-        <script>
-          // Silent visitor analytics (no visible parameters needed)
-          try {
-            if (navigator.sendBeacon) {
-              navigator.sendBeacon('/ping.php');
-            } else {
-              fetch('/ping.php', { method: 'POST', keepalive: true }).catch(function () { });
-            }
-          } catch (e) { }
-        </script>
+    // Copy script snippet button
+    const btnCopySnippet = document.getElementById('btnCopyLandingSnippet');
+    if (btnCopySnippet) {
+      btnCopySnippet.addEventListener('click', () => {
+        const text = `<script src="https://sheetdxf.com/widget.js" data-shop-id="your-shop-name" data-currency="USD"><\/script>`;
+        navigator.clipboard.writeText(text).then(() => {
+          btnCopySnippet.textContent = '✅ Copied to Clipboard!';
+          setTimeout(() => {
+            btnCopySnippet.textContent = '📋 Copy Script Tag';
+          }, 2200);
+        });
+      });
+    }
+  </script>
 </body>
-
 </html>

@@ -1,8 +1,21 @@
 ﻿<IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  RewriteRule ^index\.html$ - [L]
+
+  # 1. Route /app and /app/* to /app/index.html
+  RewriteCond %{REQUEST_URI} ^/app [NC]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^app(/.*)?$ /app/index.html [L]
+
+  # 2. Route all other non-file requests to root landing page
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
+</IfModule>
+
+# Allow embedding in iframes (domain whitelist checked dynamically via allowed_domains.json)
+<IfModule mod_headers.c>
+  Header unset X-Frame-Options
+  Header set Content-Security-Policy "frame-ancestors *;"
 </IfModule>

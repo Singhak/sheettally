@@ -23,8 +23,9 @@
   <link rel="canonical" href="https://sheetdxf.com/app" />
 
   <!-- Preload Demo CAD & Media Assets for Instant Zero-Wait Load -->
-  <link rel="preload" href="/demo/jeep_wall_art.dxf" as="fetch" crossorigin="anonymous" />
-  <link rel="preload" href="/demo/jeep_wall_art.svg" as="image" />
+  <!-- fetchpriority=low keeps demo files out of the critical path; browser loads CSS/JS/fonts first -->
+  <link rel="preload" href="/demo/jeep_wall_art.dxf" as="fetch" crossorigin="anonymous" fetchpriority="low" />
+  <link rel="preload" href="/demo/jeep_wall_art.svg" as="image" fetchpriority="low" />
 
   <!-- Open Graph / Facebook / LinkedIn / WhatsApp / Slack -->
   <meta property="og:type" content="website" />
@@ -201,12 +202,13 @@
   <link rel="preload" href="/logo-mark.svg" as="image" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" as="style" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <!-- Trimmed to used weights only: Inter 400/600/700 + JetBrains Mono 500/700 (saves ~30 KB) -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" as="style" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" media="print" onload="this.media='all'" />
   <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" />
   </noscript>
-  <script type="module" crossorigin src="/assets/app-Bm-wUix7.js"></script>
+  <script type="module" crossorigin src="/assets/app-C7Ms1C6F.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/auxiliary-3HlIIhEJ.js">
   <link rel="stylesheet" crossorigin href="/assets/index-B2lfyPoC.css">
 </head>
@@ -1934,14 +1936,26 @@
         <div id="toastNotification" class="toast hidden">📋 Quotation copied to clipboard!</div>
 
         <script>
-          // Silent visitor analytics (no visible parameters needed)
-          try {
-            if (navigator.sendBeacon) {
-              navigator.sendBeacon('/ping.php');
-            } else {
-              fetch('/ping.php', { method: 'POST', keepalive: true }).catch(function () { });
-            }
-          } catch (e) { }
+          // Silent visitor analytics — deferred until browser is idle to avoid
+          // competing with critical resource downloads during page startup.
+          function _sendPing() {
+            try {
+              if (navigator.sendBeacon) {
+                navigator.sendBeacon('/ping.php');
+              } else {
+                fetch('/ping.php', { method: 'POST', keepalive: true }).catch(function () { });
+              }
+            } catch (e) { }
+          }
+          if ('requestIdleCallback' in window) {
+            window.addEventListener('load', function () {
+              requestIdleCallback(_sendPing, { timeout: 5000 });
+            });
+          } else {
+            window.addEventListener('load', function () {
+              setTimeout(_sendPing, 3000);
+            });
+          }
         </script>
 </body>
 

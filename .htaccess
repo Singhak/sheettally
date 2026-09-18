@@ -1,21 +1,64 @@
-﻿<IfModule mod_rewrite.c>
+﻿# â”€â”€ MIME Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+<IfModule mod_mime.c>
+  AddType image/vnd.dxf           .dxf
+  AddType application/font-woff2  .woff2
+  AddType image/svg+xml           .svg
+</IfModule>
+
+# â”€â”€ Gzip / Deflate Compression â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE image/vnd.dxf
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE application/font-woff2
+</IfModule>
+
+# â”€â”€ Browser & CDN Caching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+<IfModule mod_headers.c>
+  # 1. Vite hashed bundles and demo CAD/media assets (content-addressed, safe to cache forever)
+  <FilesMatch "\.(js|css|woff2|dxf|svg|pdf|png|ico|gif|webp|jpg|jpeg)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # 2. HTML documents â€” always revalidate so users get the latest version instantly after deploy
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # 3. API / data endpoints â€” never cache
+  <FilesMatch "\.php$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+
+  # Allow embedding in iframes (domain whitelist checked dynamically via allowed_domains.json)
+  Header unset X-Frame-Options
+  Header set Content-Security-Policy "frame-ancestors *;"
+</IfModule>
+
+# â”€â”€ SPA Routing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+<IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # 1. Route /app and /app/* to /app/index.html
-  RewriteCond %{REQUEST_URI} ^/app [NC]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^app(/.*)?$ /app/index.html [L]
+  # Prevent Apache from issuing a 301 redirect for /app â†’ /app/
+  # (app/ is a real directory in dist, which would otherwise trigger mod_dir)
+  DirectorySlash Off
 
-  # 2. Route all other non-file requests to root landing page
+  # 1. Serve /app and /app/ directly as SPA shell â€” no redirect, no 301
+  RewriteRule ^app/?$ /app/index.html [L]
+
+  # 2. Pass existing /app/* static files through unchanged
+  RewriteCond %{REQUEST_URI} ^/app/ [NC]
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # 3. Remaining /app/* deep routes â†’ SPA shell
+  RewriteRule ^app/(.+)$ /app/index.html [L]
+
+  # 4. Route all other non-file, non-directory requests to root landing page
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
-</IfModule>
-
-# Allow embedding in iframes (domain whitelist checked dynamically via allowed_domains.json)
-<IfModule mod_headers.c>
-  Header unset X-Frame-Options
-  Header set Content-Security-Policy "frame-ancestors *;"
 </IfModule>

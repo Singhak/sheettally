@@ -9,6 +9,9 @@
  * - Storage: SQLite in WAL mode with prepared statements & auto-migration
  */
 
+// Set timezone to IST (Indian Standard Time, UTC+5:30)
+date_default_timezone_set('Asia/Kolkata');
+
 // Enable CORS for widget embedding & dev environments
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");

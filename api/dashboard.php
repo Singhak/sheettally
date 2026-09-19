@@ -6,10 +6,14 @@
  * - Invariant Physical Machine Inspector (Cross-Browser ID, Lifetime Uploads, Quotes)
  * - Machine Type & OS Tracking (Windows, Mac, Linux, iOS, Android, Desktop vs Mobile)
  * - Geographical Location & Timezone Tracking
+ * - Timestamps in Indian Standard Time (IST — UTC+5:30)
  * - Tool Error Center & Health Diagnostic Console
  * - Manufacturing Insights (Materials, Gauges, Nesting Yields)
  * - Live Event Feed & CSV / SQLite DB Exporter
  */
+
+// Force all dashboard timestamps and operations to IST (Asia/Kolkata)
+date_default_timezone_set('Asia/Kolkata');
 
 $dataDir = __DIR__ . '/data';
 $dbPath = $dataDir . '/telemetry.db';
@@ -196,6 +200,14 @@ function formatOSPill($osName, $deviceType = 'Desktop') {
         . "<span>{$icon} {$os}</span>"
         . "<span style=\"color: #94a3b8; font-size: 0.65rem;\">({$devIcon} {$dev})</span>"
         . "</span>";
+}
+
+// Helper to format timestamps in readable Indian Standard Time (IST)
+function formatISTDate($dateStr) {
+    if (!$dateStr) return '-';
+    $time = strtotime($dateStr);
+    if (!$time) return htmlspecialchars($dateStr);
+    return date('d M Y, h:i:s A', $time) . ' IST';
 }
 ?>
 <!DOCTYPE html>
@@ -661,7 +673,7 @@ function formatOSPill($osName, $deviceType = 'Desktop') {
             <div class="dash-brand-title">⚡ SheetDXF Telemetry & Monitoring</div>
             <div class="dash-status-pill <?= $db ? '' : 'offline' ?>">
                 <span class="dash-pulse-dot"></span>
-                <span><?= $db ? 'SQLite Live (WAL Mode)' : 'Database Not Found' ?></span>
+                <span><?= $db ? 'SQLite Live (WAL Mode)' : 'Database Not Found' ?> • 🕒 <?= date('d M Y, h:i A') ?> IST (UTC+5:30)</span>
             </div>
         </div>
 
@@ -840,7 +852,7 @@ function formatOSPill($osName, $deviceType = 'Desktop') {
                         <th>Errors</th>
                         <th>Hardware Specs (GPU / CPU / Screen)</th>
                         <th>Known Browsers</th>
-                        <th>Last Active</th>
+                        <th>Last Active (IST)</th>
                     </tr>
                 </thead>
                 <tbody id="table-machines-body">
@@ -880,7 +892,7 @@ function formatOSPill($osName, $deviceType = 'Desktop') {
                                 <?= htmlspecialchars(($m['gpu_renderer'] ?? 'Unknown GPU') . ' (' . ($m['cpu_cores'] ?? '?') . 'C, ' . ($m['screen_res'] ?? '?') . ')') ?>
                             </td>
                             <td><span class="code-pill"><?= htmlspecialchars($m['known_browsers'] ?? '[]') ?></span></td>
-                            <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.72rem;"><?= $m['last_seen_at'] ?></td>
+                            <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.72rem;"><?= formatISTDate($m['last_seen_at']) ?></td>
                         </tr>
                     <?php endforeach; endif; ?>
                 </tbody>
@@ -913,7 +925,7 @@ function formatOSPill($osName, $deviceType = 'Desktop') {
                         <th>Location</th>
                         <th>Seq #</th>
                         <th>Lifetime Uploads</th>
-                        <th>Created At</th>
+                        <th>Created At (IST)</th>
                         <th>Payload Details</th>
                     </tr>
                 </thead>
@@ -930,7 +942,7 @@ function formatOSPill($osName, $deviceType = 'Desktop') {
                             <td><span class="loc-pill"><?= htmlspecialchars($e['location_display'] ?? '') ?></span></td>
                             <td>#<?= $e['session_event_seq'] ?></td>
                             <td><?= $e['lifetime_upload_count'] ?></td>
-                            <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.72rem;"><?= $e['created_at'] ?></td>
+                            <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.72rem;"><?= formatISTDate($e['created_at']) ?></td>
                             <td>
                                 <button class="btn" style="padding: 0.2rem 0.5rem; font-size: 0.7rem;" onclick='openPayloadModal(<?= json_encode($e['payload']) ?>, "<?= htmlspecialchars($e['event_name']) ?>")'>🔍 View JSON</button>
                             </td>
@@ -955,7 +967,7 @@ function formatOSPill($osName, $deviceType = 'Desktop') {
                         <th>Machine ID</th>
                         <th>OS & Device</th>
                         <th>Context / Message</th>
-                        <th>Created At</th>
+                        <th>Occurred At (IST)</th>
                         <th>Full Diagnostic</th>
                     </tr>
                 </thead>
@@ -971,7 +983,7 @@ function formatOSPill($osName, $deviceType = 'Desktop') {
                             <td style="max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); font-size: 0.72rem;">
                                 <?= htmlspecialchars($err['payload']) ?>
                             </td>
-                            <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.72rem;"><?= $err['created_at'] ?></td>
+                            <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.72rem;"><?= formatISTDate($err['created_at']) ?></td>
                             <td>
                                 <button class="btn btn-danger" style="padding: 0.2rem 0.5rem; font-size: 0.7rem;" onclick='openPayloadModal(<?= json_encode($err['payload']) ?>, "<?= htmlspecialchars($err['event_name']) ?>")'>⚠️ Inspect Trace</button>
                             </td>

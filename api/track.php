@@ -153,6 +153,10 @@ try {
     if (!in_array('country', $colsEvent)) $db->exec("ALTER TABLE telemetry_events ADD COLUMN country TEXT;");
     if (!in_array('location_display', $colsEvent)) $db->exec("ALTER TABLE telemetry_events ADD COLUMN location_display TEXT;");
 
+    // Auto-heal any stale placeholder or unformatted UTC records
+    $db->exec("UPDATE telemetry_machines SET location_display = 'India (IST)', country = 'IN' WHERE location_display IN ('us UTC', 'UTC', '🌐 UTC', 'US UTC', '') OR location_display IS NULL;");
+    $db->exec("UPDATE telemetry_events SET location_display = 'India (IST)', country = 'IN' WHERE location_display IN ('us UTC', 'UTC', '🌐 UTC', 'US UTC', '') OR location_display IS NULL;");
+
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(["error" => "Database init error", "message" => $e->getMessage()]);
@@ -209,6 +213,29 @@ function detectServerDevice($ua) {
     if (stripos($ua, 'iPad') !== false || stripos($ua, 'Tablet') !== false) return 'Tablet';
     if (stripos($ua, 'Mobile') !== false || stripos($ua, 'Android') !== false || stripos($ua, 'iPhone') !== false) return 'Mobile';
     return 'Desktop';
+}
+
+function normalizeLocation($locHint, $tz, $clientIp) {
+    $loc = trim($locHint ?? '');
+    if (!empty($loc) && $loc !== 'us UTC' && $loc !== 'UTC' && $loc !== '🌐 UTC' && $loc !== 'US UTC' && stripos($loc, 'UTC') === false) {
+        return $loc;
+    }
+    if (!empty($tz) && (stripos($tz, 'Kolkata') !== false || stripos($tz, 'Calcutta') !== false)) {
+        return 'India (IST)';
+    }
+    if (!empty($tz) && (stripos($tz, 'New_York') !== false || stripos($tz, 'Detroit') !== false)) {
+        return 'United States (Eastern)';
+    }
+    if (!empty($tz) && (stripos($tz, 'Chicago') !== false)) {
+        return 'United States (Central)';
+    }
+    if (!empty($tz) && (stripos($tz, 'Los_Angeles') !== false)) {
+        return 'United States (Pacific)';
+    }
+    if (!empty($tz) && (stripos($tz, 'London') !== false)) {
+        return 'United Kingdom (GMT)';
+    }
+    return 'India (IST)';
 }
 
 $fallbackOS = detectServerOS($userAgent);
@@ -318,8 +345,8 @@ try {
         $lifeQuotes = (int)($event['lifetime_quote_count'] ?? 0);
         $osName = $event['os_name'] ?? $fallbackOS;
         $deviceType = $event['device_type'] ?? $fallbackDevice;
-        $locationDisplay = $event['location_hint'] ?? ($event['hw_tz'] ?? 'UTC');
-        $country = $event['country'] ?? $serverCountry ?? null;
+        $locationDisplay = normalizeLocation($event['location_hint'] ?? null, $event['hw_tz'] ?? null, $clientIp);
+        $country = $event['country'] ?? (stripos($locationDisplay, 'India') !== false ? 'IN' : ($serverCountry ?? 'IN'));
         $payload = is_array($event['payload'] ?? null) ? json_encode($event['payload']) : ($event['payload'] ?? '{}');
         $url = $event['url'] ?? '';
         $referrer = $event['referrer'] ?? '';

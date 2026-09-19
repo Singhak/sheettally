@@ -145,10 +145,15 @@ if ($db) {
             }
         }
 
+        if ($db) {
+            $db->exec("UPDATE telemetry_machines SET location_display = 'India (IST)', country = 'IN' WHERE location_display IN ('us UTC', 'UTC', '🌐 UTC', 'US UTC', '') OR location_display IS NULL;");
+            $db->exec("UPDATE telemetry_events SET location_display = 'India (IST)', country = 'IN' WHERE location_display IN ('us UTC', 'UTC', '🌐 UTC', 'US UTC', '') OR location_display IS NULL;");
+        }
+
         // Platform & Location Distribution
         $osStats = $db->query("SELECT COALESCE(os_name, 'Unknown') as name, COUNT(*) as count FROM telemetry_machines GROUP BY os_name ORDER BY count DESC LIMIT 6")->fetchAll();
         $deviceStats = $db->query("SELECT COALESCE(device_type, 'Desktop') as name, COUNT(*) as count FROM telemetry_machines GROUP BY device_type ORDER BY count DESC LIMIT 4")->fetchAll();
-        $locationStats = $db->query("SELECT COALESCE(location_display, timezone, 'Unknown') as name, COUNT(*) as count FROM telemetry_machines GROUP BY name ORDER BY count DESC LIMIT 6")->fetchAll();
+        $locationStats = $db->query("SELECT COALESCE(location_display, 'India (IST)') as name, COUNT(*) as count FROM telemetry_machines GROUP BY name ORDER BY count DESC LIMIT 6")->fetchAll();
 
         // Top active machines
         $machinesList = $db->query("SELECT * FROM telemetry_machines ORDER BY last_seen_at DESC LIMIT 50")->fetchAll();
@@ -200,6 +205,31 @@ function formatOSPill($osName, $deviceType = 'Desktop') {
         . "<span>{$icon} {$os}</span>"
         . "<span style=\"color: #94a3b8; font-size: 0.65rem;\">({$devIcon} {$dev})</span>"
         . "</span>";
+}
+
+// Helper to format clean location pill with flag
+function formatLocationPill($loc) {
+    $clean = trim($loc ?? '');
+    if ($clean === 'us UTC' || $clean === 'UTC' || $clean === '🌐 UTC' || $clean === 'US UTC' || empty($clean)) {
+        $clean = 'India (IST)';
+    }
+    $flag = '🌐';
+    if (stripos($clean, 'India') !== false || stripos($clean, 'IST') !== false || stripos($clean, 'Kolkata') !== false) {
+        $flag = '🇮🇳';
+    } elseif (stripos($clean, 'United States') !== false || stripos($clean, 'Eastern') !== false || stripos($clean, 'Central') !== false || stripos($clean, 'Mountain') !== false || stripos($clean, 'Pacific') !== false) {
+        $flag = '🇺🇸';
+    } elseif (stripos($clean, 'United Kingdom') !== false || stripos($clean, 'GMT') !== false) {
+        $flag = '🇬🇧';
+    } elseif (stripos($clean, 'Germany') !== false || stripos($clean, 'CET') !== false) {
+        $flag = '🇩🇪';
+    } elseif (stripos($clean, 'Canada') !== false) {
+        $flag = '🇨🇦';
+    } elseif (stripos($clean, 'Australia') !== false) {
+        $flag = '🇦🇺';
+    } elseif (stripos($clean, 'Japan') !== false) {
+        $flag = '🇯🇵';
+    }
+    return "<span class=\"loc-pill\">{$flag} " . htmlspecialchars($clean) . "</span>";
 }
 
 // Helper to format timestamps in readable Indian Standard Time (IST)
@@ -877,11 +907,7 @@ function formatISTDate($dateStr) {
                             <td><span class="code-pill"><?= htmlspecialchars($m['machine_id']) ?></span></td>
                             <td><span class="tier-badge <?= $tierClass ?>"><?= $tierLabel ?></span></td>
                             <td><?= formatOSPill($m['os_name'] ?? 'Unknown', $m['device_type'] ?? 'Desktop') ?></td>
-                            <td>
-                                <span class="loc-pill" title="<?= htmlspecialchars($m['timezone'] ?? '') ?>">
-                                    <?= htmlspecialchars($m['location_display'] ?? ($m['timezone'] ?? 'UTC')) ?>
-                                </span>
-                            </td>
+                            <td><?= formatLocationPill($m['location_display'] ?? '') ?></td>
                             <td style="font-weight: 700; color: #38bdf8;"><?= $m['upload_count'] ?></td>
                             <td style="font-weight: 700; color: #22c55e;"><?= $m['quote_generate_count'] ?></td>
                             <td><?= $m['pdf_download_count'] ?></td>
@@ -939,7 +965,7 @@ function formatISTDate($dateStr) {
                             <td><span class="cat-tag cat-<?= htmlspecialchars($e['category']) ?>"><?= htmlspecialchars($e['category']) ?></span></td>
                             <td><span class="code-pill"><?= htmlspecialchars($e['machine_id']) ?></span></td>
                             <td><?= formatOSPill($e['os_name'] ?? 'Unknown', $e['device_type'] ?? 'Desktop') ?></td>
-                            <td><span class="loc-pill"><?= htmlspecialchars($e['location_display'] ?? '') ?></span></td>
+                            <td><?= formatLocationPill($e['location_display'] ?? '') ?></td>
                             <td>#<?= $e['session_event_seq'] ?></td>
                             <td><?= $e['lifetime_upload_count'] ?></td>
                             <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.72rem;"><?= formatISTDate($e['created_at']) ?></td>

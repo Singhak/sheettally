@@ -489,6 +489,20 @@
         const machId = `mach_${fnv1a([gpu, screenRes, String(cores), tz].join('||'))}${fnv1a(tz)}`;
         const sesId = 'ses_' + Math.random().toString(36).substring(2, 10);
 
+        // Detect OS and Form Factor
+        const ua = navigator.userAgent || '';
+        let osName = 'Windows';
+        if (/android/i.test(ua)) osName = 'Android';
+        else if (/iphone|ipad|ipod/i.test(ua)) osName = 'iOS';
+        else if (/macintosh|mac os x/i.test(ua)) osName = 'macOS';
+        else if (/cros/i.test(ua)) osName = 'ChromeOS';
+        else if (/linux/i.test(ua)) osName = 'Linux';
+
+        const maxTouch = navigator.maxTouchPoints || 0;
+        let devType = 'Desktop';
+        if (/ipad|tablet/i.test(ua) || (maxTouch > 1 && /macintosh/i.test(ua))) devType = 'Tablet';
+        else if (/mobi|iphone|android.*mobile/i.test(ua) || (maxTouch > 0 && window.screen.width <= 640)) devType = 'Mobile';
+
         function trackLanding(event, cat, payload) {
           const body = JSON.stringify({
             events: [{
@@ -500,6 +514,9 @@
               payload: payload || {},
               url: window.location.href,
               referrer: document.referrer || '',
+              os_name: osName,
+              device_type: devType,
+              location_hint: tz.replace('_', ' ').replace(/\//g, ' • '),
               hw_gpu: gpu,
               hw_cores: cores,
               hw_screen: screenRes,

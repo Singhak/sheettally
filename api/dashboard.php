@@ -1,9 +1,11 @@
 <?php
 /**
- * SheetDXF Unified Telemetry & Error Monitoring Dashboard
+ * SheetDXF Unified Telemetry, Activity & Error Monitoring Dashboard
  * 
  * - Executive KPI Ribbon & Conversion Funnels
  * - Invariant Physical Machine Inspector (Cross-Browser ID, Lifetime Uploads, Quotes)
+ * - Machine Type & OS Tracking (Windows, Mac, Linux, iOS, Android, Desktop vs Mobile)
+ * - Geographical Location & Timezone Tracking
  * - Tool Error Center & Health Diagnostic Console
  * - Manufacturing Insights (Materials, Gauges, Nesting Yields)
  * - Live Event Feed & CSV / SQLite DB Exporter
@@ -39,13 +41,16 @@ if (isset($_GET['action']) && $_GET['action'] === 'export_csv' && $db) {
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="sheetdxf_telemetry_events_' . date('Y-m-d_His') . '.csv"');
     $out = fopen('php://output', 'w');
-    fputcsv($out, ['ID', 'Machine ID', 'Browser Instance', 'Session ID', 'Event Name', 'Category', 'Lifetime Uploads', 'Lifetime Quotes', 'Duration (ms)', 'Created At', 'Payload']);
+    fputcsv($out, ['ID', 'Machine ID', 'OS', 'Device Type', 'Location', 'Browser Instance', 'Session ID', 'Event Name', 'Category', 'Lifetime Uploads', 'Lifetime Quotes', 'Duration (ms)', 'Created At', 'Payload']);
 
-    $stmt = $db->query("SELECT id, machine_id, browser_instance_id, session_id, event_name, category, lifetime_upload_count, lifetime_quote_count, duration_ms, created_at, payload FROM telemetry_events ORDER BY id DESC LIMIT 5000");
+    $stmt = $db->query("SELECT id, machine_id, os_name, device_type, location_display, browser_instance_id, session_id, event_name, category, lifetime_upload_count, lifetime_quote_count, duration_ms, created_at, payload FROM telemetry_events ORDER BY id DESC LIMIT 5000");
     while ($row = $stmt->fetch()) {
         fputcsv($out, [
             $row['id'],
             $row['machine_id'],
+            $row['os_name'] ?? 'Unknown',
+            $row['device_type'] ?? 'Desktop',
+            $row['location_display'] ?? '',
             $row['browser_instance_id'],
             $row['session_id'],
             $row['event_name'],
@@ -75,7 +80,7 @@ if (isset($_GET['format']) && $_GET['format'] === 'json' && $db) {
         $params[':cat'] = $category;
     }
     if (!empty($search)) {
-        $sql .= " AND (machine_id LIKE :search OR event_name LIKE :search OR payload LIKE :search)";
+        $sql .= " AND (machine_id LIKE :search OR event_name LIKE :search OR payload LIKE :search OR os_name LIKE :search OR location_display LIKE :search)";
         $params[':search'] = "%$search%";
     }
     $sql .= " ORDER BY id DESC LIMIT $limit";
@@ -102,7 +107,9 @@ $kpis = [
 $machinesList = [];
 $recentEvents = [];
 $recentErrors = [];
-$materialsDistribution = [];
+$osStats = [];
+$deviceStats = [];
+$locationStats = [];
 
 if ($db) {
     try {
@@ -134,6 +141,11 @@ if ($db) {
             }
         }
 
+        // Platform & Location Distribution
+        $osStats = $db->query("SELECT COALESCE(os_name, 'Unknown') as name, COUNT(*) as count FROM telemetry_machines GROUP BY os_name ORDER BY count DESC LIMIT 6")->fetchAll();
+        $deviceStats = $db->query("SELECT COALESCE(device_type, 'Desktop') as name, COUNT(*) as count FROM telemetry_machines GROUP BY device_type ORDER BY count DESC LIMIT 4")->fetchAll();
+        $locationStats = $db->query("SELECT COALESCE(location_display, timezone, 'Unknown') as name, COUNT(*) as count FROM telemetry_machines GROUP BY name ORDER BY count DESC LIMIT 6")->fetchAll();
+
         // Top active machines
         $machinesList = $db->query("SELECT * FROM telemetry_machines ORDER BY last_seen_at DESC LIMIT 50")->fetchAll();
 
@@ -146,6 +158,44 @@ if ($db) {
     } catch (Exception $e) {
         $errorMsg = $e->getMessage();
     }
+}
+
+// Helper to format OS pill with icon
+function formatOSPill($osName, $deviceType = 'Desktop') {
+    $os = $osName ?? 'Unknown';
+    $dev = $deviceType ?? 'Desktop';
+    $icon = '💻';
+    $color = '#94a3b8';
+    $bg = 'rgba(148, 163, 184, 0.12)';
+
+    if (stripos($os, 'Windows') !== false) {
+        $icon = '🪟';
+        $color = '#38bdf8';
+        $bg = 'rgba(56, 189, 248, 0.15)';
+    } elseif (stripos($os, 'macOS') !== false || stripos($os, 'Mac') !== false) {
+        $icon = '🍎';
+        $color = '#f1f5f9';
+        $bg = 'rgba(255, 255, 255, 0.15)';
+    } elseif (stripos($os, 'Linux') !== false) {
+        $icon = '🐧';
+        $color = '#f97316';
+        $bg = 'rgba(249, 115, 22, 0.15)';
+    } elseif (stripos($os, 'iOS') !== false) {
+        $icon = '📱';
+        $color = '#a855f7';
+        $bg = 'rgba(168, 85, 247, 0.15)';
+    } elseif (stripos($os, 'Android') !== false) {
+        $icon = '🤖';
+        $color = '#22c55e';
+        $bg = 'rgba(34, 197, 94, 0.15)';
+    }
+
+    $devIcon = ($dev === 'Mobile') ? '📱' : (($dev === 'Tablet') ? '📟' : '🖥️');
+
+    return "<span style=\"display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; background: {$bg}; color: {$color}; border: 1px solid rgba(255,255,255,0.08);\">"
+        . "<span>{$icon} {$os}</span>"
+        . "<span style=\"color: #94a3b8; font-size: 0.65rem;\">({$devIcon} {$dev})</span>"
+        . "</span>";
 }
 ?>
 <!DOCTYPE html>
@@ -251,48 +301,131 @@ if ($db) {
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
             transition: all 0.15s ease;
         }
-        .btn:hover { background: var(--bg-card-hover); border-color: var(--accent-blue); }
-        .btn-primary { background: #2563eb; border-color: #3b82f6; color: #fff; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-danger { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
+        .btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            border-color: rgba(56, 189, 248, 0.4);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0369a1, #1d4ed8);
+        }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+            color: #fff;
+        }
 
-        /* KPI Cards Grid */
+        /* KPI Ribbon */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         .kpi-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 1.15rem;
+            padding: 1rem 1.1rem;
             position: relative;
             overflow: hidden;
         }
-        .kpi-card::after {
+        .kpi-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--accent-blue);
         }
-        .kpi-card.kpi-warn::after { background: linear-gradient(90deg, var(--accent-yellow), var(--accent-red)); }
-        .kpi-card.kpi-green::after { background: linear-gradient(90deg, var(--accent-green), var(--accent-blue)); }
-        .kpi-title { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
-        .kpi-value { font-size: 1.85rem; font-weight: 800; font-family: var(--font-mono); color: #fff; }
-        .kpi-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.35rem; }
+        .kpi-card.kpi-green::before { background: var(--accent-green); }
+        .kpi-card.kpi-yellow::before { background: var(--accent-yellow); }
+        .kpi-card.kpi-warn::before { background: var(--accent-red); }
+        .kpi-card.kpi-purple::before { background: var(--accent-purple); }
 
-        /* Conversion Funnel */
+        .kpi-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+        .kpi-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            font-family: var(--font-mono);
+            line-height: 1.1;
+        }
+        .kpi-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+        }
+
+        /* Platform Breakdown Mini-Ribbon */
+        .platform-ribbon {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .platform-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.9rem 1.1rem;
+        }
+        .platform-header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .p-chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .p-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            padding: 0.25rem 0.55rem;
+            font-size: 0.72rem;
+        }
+        .p-chip-cnt {
+            font-weight: 700;
+            color: var(--accent-blue);
+            font-family: var(--font-mono);
+        }
+
+        /* Funnel Card */
         .funnel-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 1.25rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
         }
         .section-header {
             display: flex;
@@ -300,23 +433,40 @@ if ($db) {
             align-items: center;
             margin-bottom: 1rem;
         }
-        .section-title { font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #fff;
+        }
         .funnel-steps {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 0.75rem;
         }
         .funnel-step {
-            background: rgba(255,255,255,0.03);
+            background: rgba(0,0,0,0.25);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 0.85rem;
             text-align: center;
-            position: relative;
         }
-        .funnel-step-num { font-size: 0.7rem; color: var(--accent-blue); font-weight: 700; }
-        .funnel-step-name { font-size: 0.8rem; font-weight: 600; margin: 0.25rem 0; color: #fff; }
-        .funnel-step-val { font-size: 1.35rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-green); }
+        .funnel-step-num {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+            margin-bottom: 0.2rem;
+        }
+        .funnel-step-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+        .funnel-step-val {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #fff;
+            font-family: var(--font-mono);
+        }
 
         /* Tabs Navigation */
         .dash-tabs {
@@ -326,27 +476,37 @@ if ($db) {
             margin-bottom: 1.25rem;
         }
         .tab-btn {
-            background: none;
-            border: none;
+            background: transparent;
             color: var(--text-muted);
-            padding: 0.65rem 1rem;
+            border: none;
+            padding: 0.65rem 1.1rem;
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             border-bottom: 2px solid transparent;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.4rem;
+            transition: all 0.15s ease;
         }
-        .tab-btn:hover { color: #fff; }
-        .tab-btn.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+        .tab-btn.active {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
         .tab-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 0.15rem 0.45rem;
-            border-radius: 10px;
-            font-size: 0.68rem;
+            background: rgba(255,255,255,0.08);
+            padding: 0.1rem 0.45rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 700;
         }
-        .tab-badge.badge-error { background: rgba(239, 68, 68, 0.3); color: #fca5a5; }
+        .tab-badge.badge-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+        }
 
         /* Tab Panels */
         .tab-panel { display: none; }
@@ -419,6 +579,15 @@ if ($db) {
             color: #e2e8f0;
         }
 
+        .loc-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.74rem;
+            color: #fde047;
+            font-weight: 500;
+        }
+
         /* Modal */
         .modal-overlay {
             display: none;
@@ -469,6 +638,7 @@ if ($db) {
             gap: 0.75rem;
             margin-bottom: 0.75rem;
             align-items: center;
+            flex-wrap: wrap;
         }
         .search-input {
             background: var(--bg-card);
@@ -508,7 +678,7 @@ if ($db) {
         <div class="kpi-card">
             <div class="kpi-title">Unique Machines (Hardware)</div>
             <div class="kpi-value"><?= number_format($kpis['machines']) ?></div>
-            <div class="kpi-sub">Cross-browser invariant hardware IDs</div>
+            <div class="kpi-sub">Cross-browser invariant physical IDs</div>
         </div>
         <div class="kpi-card">
             <div class="kpi-title">Total User Sessions</div>
@@ -534,6 +704,69 @@ if ($db) {
             <div class="kpi-title">Tool Errors / Health</div>
             <div class="kpi-value" style="color: <?= $kpis['tool_errors'] > 0 ? 'var(--accent-red)' : 'var(--accent-green)' ?>"><?= number_format($kpis['tool_errors']) ?></div>
             <div class="kpi-sub"><?= $kpis['tool_errors'] === 0 ? 'All tools running healthy' : 'Exceptions logged for triage' ?></div>
+        </div>
+    </section>
+
+    <!-- Platform & Location Breakdown Ribbon -->
+    <section class="platform-ribbon">
+        <div class="platform-card">
+            <div class="platform-header">
+                <span>💻 Machine Type & Operating System</span>
+                <span><?= count($machinesList) ?> Machines</span>
+            </div>
+            <div class="p-chips-row">
+                <?php if (empty($osStats)): ?>
+                    <span style="font-size:0.75rem; color: var(--text-muted);">Awaiting telemetry data...</span>
+                <?php else: foreach ($osStats as $s): 
+                    $icon = '💻';
+                    if (stripos($s['name'], 'Windows') !== false) $icon = '🪟';
+                    elseif (stripos($s['name'], 'macOS') !== false || stripos($s['name'], 'Mac') !== false) $icon = '🍎';
+                    elseif (stripos($s['name'], 'Linux') !== false) $icon = '🐧';
+                    elseif (stripos($s['name'], 'iOS') !== false) $icon = '📱';
+                    elseif (stripos($s['name'], 'Android') !== false) $icon = '🤖';
+                ?>
+                    <div class="p-chip">
+                        <span><?= $icon ?> <?= htmlspecialchars($s['name']) ?>:</span>
+                        <span class="p-chip-cnt"><?= $s['count'] ?></span>
+                    </div>
+                <?php endforeach; endif; ?>
+            </div>
+        </div>
+
+        <div class="platform-card">
+            <div class="platform-header">
+                <span>📱 Form Factor</span>
+                <span>Device Types</span>
+            </div>
+            <div class="p-chips-row">
+                <?php if (empty($deviceStats)): ?>
+                    <span style="font-size:0.75rem; color: var(--text-muted);">Awaiting telemetry data...</span>
+                <?php else: foreach ($deviceStats as $d): 
+                    $dIcon = ($d['name'] === 'Mobile') ? '📱' : (($d['name'] === 'Tablet') ? '📟' : '🖥️');
+                ?>
+                    <div class="p-chip">
+                        <span><?= $dIcon ?> <?= htmlspecialchars($d['name']) ?>:</span>
+                        <span class="p-chip-cnt"><?= $d['count'] ?></span>
+                    </div>
+                <?php endforeach; endif; ?>
+            </div>
+        </div>
+
+        <div class="platform-card">
+            <div class="platform-header">
+                <span>🌍 Top Locations & Timezones</span>
+                <span>Geographic Reach</span>
+            </div>
+            <div class="p-chips-row">
+                <?php if (empty($locationStats)): ?>
+                    <span style="font-size:0.75rem; color: var(--text-muted);">Awaiting location data...</span>
+                <?php else: foreach ($locationStats as $l): ?>
+                    <div class="p-chip">
+                        <span><?= htmlspecialchars($l['name']) ?>:</span>
+                        <span class="p-chip-cnt"><?= $l['count'] ?></span>
+                    </div>
+                <?php endforeach; endif; ?>
+            </div>
         </div>
     </section>
 
@@ -588,8 +821,8 @@ if ($db) {
     <!-- Tab 1: Physical Machines Inspector -->
     <div id="tab-machines" class="tab-panel active">
         <div class="table-filter-bar">
-            <input type="text" class="search-input" placeholder="Search Machine ID, GPU, Timezone..." onkeyup="filterTable('table-machines-body', this.value)">
-            <span style="font-size: 0.75rem; color: var(--text-muted);">Tracking user activity frequency across lifetime sessions</span>
+            <input type="text" class="search-input" placeholder="Search Machine ID, OS, Location..." onkeyup="filterTable('table-machines-body', this.value)">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Tracking physical hardware, operating systems, locations, and lifetime usage frequency</span>
         </div>
         <div class="table-wrap">
             <table>
@@ -597,6 +830,8 @@ if ($db) {
                     <tr>
                         <th>Machine ID</th>
                         <th>Intent Tier</th>
+                        <th>OS & Device Type</th>
+                        <th>Location</th>
                         <th>Uploads</th>
                         <th>Quotes</th>
                         <th>PDFs</th>
@@ -610,7 +845,7 @@ if ($db) {
                 </thead>
                 <tbody id="table-machines-body">
                     <?php if (empty($machinesList)): ?>
-                        <tr><td colspan="11" style="text-align:center; padding: 2rem; color: var(--text-muted);">No machines recorded yet. Upload a DXF in the app to begin tracking.</td></tr>
+                        <tr><td colspan="13" style="text-align:center; padding: 2rem; color: var(--text-muted);">No machines recorded yet. Upload a DXF in the app to begin tracking.</td></tr>
                     <?php else: foreach ($machinesList as $m): 
                         // Determine Intent Tier
                         $tierClass = 'tier-visitor';
@@ -629,13 +864,19 @@ if ($db) {
                         <tr>
                             <td><span class="code-pill"><?= htmlspecialchars($m['machine_id']) ?></span></td>
                             <td><span class="tier-badge <?= $tierClass ?>"><?= $tierLabel ?></span></td>
+                            <td><?= formatOSPill($m['os_name'] ?? 'Unknown', $m['device_type'] ?? 'Desktop') ?></td>
+                            <td>
+                                <span class="loc-pill" title="<?= htmlspecialchars($m['timezone'] ?? '') ?>">
+                                    <?= htmlspecialchars($m['location_display'] ?? ($m['timezone'] ?? 'UTC')) ?>
+                                </span>
+                            </td>
                             <td style="font-weight: 700; color: #38bdf8;"><?= $m['upload_count'] ?></td>
                             <td style="font-weight: 700; color: #22c55e;"><?= $m['quote_generate_count'] ?></td>
                             <td><?= $m['pdf_download_count'] ?></td>
                             <td><?= $m['nesting_run_count'] ?></td>
                             <td><?= $m['dxf_export_count'] ?></td>
                             <td style="color: <?= $m['error_count'] > 0 ? '#ef4444' : 'inherit' ?>"><?= $m['error_count'] ?></td>
-                            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<?= htmlspecialchars(($m['gpu_renderer'] ?? '') . ' | ' . ($m['cpu_cores'] ?? '') . ' Cores | ' . ($m['screen_res'] ?? '')) ?>">
+                            <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<?= htmlspecialchars(($m['gpu_renderer'] ?? '') . ' | ' . ($m['cpu_cores'] ?? '') . ' Cores | ' . ($m['screen_res'] ?? '')) ?>">
                                 <?= htmlspecialchars(($m['gpu_renderer'] ?? 'Unknown GPU') . ' (' . ($m['cpu_cores'] ?? '?') . 'C, ' . ($m['screen_res'] ?? '?') . ')') ?>
                             </td>
                             <td><span class="code-pill"><?= htmlspecialchars($m['known_browsers'] ?? '[]') ?></span></td>
@@ -668,6 +909,8 @@ if ($db) {
                         <th>Event</th>
                         <th>Category</th>
                         <th>Machine ID</th>
+                        <th>OS & Device</th>
+                        <th>Location</th>
                         <th>Seq #</th>
                         <th>Lifetime Uploads</th>
                         <th>Created At</th>
@@ -676,13 +919,15 @@ if ($db) {
                 </thead>
                 <tbody id="table-events-body">
                     <?php if (empty($recentEvents)): ?>
-                        <tr><td colspan="8" style="text-align:center; padding: 2rem; color: var(--text-muted);">No events recorded yet.</td></tr>
+                        <tr><td colspan="10" style="text-align:center; padding: 2rem; color: var(--text-muted);">No events recorded yet.</td></tr>
                     <?php else: foreach ($recentEvents as $e): ?>
                         <tr data-category="<?= htmlspecialchars($e['category']) ?>">
                             <td>#<?= $e['id'] ?></td>
                             <td style="font-weight: 700; color: #fff; font-family: var(--font-mono);"><?= htmlspecialchars($e['event_name']) ?></td>
                             <td><span class="cat-tag cat-<?= htmlspecialchars($e['category']) ?>"><?= htmlspecialchars($e['category']) ?></span></td>
                             <td><span class="code-pill"><?= htmlspecialchars($e['machine_id']) ?></span></td>
+                            <td><?= formatOSPill($e['os_name'] ?? 'Unknown', $e['device_type'] ?? 'Desktop') ?></td>
+                            <td><span class="loc-pill"><?= htmlspecialchars($e['location_display'] ?? '') ?></span></td>
                             <td>#<?= $e['session_event_seq'] ?></td>
                             <td><?= $e['lifetime_upload_count'] ?></td>
                             <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.72rem;"><?= $e['created_at'] ?></td>
@@ -708,6 +953,7 @@ if ($db) {
                         <th>ID</th>
                         <th>Error Type</th>
                         <th>Machine ID</th>
+                        <th>OS & Device</th>
                         <th>Context / Message</th>
                         <th>Created At</th>
                         <th>Full Diagnostic</th>
@@ -715,13 +961,14 @@ if ($db) {
                 </thead>
                 <tbody>
                     <?php if (empty($recentErrors)): ?>
-                        <tr><td colspan="6" style="text-align:center; padding: 2rem; color: var(--accent-green);">🎉 Zero tool errors detected! All modules are functioning normally.</td></tr>
+                        <tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--accent-green);">🎉 Zero tool errors detected! All modules are functioning normally.</td></tr>
                     <?php else: foreach ($recentErrors as $err): ?>
                         <tr>
                             <td>#<?= $err['id'] ?></td>
                             <td><span class="cat-tag cat-ERROR"><?= htmlspecialchars($err['event_name']) ?></span></td>
                             <td><span class="code-pill"><?= htmlspecialchars($err['machine_id']) ?></span></td>
-                            <td style="max-width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); font-size: 0.72rem;">
+                            <td><?= formatOSPill($err['os_name'] ?? 'Unknown', $err['device_type'] ?? 'Desktop') ?></td>
+                            <td style="max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); font-size: 0.72rem;">
                                 <?= htmlspecialchars($err['payload']) ?>
                             </td>
                             <td style="white-space: nowrap; color: var(--text-muted); font-size: 0.72rem;"><?= $err['created_at'] ?></td>
@@ -767,32 +1014,40 @@ if ($db) {
         function filterCategory(cat) {
             const rows = document.querySelectorAll('#table-events-body tr');
             rows.forEach(r => {
-                const rowCat = r.getAttribute('data-category');
-                if (!cat || rowCat === cat) {
+                if (!cat) {
                     r.style.display = '';
-                } else {
-                    r.style.display = 'none';
+                    return;
                 }
+                const rCat = r.getAttribute('data-category');
+                r.style.display = (rCat === cat) ? '' : 'none';
             });
         }
 
         function openPayloadModal(payloadRaw, title) {
-            document.getElementById('modalTitle').textContent = '🔍 ' + title + ' Payload';
-            let formatted = payloadRaw;
+            const modal = document.getElementById('payloadModal');
+            const pre = document.getElementById('modalContent');
+            const titleEl = document.getElementById('modalTitle');
+            titleEl.textContent = 'Event Trace: ' + title;
+
             try {
-                if (typeof payloadRaw === 'string') {
-                    formatted = JSON.stringify(JSON.parse(payloadRaw), null, 2);
-                } else {
-                    formatted = JSON.stringify(payloadRaw, null, 2);
-                }
-            } catch (e) {}
-            document.getElementById('modalContent').textContent = formatted;
-            document.getElementById('payloadModal').classList.add('open');
+                let parsed = (typeof payloadRaw === 'string') ? JSON.parse(payloadRaw) : payloadRaw;
+                pre.textContent = JSON.stringify(parsed, null, 2);
+            } catch (e) {
+                pre.textContent = payloadRaw || '{}';
+            }
+            modal.classList.add('open');
         }
 
-        function closeModal() {
+        function closeModal(e) {
+            if (e && e.target && e.target.closest && e.target.closest('.modal-box') && !e.target.closest('.modal-header button')) {
+                return;
+            }
             document.getElementById('payloadModal').classList.remove('open');
         }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
     </script>
 </body>
 </html>

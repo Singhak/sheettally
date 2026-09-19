@@ -5,7 +5,8 @@
  * - Zero UI Lag: Executes in <2ms, supports navigator.sendBeacon & batched fetch
  * - Cross-Browser Machine Graph: Correlates events by invariant machine_id
  * - Granular Activity Counters: Atomically increments lifetime counters in SQLite
- * - Storage: SQLite in WAL mode with prepared statements
+ * - Hardware & Device Intelligence: Tracks Machine OS (Windows, Mac, Linux, Mobile, Desktop), Form Factor, and Location
+ * - Storage: SQLite in WAL mode with prepared statements & auto-migration
  */
 
 // Enable CORS for widget embedding & dev environments
@@ -62,6 +63,10 @@ try {
             error_count INTEGER DEFAULT 0,
             email_copy_count INTEGER DEFAULT 0,
             share_count INTEGER DEFAULT 0,
+            os_name TEXT,
+            device_type TEXT,
+            country TEXT,
+            location_display TEXT,
             gpu_renderer TEXT,
             cpu_cores INTEGER,
             screen_res TEXT,
@@ -83,6 +88,10 @@ try {
             dxf_export_count INTEGER DEFAULT 0,
             nesting_run_count INTEGER DEFAULT 0,
             error_count INTEGER DEFAULT 0,
+            os_name TEXT,
+            device_type TEXT,
+            country TEXT,
+            location_display TEXT,
             referrer TEXT,
             utm_source TEXT,
             utm_medium TEXT,
@@ -101,6 +110,10 @@ try {
             session_event_seq INTEGER DEFAULT 1,
             lifetime_upload_count INTEGER DEFAULT 0,
             lifetime_quote_count INTEGER DEFAULT 0,
+            os_name TEXT,
+            device_type TEXT,
+            country TEXT,
+            location_display TEXT,
             payload TEXT,
             url TEXT,
             referrer TEXT,
@@ -117,6 +130,26 @@ try {
         CREATE INDEX IF NOT EXISTS idx_telemetry_created_at ON telemetry_events(created_at);
         CREATE INDEX IF NOT EXISTS idx_telemetry_session_id ON telemetry_events(session_id);
     ");
+
+    // Auto-migration for existing databases without new columns
+    $colsMachine = $db->query("PRAGMA table_info(telemetry_machines)")->fetchAll(PDO::FETCH_COLUMN, 1);
+    if (!in_array('os_name', $colsMachine)) $db->exec("ALTER TABLE telemetry_machines ADD COLUMN os_name TEXT;");
+    if (!in_array('device_type', $colsMachine)) $db->exec("ALTER TABLE telemetry_machines ADD COLUMN device_type TEXT;");
+    if (!in_array('country', $colsMachine)) $db->exec("ALTER TABLE telemetry_machines ADD COLUMN country TEXT;");
+    if (!in_array('location_display', $colsMachine)) $db->exec("ALTER TABLE telemetry_machines ADD COLUMN location_display TEXT;");
+
+    $colsSession = $db->query("PRAGMA table_info(telemetry_sessions)")->fetchAll(PDO::FETCH_COLUMN, 1);
+    if (!in_array('os_name', $colsSession)) $db->exec("ALTER TABLE telemetry_sessions ADD COLUMN os_name TEXT;");
+    if (!in_array('device_type', $colsSession)) $db->exec("ALTER TABLE telemetry_sessions ADD COLUMN device_type TEXT;");
+    if (!in_array('country', $colsSession)) $db->exec("ALTER TABLE telemetry_sessions ADD COLUMN country TEXT;");
+    if (!in_array('location_display', $colsSession)) $db->exec("ALTER TABLE telemetry_sessions ADD COLUMN location_display TEXT;");
+
+    $colsEvent = $db->query("PRAGMA table_info(telemetry_events)")->fetchAll(PDO::FETCH_COLUMN, 1);
+    if (!in_array('os_name', $colsEvent)) $db->exec("ALTER TABLE telemetry_events ADD COLUMN os_name TEXT;");
+    if (!in_array('device_type', $colsEvent)) $db->exec("ALTER TABLE telemetry_events ADD COLUMN device_type TEXT;");
+    if (!in_array('country', $colsEvent)) $db->exec("ALTER TABLE telemetry_events ADD COLUMN country TEXT;");
+    if (!in_array('location_display', $colsEvent)) $db->exec("ALTER TABLE telemetry_events ADD COLUMN location_display TEXT;");
+
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(["error" => "Database init error", "message" => $e->getMessage()]);
@@ -155,6 +188,29 @@ $clientIp = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '127.
 $ipHash = substr(hash('sha256', $clientIp . 'sheetdxf_salt_2026'), 0, 16);
 $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
 
+// Fallback server country detection
+$serverCountry = $_SERVER['HTTP_CF_IPCOUNTRY'] ?? $_SERVER['HTTP_X_COUNTRY_CODE'] ?? $_SERVER['GEOIP_COUNTRY_CODE'] ?? null;
+
+// Server OS / Device fallback detection from User-Agent
+function detectServerOS($ua) {
+    if (stripos($ua, 'Windows NT') !== false || stripos($ua, 'Win64') !== false || stripos($ua, 'WOW64') !== false) return 'Windows';
+    if (stripos($ua, 'iPhone') !== false || stripos($ua, 'iPad') !== false || stripos($ua, 'iPod') !== false) return 'iOS';
+    if (stripos($ua, 'Android') !== false) return 'Android';
+    if (stripos($ua, 'Macintosh') !== false || stripos($ua, 'Mac OS X') !== false) return 'macOS';
+    if (stripos($ua, 'CrOS') !== false) return 'ChromeOS';
+    if (stripos($ua, 'Linux') !== false) return 'Linux';
+    return 'Desktop';
+}
+
+function detectServerDevice($ua) {
+    if (stripos($ua, 'iPad') !== false || stripos($ua, 'Tablet') !== false) return 'Tablet';
+    if (stripos($ua, 'Mobile') !== false || stripos($ua, 'Android') !== false || stripos($ua, 'iPhone') !== false) return 'Mobile';
+    return 'Desktop';
+}
+
+$fallbackOS = detectServerOS($userAgent);
+$fallbackDevice = detectServerDevice($userAgent);
+
 try {
     $db->beginTransaction();
 
@@ -162,11 +218,13 @@ try {
         INSERT INTO telemetry_events (
             machine_id, browser_instance_id, session_id, event_name, category,
             session_event_seq, lifetime_upload_count, lifetime_quote_count,
+            os_name, device_type, country, location_display,
             payload, url, referrer, utm_source, utm_medium, utm_campaign,
             duration_ms, created_at
         ) VALUES (
             :machine_id, :browser_instance_id, :session_id, :event_name, :category,
             :session_event_seq, :lifetime_upload_count, :lifetime_quote_count,
+            :os_name, :device_type, :country, :location_display,
             :payload, :url, :referrer, :utm_source, :utm_medium, :utm_campaign,
             :duration_ms, :created_at
         )
@@ -177,14 +235,16 @@ try {
             machine_id, first_seen_at, last_seen_at, total_sessions, total_events,
             upload_count, quote_generate_count, pdf_download_count, dxf_export_count,
             nesting_run_count, param_shape_count, material_change_count, sim_run_count,
-            error_count, email_copy_count, share_count, gpu_renderer, cpu_cores,
-            screen_res, timezone, known_browsers, ip_hash
+            error_count, email_copy_count, share_count,
+            os_name, device_type, country, location_display,
+            gpu_renderer, cpu_cores, screen_res, timezone, known_browsers, ip_hash
         ) VALUES (
             :machine_id, :now, :now, 1, :events_count,
             :upload_inc, :quote_inc, :pdf_inc, :dxf_inc,
             :nest_inc, :param_inc, :mat_inc, :sim_inc,
-            :error_inc, :email_inc, :share_inc, :gpu_renderer, :cpu_cores,
-            :screen_res, :timezone, :known_browsers, :ip_hash
+            :error_inc, :email_inc, :share_inc,
+            :os_name, :device_type, :country, :location_display,
+            :gpu_renderer, :cpu_cores, :screen_res, :timezone, :known_browsers, :ip_hash
         )
         ON CONFLICT(machine_id) DO UPDATE SET
             last_seen_at = :now,
@@ -200,6 +260,10 @@ try {
             error_count = telemetry_machines.error_count + :error_inc,
             email_copy_count = telemetry_machines.email_copy_count + :email_inc,
             share_count = telemetry_machines.share_count + :share_inc,
+            os_name = COALESCE(:os_name, telemetry_machines.os_name),
+            device_type = COALESCE(:device_type, telemetry_machines.device_type),
+            country = COALESCE(:country, telemetry_machines.country),
+            location_display = COALESCE(:location_display, telemetry_machines.location_display),
             known_browsers = CASE 
                 WHEN :browser_name IS NOT NULL AND INSTR(COALESCE(telemetry_machines.known_browsers, '[]'), :browser_name) = 0
                 THEN json_insert(COALESCE(telemetry_machines.known_browsers, '[]'), '$[#]', :browser_name)
@@ -212,13 +276,15 @@ try {
         INSERT INTO telemetry_sessions (
             session_id, machine_id, browser_instance_id, started_at, last_active_at,
             total_events, upload_count, quote_generate_count, pdf_download_count,
-            dxf_export_count, nesting_run_count, error_count, referrer,
-            utm_source, utm_medium, utm_campaign, user_agent, ip_hash
+            dxf_export_count, nesting_run_count, error_count,
+            os_name, device_type, country, location_display,
+            referrer, utm_source, utm_medium, utm_campaign, user_agent, ip_hash
         ) VALUES (
             :session_id, :machine_id, :browser_instance_id, :now, :now,
             :events_count, :upload_inc, :quote_inc, :pdf_inc,
-            :dxf_inc, :nest_inc, :error_inc, :referrer,
-            :utm_source, :utm_medium, :utm_campaign, :user_agent, :ip_hash
+            :dxf_inc, :nest_inc, :error_inc,
+            :os_name, :device_type, :country, :location_display,
+            :referrer, :utm_source, :utm_medium, :utm_campaign, :user_agent, :ip_hash
         )
         ON CONFLICT(session_id) DO UPDATE SET
             last_active_at = :now,
@@ -228,7 +294,11 @@ try {
             pdf_download_count = telemetry_sessions.pdf_download_count + :pdf_inc,
             dxf_export_count = telemetry_sessions.dxf_export_count + :dxf_inc,
             nesting_run_count = telemetry_sessions.nesting_run_count + :nest_inc,
-            error_count = telemetry_sessions.error_count + :error_inc
+            error_count = telemetry_sessions.error_count + :error_inc,
+            os_name = COALESCE(:os_name, telemetry_sessions.os_name),
+            device_type = COALESCE(:device_type, telemetry_sessions.device_type),
+            country = COALESCE(:country, telemetry_sessions.country),
+            location_display = COALESCE(:location_display, telemetry_sessions.location_display)
     ");
 
     // Aggregate counts across batch
@@ -243,6 +313,10 @@ try {
         $seq = (int)($event['session_event_seq'] ?? 1);
         $lifeUploads = (int)($event['lifetime_upload_count'] ?? 0);
         $lifeQuotes = (int)($event['lifetime_quote_count'] ?? 0);
+        $osName = $event['os_name'] ?? $fallbackOS;
+        $deviceType = $event['device_type'] ?? $fallbackDevice;
+        $locationDisplay = $event['location_hint'] ?? ($event['hw_tz'] ?? 'UTC');
+        $country = $event['country'] ?? $serverCountry ?? null;
         $payload = is_array($event['payload'] ?? null) ? json_encode($event['payload']) : ($event['payload'] ?? '{}');
         $url = $event['url'] ?? '';
         $referrer = $event['referrer'] ?? '';
@@ -262,6 +336,10 @@ try {
             ':session_event_seq' => $seq,
             ':lifetime_upload_count' => $lifeUploads,
             ':lifetime_quote_count' => $lifeQuotes,
+            ':os_name' => $osName,
+            ':device_type' => $deviceType,
+            ':country' => $country,
+            ':location_display' => $locationDisplay,
             ':payload' => $payload,
             ':url' => $url,
             ':referrer' => $referrer,
@@ -289,6 +367,10 @@ try {
                 'error_inc' => 0,
                 'email_inc' => 0,
                 'share_inc' => 0,
+                'os_name' => $osName,
+                'device_type' => $deviceType,
+                'country' => $country,
+                'location_display' => $locationDisplay,
                 'gpu_renderer' => $event['hw_gpu'] ?? null,
                 'cpu_cores' => isset($event['hw_cores']) ? (int)$event['hw_cores'] : null,
                 'screen_res' => $event['hw_screen'] ?? null,
@@ -366,6 +448,10 @@ try {
             ':error_inc' => $agg['error_inc'],
             ':email_inc' => $agg['email_inc'],
             ':share_inc' => $agg['share_inc'],
+            ':os_name' => $agg['os_name'],
+            ':device_type' => $agg['device_type'],
+            ':country' => $agg['country'],
+            ':location_display' => $agg['location_display'],
             ':gpu_renderer' => $agg['gpu_renderer'],
             ':cpu_cores' => $agg['cpu_cores'],
             ':screen_res' => $agg['screen_res'],
@@ -387,6 +473,10 @@ try {
             ':dxf_inc' => $agg['dxf_inc'],
             ':nest_inc' => $agg['nest_inc'],
             ':error_inc' => $agg['error_inc'],
+            ':os_name' => $agg['os_name'],
+            ':device_type' => $agg['device_type'],
+            ':country' => $agg['country'],
+            ':location_display' => $agg['location_display'],
             ':referrer' => $agg['referrer'],
             ':utm_source' => $agg['utm_source'],
             ':utm_medium' => $agg['utm_medium'],
@@ -398,7 +488,7 @@ try {
 
     $db->commit();
 
-    // Send ultra-fast 204 No Content for sendBeacon/zero-overhead
+    // Send fast JSON success response
     http_response_code(200);
     echo json_encode(["status" => "ok", "ingested" => count($events)]);
 } catch (Exception $e) {

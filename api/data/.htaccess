@@ -1,0 +1,6 @@
+# Deny direct HTTP access to SQLite database files and private data
+<Files ~ "\.(db|sqlite|sqlite3|log)$">
+    Order allow,deny
+    Deny from all
+</Files>
+Options -Indexes

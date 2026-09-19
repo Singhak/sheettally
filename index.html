@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" crossorigin href="/assets/index-B2lfyPoC.css">
+  <link rel="stylesheet" crossorigin href="/assets/index--Pmab3Qe.css">
 </head>
 <body class="lp-body lp-grid-bg">
 
@@ -459,6 +459,74 @@
         });
       });
     }
+
+    // Lightweight Invariant Machine Fingerprint & Background Telemetry for Landing Page
+    (function() {
+      try {
+        function fnv1a(str) {
+          let hash = 0x811c9dc5;
+          for (let i = 0; i < str.length; i++) {
+            hash ^= str.charCodeAt(i);
+            hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+          }
+          return ('00000000' + (hash >>> 0).toString(16)).slice(-8);
+        }
+
+        let gpu = 'Unknown GPU';
+        try {
+          const c = document.createElement('canvas');
+          const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+          if (gl) {
+            const ext = gl.getExtension('WEBGL_debug_renderer_info');
+            gpu = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+          }
+        } catch(e){}
+
+        const screenRes = `${window.screen.width}x${window.screen.height}@${window.screen.colorDepth}b`;
+        const cores = navigator.hardwareConcurrency || 4;
+        let tz = 'UTC';
+        try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch(e){}
+        const machId = `mach_${fnv1a([gpu, screenRes, String(cores), tz].join('||'))}${fnv1a(tz)}`;
+        const sesId = 'ses_' + Math.random().toString(36).substring(2, 10);
+
+        function trackLanding(event, cat, payload) {
+          const body = JSON.stringify({
+            events: [{
+              machine_id: machId,
+              browser_instance_id: 'brw_landing',
+              session_id: sesId,
+              event_name: event,
+              category: cat,
+              payload: payload || {},
+              url: window.location.href,
+              referrer: document.referrer || '',
+              hw_gpu: gpu,
+              hw_cores: cores,
+              hw_screen: screenRes,
+              hw_tz: tz,
+              created_at: new Date().toISOString().replace('T', ' ').substring(0, 19)
+            }]
+          });
+
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon('/api/track.php', new Blob([body], { type: 'application/json' }));
+          } else {
+            fetch('/api/track.php', { method: 'POST', body: body, keepalive: true }).catch(function(){});
+          }
+        }
+
+        // Track page view
+        trackLanding('page_viewed', 'NAVIGATION', { page: 'landing_home' });
+
+        // Track CTA button clicks
+        document.querySelectorAll('a, button').forEach(function(el) {
+          el.addEventListener('click', function() {
+            const id = el.id || el.getAttribute('href') || el.textContent.trim().substring(0, 30);
+            if (id) trackLanding('cta_clicked', 'ENGAGEMENT', { target: id });
+          });
+        });
+      } catch(e){}
+    })();
   </script>
 </body>
 </html>

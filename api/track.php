@@ -238,11 +238,46 @@ function normalizeLocation($locHint, $tz, $clientIp) {
     return 'India (IST)';
 }
 
+// Server GPU normalization helper
+function normalizeServerGpu($raw) {
+    if (!$raw || $raw === 'Unknown GPU' || $raw === 'WebGL Disabled') return $raw ?: 'Unknown GPU';
+    $s = trim($raw);
+    $s = preg_replace('/^ANGLE\s*\((.*)\)$/i', '$1', $s);
+    $s = preg_replace('/\(0x[0-9a-fA-F]+\)/', '', $s);
+    $s = preg_replace('/\bDirect3D\d*\b/i', '', $s);
+    $s = preg_replace('/\bvs_\d+_\d+\s+ps_\d+_\d+\b/i', '', $s);
+    $s = preg_replace('/\bD3D\d+\b/i', '', $s);
+    $s = preg_replace('/\bOpenGL\s+Engine\b/i', '', $s);
+    $s = preg_replace('/\bOpenGL\b/i', '', $s);
+    $s = preg_replace('/\bMetal\b/i', '', $s);
+    $s = preg_replace('/\bVulkan\b/i', '', $s);
+    $s = preg_replace('/Intel\s*,\s*Intel/i', 'Intel', $s);
+    $s = preg_replace('/NVIDIA\s+Corporation\s*,\s*NVIDIA/i', 'NVIDIA', $s);
+    $s = preg_replace('/NVIDIA\s*,\s*NVIDIA/i', 'NVIDIA', $s);
+    $s = preg_replace('/AMD\s*,\s*AMD/i', 'AMD', $s);
+    $s = preg_replace('/Apple\s*,\s*Apple/i', 'Apple', $s);
+    $s = preg_replace('/[,;()]+/', ' ', $s);
+    $s = trim(preg_replace('/\s+/', ' ', $s));
+    return $s ?: 'Unknown GPU';
+}
+
 $fallbackOS = detectServerOS($userAgent);
 $fallbackDevice = detectServerDevice($userAgent);
 
 try {
     $db->beginTransaction();
+
+    // Check machine existence and server-side hardware signature matching
+    $stmtCheckMach = $db->prepare("SELECT 1 FROM telemetry_machines WHERE machine_id = :mid LIMIT 1");
+    $stmtReconcile = $db->prepare("
+        SELECT machine_id FROM telemetry_machines
+        WHERE ip_hash = :ip_hash 
+          AND os_name = :os_name 
+          AND gpu_renderer = :gpu_renderer 
+          AND cpu_cores = :cpu_cores 
+          AND timezone = :timezone
+        ORDER BY last_seen_at DESC LIMIT 1
+    ");
 
     $stmtEvent = $db->prepare("
         INSERT INTO telemetry_events (
@@ -356,6 +391,32 @@ try {
         $durationMs = isset($event['duration_ms']) ? (float)$event['duration_ms'] : 0.0;
         $createdAt = $event['created_at'] ?? $now;
 
+        $rawGpu = $event['hw_gpu'] ?? null;
+        $normalizedGpu = normalizeServerGpu($rawGpu);
+        $cpuCores = isset($event['hw_cores']) ? (int)$event['hw_cores'] : null;
+        $screenRes = $event['hw_screen'] ?? null;
+        $tz = $event['hw_tz'] ?? null;
+
+        // Level 3 Multi-Layer Machine Reconciliation:
+        // If incoming machineId is not yet registered in telemetry_machines, check if an existing machine matches (ip_hash + os_name + normalized_gpu + cpu_cores + timezone)
+        if (!empty($machineId) && $normalizedGpu !== 'Unknown GPU' && $cpuCores !== null && !empty($tz)) {
+            $stmtCheckMach->execute([':mid' => $machineId]);
+            $exists = $stmtCheckMach->fetchColumn();
+            if (!$exists) {
+                $stmtReconcile->execute([
+                    ':ip_hash' => $ipHash,
+                    ':os_name' => $osName,
+                    ':gpu_renderer' => $normalizedGpu,
+                    ':cpu_cores' => $cpuCores,
+                    ':timezone' => $tz
+                ]);
+                $canonicalId = $stmtReconcile->fetchColumn();
+                if ($canonicalId) {
+                    $machineId = $canonicalId;
+                }
+            }
+        }
+
         // Insert individual event record
         $stmtEvent->execute([
             ':machine_id' => $machineId,
@@ -401,10 +462,10 @@ try {
                 'device_type' => $deviceType,
                 'country' => $country,
                 'location_display' => $locationDisplay,
-                'gpu_renderer' => $event['hw_gpu'] ?? null,
-                'cpu_cores' => isset($event['hw_cores']) ? (int)$event['hw_cores'] : null,
-                'screen_res' => $event['hw_screen'] ?? null,
-                'timezone' => $event['hw_tz'] ?? null,
+                'gpu_renderer' => $normalizedGpu,
+                'cpu_cores' => $cpuCores,
+                'screen_res' => $screenRes,
+                'timezone' => $tz,
                 'browser_name' => $event['browser_name'] ?? null,
                 'referrer' => $referrer,
                 'utm_source' => $utmSource,
@@ -418,8 +479,10 @@ try {
 
         switch ($eventName) {
             case 'file_uploaded':
-            case 'demo_loaded':
                 $agg['upload_inc']++;
+                break;
+            case 'demo_loaded':
+                // Demo loaded is a showcase sample, not a real user file upload
                 break;
             case 'quote_calculated':
             case 'quote_viewed':

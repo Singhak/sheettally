@@ -66,7 +66,7 @@
     </p>
 
     <div class="lp-hero-buttons">
-      <a href="/app/?demo=jeep" class="lp-btn-primary" id="heroBtnDropDxf">
+      <a href="/app/" class="lp-btn-primary" id="heroBtnDropDxf">
         <span>📁 Drop DXF File or Try Demo</span>
         <span>→</span>
       </a>
@@ -472,22 +472,71 @@
           return ('00000000' + (hash >>> 0).toString(16)).slice(-8);
         }
 
-        let gpu = 'Unknown GPU';
+        function generateHardwareHash(components) {
+          const joined = components.join('||');
+          const h1 = fnv1a(joined);
+          const h2 = fnv1a(joined.split('').reverse().join(''));
+          return `mach_${h1}${h2}`;
+        }
+
+        function normalizeGpuRenderer(raw) {
+          if (!raw || raw === 'Unknown GPU') return 'Unknown GPU';
+          let s = raw.trim();
+          s = s.replace(/^ANGLE\s*\((.*)\)$/i, '$1');
+          s = s.replace(/\(0x[0-9a-fA-F]+\)/g, '');
+          s = s.replace(/\bDirect3D\d*\b/gi, '').replace(/\bvs_\d+_\d+\s+ps_\d+_\d+\b/gi, '').replace(/\bD3D\d+\b/gi, '');
+          s = s.replace(/\bOpenGL\s+Engine\b/gi, '').replace(/\bOpenGL\b/gi, '').replace(/\bMetal\b/gi, '').replace(/\bVulkan\b/gi, '');
+          s = s.replace(/Intel\s*,\s*Intel/gi, 'Intel').replace(/NVIDIA\s+Corporation\s*,\s*NVIDIA/gi, 'NVIDIA').replace(/NVIDIA\s*,\s*NVIDIA/gi, 'NVIDIA');
+          s = s.replace(/[,;()]+/g, ' ').replace(/\s+/g, ' ').trim();
+          return s || 'Unknown GPU';
+        }
+
+        let storedMachId = null;
+        try {
+          if (window.localStorage) {
+            const ls = localStorage.getItem('sheetdxf_machine_id');
+            if (ls && ls.startsWith('mach_') && ls.length >= 16) storedMachId = ls;
+          }
+        } catch(e){}
+        try {
+          if (!storedMachId && document.cookie) {
+            const m = document.cookie.match(/(?:^|;\s*)sheetdxf_mid=([^;]+)/);
+            if (m && m[1] && m[1].startsWith('mach_')) storedMachId = decodeURIComponent(m[1]);
+          }
+        } catch(e){}
+
+        let rawGpu = 'Unknown GPU';
+        let maxTex = 0;
+        let maxRbo = 0;
+        let maxVbo = 0;
+        let prec = '0';
         try {
           const c = document.createElement('canvas');
           const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
           if (gl) {
             const ext = gl.getExtension('WEBGL_debug_renderer_info');
-            gpu = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+            rawGpu = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+            maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 0;
+            maxRbo = gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) || 0;
+            maxVbo = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS) || 0;
+            const p = gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.HIGH_FLOAT);
+            prec = p ? `${p.rangeMin}_${p.rangeMax}_${p.precision}` : '0';
           }
         } catch(e){}
 
-        const screenRes = `${window.screen.width}x${window.screen.height}@${window.screen.colorDepth}b`;
+        const gpu = normalizeGpuRenderer(rawGpu);
+        const dpr = window.devicePixelRatio || 1;
+        const physW = Math.round((window.screen.width || 1920) * dpr);
+        const physH = Math.round((window.screen.height || 1080) * dpr);
+        const screenRes = `${physW}x${physH}@${window.screen.colorDepth || 24}b`;
         const cores = navigator.hardwareConcurrency || 4;
+        const ramGb = navigator.deviceMemory || 0;
         let tz = 'UTC';
         try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch(e){}
-        const machId = `mach_${fnv1a([gpu, screenRes, String(cores), tz].join('||'))}${fnv1a(tz)}`;
-        const sesId = 'ses_' + Math.random().toString(36).substring(2, 10);
+        const d1 = new Date(2026, 0, 1), d2 = new Date(2026, 6, 1);
+        const dstOffset = Math.abs(d1.getTimezoneOffset() - d2.getTimezoneOffset());
+        const audioSampleRate = 48000;
+        const maxTouch = navigator.maxTouchPoints || 0;
 
         // Detect OS and Form Factor
         const ua = navigator.userAgent || '';
@@ -498,10 +547,35 @@
         else if (/cros/i.test(ua)) osName = 'ChromeOS';
         else if (/linux/i.test(ua)) osName = 'Linux';
 
-        const maxTouch = navigator.maxTouchPoints || 0;
         let devType = 'Desktop';
         if (/ipad|tablet/i.test(ua) || (maxTouch > 1 && /macintosh/i.test(ua))) devType = 'Tablet';
         else if (/mobi|iphone|android.*mobile/i.test(ua) || (maxTouch > 0 && window.screen.width <= 640)) devType = 'Mobile';
+
+        let machId = storedMachId;
+        if (!machId) {
+          const rawComponents = [
+            osName,
+            gpu,
+            String(maxTex),
+            String(maxRbo),
+            String(maxVbo),
+            prec,
+            screenRes,
+            String(cores),
+            String(ramGb),
+            tz,
+            String(dstOffset),
+            String(audioSampleRate),
+            String(maxTouch)
+          ];
+          machId = generateHardwareHash(rawComponents);
+          try {
+            if (window.localStorage) localStorage.setItem('sheetdxf_machine_id', machId);
+            document.cookie = `sheetdxf_mid=${encodeURIComponent(machId)}; path=/; max-age=31536000; SameSite=Lax`;
+          } catch(e){}
+        }
+
+        const sesId = 'ses_' + Math.random().toString(36).substring(2, 10);
 
         function trackLanding(event, cat, payload) {
           const body = JSON.stringify({

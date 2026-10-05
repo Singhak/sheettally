@@ -6,7 +6,8 @@
 
 $db_dir = __DIR__ . '/data';
 $db_file = $db_dir . '/analytics.sqlite';
-$secret_key = 'laser2026'; // Key to view dashboard: ping.php?key=laser2026
+// Dashboard key comes from env PING_KEY or an untracked data/../ping.key file (never commit it)
+$secret_key = getenv('PING_KEY') ?: (is_file(__DIR__ . '/ping.key') ? trim(file_get_contents(__DIR__ . '/ping.key')) : '');
 
 // Helper: Initialize SQLite DB via PDO
 function get_db_connection($db_dir, $db_file) {
@@ -39,9 +40,9 @@ function get_db_connection($db_dir, $db_file) {
 }
 
 // --------------------------------------------------------------------
-// 1. CSV Export for Excel (ping.php?key=laser2026&export=csv)
+// 1. CSV Export for Excel (ping.php?key=<your key>&export=csv)
 // --------------------------------------------------------------------
-if (isset($_GET['key']) && $_GET['key'] === $secret_key && isset($_GET['export']) && $_GET['export'] === 'csv') {
+if ($secret_key !== '' && isset($_GET['key']) && hash_equals($secret_key, (string)$_GET['key']) && isset($_GET['export']) && $_GET['export'] === 'csv') {
     $pdo = get_db_connection($db_dir, $db_file);
     $stmt = $pdo->query("SELECT id, created_at, source, city, region, country, isp_org, device, ip, user_agent FROM visits ORDER BY id DESC");
     $rows = $stmt->fetchAll();
@@ -58,9 +59,9 @@ if (isset($_GET['key']) && $_GET['key'] === $secret_key && isset($_GET['export']
 }
 
 // --------------------------------------------------------------------
-// 2. Private Dashboard (ping.php?key=laser2026)
+// 2. Private Dashboard (ping.php?key=<your key>)
 // --------------------------------------------------------------------
-if (isset($_GET['key']) && $_GET['key'] === $secret_key) {
+if ($secret_key !== '' && isset($_GET['key']) && hash_equals($secret_key, (string)$_GET['key'])) {
     $pdo = get_db_connection($db_dir, $db_file);
 
     // Summary statistics

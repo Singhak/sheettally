@@ -1,0 +1,4 @@
+{
+  "_comment": "Copy to shops.json on the server. shopId (widget data-shop-id) -> recipient. Never put real addresses in git.",
+  "midwest-precision": { "name": "Midwest Precision CNC & Laser", "email": "quotes@example-shop.com" }
+}

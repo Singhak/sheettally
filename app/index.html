@@ -199,7 +199,7 @@
     ]
   }
   </script>
-  <link rel="preload" href="/logo-mark.svg" as="image" type="image/svg+xml" />
+  <link rel="preload" href="/logo-mark.svg" as="image" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- Trimmed to used weights only: Inter 400/600/700 + JetBrains Mono 500/700 (saves ~30 KB) -->
@@ -208,8 +208,8 @@
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" />
   </noscript>
-  <script type="module" crossorigin src="/assets/app-kk9c3fyW.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/auxiliary-OeriZVYF.js">
+  <script type="module" crossorigin src="/assets/app-iuZbTCdQ.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/auxiliary-3CmNfXPn.js">
   <link rel="stylesheet" crossorigin href="/assets/index--Pmab3Qe.css">
 </head>
 
@@ -428,6 +428,16 @@
             style="font-size: 0.74rem; color: #f59e0b; margin-top: 4px;">
             ⚠️ Dimensions appear small (&lt; 25). Confirm if drawn in Inches or MM.
           </div>
+          <div id="dxfUnitInferredNotice" class="hidden"
+            style="margin-top: 6px; padding: 8px 10px; border: 1px solid rgba(245,158,11,0.5); background: rgba(245,158,11,0.1); border-radius: 6px; font-size: 0.76rem; color: #fbbf24; line-height: 1.4;">
+            ⚠️ This file does not state its units, so we assumed <strong id="dxfAssumedUnit">inches</strong>.
+            <span id="dxfBothUnits" style="display:block; color:#f1f5f9; margin-top:2px;"></span>
+            <button type="button" id="btnConfirmDxfUnits" class="btn btn-xs btn-secondary"
+              style="margin-top: 6px; font-size: 0.72rem; padding: 3px 8px; border-color: rgba(245,158,11,0.6);">
+              ✓ Yes, these units are correct
+            </button>
+            <span style="display:block; color:#94a3b8; margin-top:4px;">If not, use the switch button above. A wrong unit changes the price by about 25&times;.</span>
+          </div>
 
           <!-- Multi-Part DXF Intake Cards Section (ToolpathCloud Style) -->
           <div id="dxfPartsSection" class="dxf-parts-section hidden" style="margin-top: 0.75rem;">
@@ -561,26 +571,26 @@
               <label>CNC Press Brake Bends:</label>
               <input type="number" id="secBendsCount" class="form-input text-center sec-input" value="0" min="0"
                 max="20" />
-              <span class="sec-rate-hint">@ $0.75/bend</span>
+              <span class="sec-rate-hint" id="secBendRateHint">@ $2.50/bend</span>
             </div>
             <div class="sec-row">
               <label>Tapped Thread Holes:</label>
               <input type="number" id="secTapsCount" class="form-input text-center sec-input" value="0" min="0"
                 max="50" />
-              <span class="sec-rate-hint">@ $1.25/hole</span>
+              <span class="sec-rate-hint" id="secTapRateHint">@ $1.50/hole</span>
             </div>
             <div class="sec-row">
               <label>Edge Deburring & Grinding:</label>
               <input type="checkbox" id="secDeburringCheck" class="form-checkbox" />
-              <span class="sec-rate-hint">@ $0.15/lb</span>
+              <span class="sec-rate-hint" id="secDeburrRateHint">@ $0.68/lb</span>
             </div>
             <div class="sec-row">
               <label>Surface Treatment:</label>
               <select id="secSurfaceFinish" class="form-select sec-select">
                 <option value="none">None (Raw Cut Edge)</option>
-                <option value="primer">Zinc-Rich Primer ($0.45/sq.ft)</option>
-                <option value="powder_coating">Polyester Powder Coating ($1.20/sq.ft)</option>
-                <option value="galvanizing">Hot-Dip Galvanizing ($0.65/lb)</option>
+                <option value="primer">Zinc-Rich Primer ($1.50/sq.ft)</option>
+                <option value="powder_coating">Polyester Powder Coating ($4.00/sq.ft)</option>
+                <option value="galvanizing">Hot-Dip Galvanizing ($0.34/lb)</option>
               </select>
             </div>
           </div>
@@ -1390,6 +1400,39 @@
             </div>
           </div>
 
+          <!-- Section 1b: Secondary Operation Rates -->
+          <div class="admin-section">
+            <div class="admin-section-header">
+              <span class="section-tag">SECONDARY OPERATION RATES</span>
+            </div>
+            <div class="admin-two-col-grid">
+              <div class="form-group">
+                <label class="form-label" for="adminBendRate">Press Brake Bend ($/bend)</label>
+                <input type="number" id="adminBendRate" class="form-input custom-admin-input rate-numeric-input" value="2.5" min="0" step="0.25" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adminTapRate">Tapped Hole ($/hole)</label>
+                <input type="number" id="adminTapRate" class="form-input custom-admin-input rate-numeric-input" value="1.5" min="0" step="0.25" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adminDeburrRate">Deburring ($/lb)</label>
+                <input type="number" id="adminDeburrRate" class="form-input custom-admin-input rate-numeric-input" value="0.68" min="0" step="0.05" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adminGalvRate">Galvanizing ($/lb)</label>
+                <input type="number" id="adminGalvRate" class="form-input custom-admin-input rate-numeric-input" value="0.34" min="0" step="0.05" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adminPrimerRate">Primer ($/sq ft)</label>
+                <input type="number" id="adminPrimerRate" class="form-input custom-admin-input rate-numeric-input" value="1.5" min="0" step="0.25" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adminPowderRate">Powder Coat ($/sq ft)</label>
+                <input type="number" id="adminPowderRate" class="form-input custom-admin-input rate-numeric-input" value="4" min="0" step="0.25" />
+              </div>
+            </div>
+          </div>
+
           <!-- Section 2: Active Material Rates -->
           <div class="admin-section">
             <div class="admin-rates-box">
@@ -1912,6 +1955,10 @@
                     placeholder="e.g. Deburr edges, maintain tight hole tolerances, package with interleaving paper..."></textarea>
                 </div>
 
+                <!-- Honeypot: hidden from people, bots fill it -->
+                <input type="text" id="rfqWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"
+                  style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;" />
+
                 <!-- Live Quote Summary Box inside Modal -->
                 <div
                   style="background: #090d16; border: 1px solid rgba(56,189,248,0.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
@@ -1941,7 +1988,7 @@
 
         <!-- Toast Notification -->
         <div id="toastNotification" class="toast hidden">📋 Quotation copied to clipboard!</div>
-
+
         <script>
           // Silent visitor analytics — deferred until browser is idle to avoid
           // competing with critical resource downloads during page startup.

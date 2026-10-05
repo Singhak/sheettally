@@ -1,0 +1,20 @@
+# Block direct web access to config, stored RFQs and bundled libraries
+<FilesMatch "\.(json|dxf|txt|log)$">
+  Require all denied
+</FilesMatch>
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(config|data|lib)/ - [F,L]
+</IfModule>
+
+# SMTP / mail settings (or set these as Hostinger environment variables).
+# Uncomment and fill on the SERVER only. Do not commit real values.
+# SetEnv SMTP_HOST smtp.example.com
+# SetEnv SMTP_PORT 587
+# SetEnv SMTP_SECURE tls
+# SetEnv SMTP_USER quotes@sheetdxf.com
+# SetEnv SMTP_PASS change-me
+# SetEnv MAIL_FROM quotes@sheetdxf.com
+# SetEnv MAIL_FROM_NAME "SheetDXF Quotes"
+# SetEnv RFQ_DEFAULT_TO you@sheetdxf.com
+# SetEnv RFQ_BCC you@sheetdxf.com
